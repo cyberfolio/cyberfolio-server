@@ -7,8 +7,9 @@ const API_KEY = process.env.BINANCE_API_KEY;
 const API_SECRET = process.env.BINANCE_API_SECRET;
 const API_URL = process.env.BINANCE_API_URL;
 
-router.get("/", async (req, res) => {
-  const queryString = `type=SPOT&timestamp=${Date.now()}&limit=1`;
+
+const getHoldings = async (type) => {
+  const queryString = `type=${type}&timestamp=${Date.now()}`;
   const signature = crypto
     .HmacSHA256(queryString, API_SECRET)
     .toString(crypto.enc.Hex);
@@ -23,20 +24,50 @@ router.get("/", async (req, res) => {
 
     let data = response.data;
     let latestSnapshotIndex = 0;
-    if(data?.snapshotVos?.length) {
+    if (data?.snapshotVos?.length) {
       latestSnapshotIndex = data.snapshotVos.length - 1
     }
-    if (data?.snapshotVos[latestSnapshotIndex]?.data?.balances?.length > 0) {
-      const assetsBiggerThanZero = data?.snapshotVos[latestSnapshotIndex]?.data?.balances?.filter(asset => 
+    console.log(data)
+    if (data?.snapshotVos[latestSnapshotIndex]?.data?.balances[0]?.free) {
+      const assetsBiggerThanZero = data?.snapshotVos[latestSnapshotIndex]?.data?.balances?.filter(asset =>
         asset.free > 0
       );
       data = assetsBiggerThanZero;
     }
-    res.json(data);
+    return data
+  } catch (e) {
+    if(e?.response?.data?.code) {
+      throw new Error(e.response.data.code)
+    } else {
+      throw new Error(e.message)
+    }
+  }
+}
 
-  } catch (error) {
-    console.log(error.message);
-    throw new Error(error.message)
+router.get("/spot", async (req, res, next) => {
+  try {
+    const data = await getHoldings('SPOT')
+    res.json(data);
+  }catch (e){
+    next(e);
+  }
+});
+
+router.get("/margin", async (req, res, next) => {
+  try {
+    const data = await getHoldings('MARGIN')
+    res.json(data);
+  }catch (e){
+    next(e);
+  }
+});
+
+router.get("/futures", async (req, res, next) => {
+  try {
+    const data = await getHoldings('FUTURES')
+    res.json(data);
+  }catch (e){
+    next(e);
   }
 });
 
