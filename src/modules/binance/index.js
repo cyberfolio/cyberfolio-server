@@ -26,13 +26,12 @@ router.get("/", async (req, res) => {
     if(data?.snapshotVos?.length) {
       latestSnapshotIndex = data.snapshotVos.length - 1
     }
-    if (data?.snapshotVos[0]?.data?.balances?.length > 0) {
+    if (data?.snapshotVos[latestSnapshotIndex]?.data?.balances?.length > 0) {
       const assetsBiggerThanZero = data?.snapshotVos[latestSnapshotIndex]?.data?.balances?.filter(asset => 
         asset.free > 0
       );
       data = assetsBiggerThanZero;
     }
-    console.log(JSON.stringify(data, null, 2));
     res.json(data);
 
   } catch (error) {
