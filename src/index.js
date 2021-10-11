@@ -1,18 +1,21 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const express = require('express')
-const binance = require('./modules/binance')
+const express = require("express");
 
-const app = express()
-const port = 5000
+const eth = require("./modules/eth");
+const binance = require("./modules/binance");
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
+const port = 5000;
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 // Routes
-app.use('/api/binance', binance)
+app.use("/api/eth", eth);
+app.use("/api/binance", binance);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
