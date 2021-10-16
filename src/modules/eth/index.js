@@ -1,15 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { getEthBalance } = require("./services");
+const { getERC20Balances } = require("./services");
 
 router.get("/total-balance", async (req, res, next) => {
   const walletAddress = req?.query?.address;
   try {
-    const balance = await getEthBalance(walletAddress);
+    const balance = await getERC20Balances(walletAddress);
     res.send(balance)
   } catch (e) {
-    console.log('error firlatildi uzaya cikti')
     next(e);
   }
 });
