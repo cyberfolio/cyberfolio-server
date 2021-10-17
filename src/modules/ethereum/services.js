@@ -36,6 +36,33 @@ const getERC20Balances = async (walletAddress) => {
   if (!isValidEthAddress(walletAddress)) {
     throw new Error("Eth address is invalid");
   }
+
+  let existingTokens = await getExistingTokensOfWallet(walletAddress);
+  console.log(existingTokens)
+
+  existingTokens = existingTokens.filter(
+    (existingToken) => existingToken.balance > 0
+  );
+
+  for (let i = 0; i < existingTokens.length; i++) {
+    if (existingTokens[i].symbol) {
+      try {
+        const price = await getCurrentUSDPrice(
+          existingTokens[i].symbol.toLowerCase()
+        );
+        existingTokens[i].usdValue = price;
+      } catch (e) {
+        console.log("Token Address: " + existingTokens[i].contractAddress);
+        console.log("Error message: " + e.message);
+        continue;
+      }
+    }
+  }
+
+  return existingTokens;
+};
+
+const getExistingTokensOfWallet = async (walletAddress) => {
   const abi = [
     {
       constant: true,
@@ -45,7 +72,7 @@ const getERC20Balances = async (walletAddress) => {
       type: "function",
     },
   ];
-  const tokens = getERC20Tokens();
+  const tokens = await getERC20Tokens();
   let existingTokens = [];
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i].address && tokens[i].symbol) {
@@ -69,27 +96,6 @@ const getERC20Balances = async (walletAddress) => {
       }
     }
   }
-
-  existingTokens = existingTokens.filter(
-    (existingToken) => existingToken.balance > 0
-  );
-
-  for (let i = 0; i < existingTokens.length; i++) {
-    if (existingTokens[i].symbol) {
-      try {
-        const price = await getCurrentUSDPrice(
-          existingTokens[i].symbol.toLowerCase()
-        );
-        console.log(price);
-        existingTokens[i].usdValue = price;
-      } catch (e) {
-        console.log("Token Address: " + existingTokens[i].contractAddress);
-        console.log("Error message: " + e.message);
-        continue;
-      }
-    }
-  }
-
   return existingTokens;
 };
 
