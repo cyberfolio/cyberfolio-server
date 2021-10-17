@@ -66,32 +66,32 @@ const getFiatDepositAndWithDrawalHistory = async (transactionType) => {
 };
 
 const getFiatPaymentBuyAndSellHistory = async (transactionType) => {
-    const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
-    const signature = crypto
-      .HmacSHA256(queryString, API_SECRET)
-      .toString(crypto.enc.Hex);
-    try {
-      const response = await axios({
-        url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
-        method: "get",
-        headers: {
-          "X-MBX-APIKEY": API_KEY,
-        },
-      });
-  
-      let data = response.data;
-      return data;
-    } catch (e) {
-      if (e?.response?.data?.code) {
-        throw new Error(e.response.data.code);
-      } else {
-        throw new Error(e.message);
-      }
+  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
+  const signature = crypto
+    .HmacSHA256(queryString, API_SECRET)
+    .toString(crypto.enc.Hex);
+  try {
+    const response = await axios({
+      url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
+      method: "get",
+      headers: {
+        "X-MBX-APIKEY": API_KEY,
+      },
+    });
+
+    let data = response.data;
+    return data;
+  } catch (e) {
+    if (e?.response?.data?.code) {
+      throw new Error(e.response.data.code);
+    } else {
+      throw new Error(e.message);
     }
-  };
+  }
+};
 
 module.exports = {
   getHoldings,
   getFiatDepositAndWithDrawalHistory,
-  getFiatPaymentBuyAndSellHistory
+  getFiatPaymentBuyAndSellHistory,
 };

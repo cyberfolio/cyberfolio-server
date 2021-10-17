@@ -7,7 +7,7 @@ router.get("/erc20-balance", async (req, res, next) => {
   const walletAddress = req?.query?.address;
   try {
     const balance = await getERC20Balances(walletAddress);
-    res.send(balance)
+    res.send(balance);
   } catch (e) {
     next(e);
   }

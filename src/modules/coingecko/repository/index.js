@@ -24,7 +24,7 @@ const addOrUpdateCryptoCurrency = async (currency) => {
 const getCryptoPriceBySymbol = async (symbol) => {
   try {
     const currency = await currencyModel.findOne({ symbol });
-    return currency.price
+    return currency.price;
   } catch (e) {
     throw new Error(e);
   }
@@ -32,5 +32,5 @@ const getCryptoPriceBySymbol = async (symbol) => {
 
 module.exports = {
   addOrUpdateCryptoCurrency,
-  getCryptoPriceBySymbol
+  getCryptoPriceBySymbol,
 };

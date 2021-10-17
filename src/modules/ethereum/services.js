@@ -38,7 +38,7 @@ const getERC20Balances = async (walletAddress) => {
   }
 
   let existingTokens = await getExistingTokensOfWallet(walletAddress);
-  console.log(existingTokens)
+  console.log(existingTokens);
 
   existingTokens = existingTokens.filter(
     (existingToken) => existingToken.balance > 0
