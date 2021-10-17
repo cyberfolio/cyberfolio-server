@@ -1,6 +1,7 @@
 const Web3 = require("web3");
 const axios = require("axios");
-const { response } = require("express");
+
+const { getCurrentUSDPrice } = require("../coingecko");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -44,7 +45,7 @@ const getERC20Balances = async (walletAddress) => {
       type: "function",
     },
   ];
-  const tokens = await getERC20Tokens();
+  const tokens = getERC20Tokens();
   let existingTokens = [];
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i].address && tokens[i].symbol) {
@@ -55,9 +56,10 @@ const getERC20Balances = async (walletAddress) => {
           .call();
         const formattedBalance = web3.utils.fromWei(tokenBalance, "ether");
         const existingToken = {
-          contractAddress: tokens[i].address,
-          balance: parseInt(formattedBalance),
+          name: tokens[i].name,
           symbol: tokens[i].symbol,
+          contractAddress: tokens[i].address,
+          balance: parseFloat(formattedBalance),
         };
         existingTokens.push(existingToken);
       } catch (e) {
@@ -73,19 +75,18 @@ const getERC20Balances = async (walletAddress) => {
   );
 
   for (let i = 0; i < existingTokens.length; i++) {
-    try {
-      const response = await axios({
-        url: `${process.env.COINGECKO_V3_API_URL}/coins/ethereum/contract/${existingTokens[i].contractAddress}`,
-        method: "get",
-      });
-      if (response?.data?.tickers[0]?.converted_last?.usd) {
-        existingTokens[i].usdValue =
-          response?.data?.tickers[0]?.converted_last?.usd;
+    if (existingTokens[i].symbol) {
+      try {
+        const price = await getCurrentUSDPrice(
+          existingTokens[i].symbol.toLowerCase()
+        );
+        console.log(price);
+        existingTokens[i].usdValue = price;
+      } catch (e) {
+        console.log("Token Address: " + existingTokens[i].contractAddress);
+        console.log("Error message: " + e.message);
+        continue;
       }
-    } catch (e) {
-      console.log("Token Address: " + existingTokens[i].contractAddress);
-      console.log("Error message: " + e.message);
-      continue;
     }
   }
 
@@ -101,6 +102,7 @@ const getERC20Tokens = async () => {
     if (response?.data?.tokens) {
       const contracts = response.data.tokens.map((token) => {
         return {
+          name: token.name,
           address: token.address,
           symbol: token.symbol,
         };

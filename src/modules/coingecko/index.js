@@ -1,6 +1,10 @@
 const axios = require("axios");
+const {
+  addOrUpdateCryptoCurrency,
+  getCryptoPriceBySymbol,
+} = require("./repository");
 
-const getAllCryptoPriceInUSD = async () => {
+const addOrUpdateAllCryptoPriceInUSD = async () => {
   try {
     const response = await axios({
       url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc`,
@@ -11,20 +15,24 @@ const getAllCryptoPriceInUSD = async () => {
       const cryptoCurrencies = response?.data;
       for (let i = 0; i < cryptoCurrencies.length; i++) {
         if (cryptoCurrencies[i].symbol && cryptoCurrencies[i].current_price) {
-          cryptos.push({
+          addOrUpdateCryptoCurrency({
             name: cryptoCurrencies[i].name,
             symbol: cryptoCurrencies[i].symbol,
-            price: cryptoCurrencies[i].current_price,
+            price: parseFloat(cryptoCurrencies[i].current_price),
           });
         }
       }
     }
-    return cryptos
   } catch (e) {
     console.log(e);
   }
 };
 
+const getCurrentUSDPrice = async (symbol) => {
+  return await getCryptoPriceBySymbol(symbol);
+};
+
 module.exports = {
-  getAllCryptoPriceInUSD,
+  addOrUpdateAllCryptoPriceInUSD,
+  getCurrentUSDPrice
 };
