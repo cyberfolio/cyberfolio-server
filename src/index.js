@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cron = require("node-cron");
 
 const ethereum = require("./modules/ethereum");
 const binance = require("./modules/binance");
@@ -9,9 +10,13 @@ const coingecko = require("./modules/coingecko");
 const main = async () => {
   try {
     await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
-    for (let i = 1; i < 51; i++) {
-      await coingecko.addOrUpdateAllCryptoPriceInUSD(i);
-    }
+    cron.schedule("0 0 */1 * * *", async () => {
+      // every hour
+      console.log("Ran cryptoprice update");
+      for (let i = 1; i < 51; i++) {
+        await coingecko.addOrUpdateAllCryptoPriceInUSD(i);
+      }
+    });
   } catch (e) {
     console.log(e);
     process.exit(1);
