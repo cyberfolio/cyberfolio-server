@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 
 const ethereum = require("./modules/ethereum");
+const avalanche = require("./modules/avalanche");
 const binance = require("./modules/binance");
 const coingecko = require("./modules/coingecko");
 
@@ -31,6 +32,7 @@ const main = async () => {
 
   // Api Routes
   app.use("/api/ethereum", ethereum);
+  app.use("/api/avalanche", avalanche);
   app.use("/api/binance", binance);
 
   app.listen(port, () => {
