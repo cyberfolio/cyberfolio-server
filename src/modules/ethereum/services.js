@@ -15,12 +15,6 @@ const isValidEthAddress = (address) => {
 };
 
 const getEthBalance = async (walletAddress) => {
-  if (!walletAddress) {
-    throw new Error("Please provide eth address");
-  }
-  if (!isValidEthAddress(walletAddress)) {
-    throw new Error("Eth address is invalid");
-  }
   try {
     const balance = await web3.eth.getBalance(walletAddress);
     return web3.utils.fromWei(balance, "ether");
@@ -30,15 +24,7 @@ const getEthBalance = async (walletAddress) => {
 };
 
 const getERC20Balances = async (walletAddress) => {
-  if (!walletAddress) {
-    throw new Error("Please provide eth address");
-  }
-  if (!isValidEthAddress(walletAddress)) {
-    throw new Error("Eth address is invalid");
-  }
-
   let existingTokens = await getExistingTokensOfWallet(walletAddress);
-  console.log(existingTokens);
 
   existingTokens = existingTokens.filter(
     (existingToken) => existingToken.balance > 0
@@ -125,4 +111,5 @@ const getERC20Tokens = async () => {
 module.exports = {
   getEthBalance,
   getERC20Balances,
+  isValidEthAddress,
 };

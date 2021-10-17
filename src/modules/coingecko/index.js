@@ -4,10 +4,10 @@ const {
   getCryptoPriceBySymbol,
 } = require("./repository");
 
-const addOrUpdateAllCryptoPriceInUSD = async () => {
+const addOrUpdateAllCryptoPriceInUSD = async (page) => {
   try {
     const response = await axios({
-      url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc`,
+      url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=${page}`,
       method: "get",
     });
     if (response?.data && Array.isArray(response?.data)) {

@@ -9,7 +9,9 @@ const coingecko = require("./modules/coingecko");
 const main = async () => {
   try {
     await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
-    await coingecko.addOrUpdateAllCryptoPriceInUSD();
+    for (let i = 1; i < 51; i++) {
+      await coingecko.addOrUpdateAllCryptoPriceInUSD(i);
+    }
   } catch (e) {
     console.log(e);
     process.exit(1);
