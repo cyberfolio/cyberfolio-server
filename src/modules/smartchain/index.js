@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { getARC20Balances } = require("./services");
+const { getBEP20Balances } = require("./services");
 
-router.get("/arc20-balance", async (req, res, next) => {
+router.get("/bep20-balance", async (req, res, next) => {
   const walletAddress = req?.query?.address;
 
   try {
-    const balances = await getARC20Balances(walletAddress);
+    const balances = await getBEP20Balances(walletAddress);
     res.send(balances);
   } catch (e) {
     next(e);
