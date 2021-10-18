@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { getBEP20Balances } = require("./services");
 
-router.get("/bep20-balance", async (req, res, next) => {
+router.get("/token-balances", async (req, res, next) => {
   const walletAddress = req?.query?.address;
 
   try {

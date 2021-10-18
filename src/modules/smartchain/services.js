@@ -4,7 +4,7 @@ const { getCurrentUSDPrice } = require("../coingecko");
 
 const getBEP20Balances = async (walletAddress) => {
   const avalancheData = await axios({
-    url: `${process.env.COVALENT_V1_API_URL}/${process.env.SMARTCHAIN_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
+    url: `${process.env.COVALENT_V1_API_URL}/${process.env.SMARTCHAIN_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
     method: "get",
   });
   let existingBEP20s = avalancheData?.data?.data?.items;
@@ -12,7 +12,10 @@ const getBEP20Balances = async (walletAddress) => {
   if (existingBEP20s && Array.isArray(existingBEP20s)) {
     for (let i = 0; i < existingBEP20s.length; i++) {
       if (existingBEP20s[i].balance > 0) {
-        const balance = formatBalance(existingBEP20s[i].balance);
+        const balance = formatBalance(
+          existingBEP20s[i].balance,
+          parseInt(existingBEP20s[i].contract_decimals)
+        );
         const currentUSDPrice = await getCurrentUSDPrice(
           existingBEP20s[i].contract_ticker_symbol.toLowerCase()
         );

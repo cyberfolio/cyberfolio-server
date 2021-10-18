@@ -1,4 +1,5 @@
 const Web3 = require("web3");
+const ethers = require("ethers");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -16,8 +17,8 @@ const isValid0xAddress = (address) => {
   return web3.utils.isAddress(address);
 };
 
-const formatBalance = (balance) => {
-  return web3.utils.fromWei(balance, "ether");
+const formatBalance = (balance, decimals) => {
+  return ethers.utils.formatUnits(balance, parseInt(decimals));
 };
 
 module.exports = {

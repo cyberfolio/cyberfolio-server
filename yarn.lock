@@ -715,7 +715,7 @@ bech32@2.0.0:
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
   integrity sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==
 
-bignumber.js@^9.0.0:
+bignumber.js@^9.0.0, bignumber.js@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
   integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
@@ -1627,7 +1627,7 @@ ethereumjs-util@^7.0.10, ethereumjs-util@^7.1.0, ethereumjs-util@^7.1.1, ethereu
     ethjs-util "0.1.6"
     rlp "^2.2.4"
 
-ethers@5.4.7:
+ethers@5.4.7, ethers@^5.4.7:
   version "5.4.7"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.4.7.tgz#0fd491a5da7c9793de2d6058d76b41b1e7efba8f"
   integrity sha512-iZc5p2nqfWK1sj8RabwsPM28cr37Bpq7ehTQ5rWExBr2Y09Sn1lDKZOED26n+TsZMye7Y6mIgQ/1cwpSD8XZew==
@@ -2778,7 +2778,7 @@ moment-timezone@^0.5.31:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.29.1:
+"moment@>= 2.9.0":
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==

@@ -6,6 +6,7 @@
   },
   "extends": ["eslint:recommended", "prettier"],
   "env": {
+    "es2020": true,
     "browser": false,
     "node": true,
     "es6": true

@@ -7,7 +7,7 @@ const {
   isValidEthAddress,
 } = require("./services");
 
-router.get("/erc20-balance", async (req, res, next) => {
+router.get("/token-balances", async (req, res, next) => {
   const walletAddress = req?.query?.address;
   if (!walletAddress) {
     throw new Error("Please provide eth wallet address");
