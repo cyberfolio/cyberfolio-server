@@ -3,12 +3,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cron = require("node-cron");
 
+const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const avalanche = require("./modules/avalanche");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
 const binance = require("./modules/binance");
 const coingecko = require("./modules/coingecko");
+
 const { sleep } = require("./utils");
 
 const main = async () => {
@@ -33,6 +35,7 @@ const main = async () => {
   });
 
   // Api Routes
+  app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
   app.use("/api/avalanche", avalanche);
   app.use("/api/smartchain", smartchain);

@@ -1,5 +1,4 @@
 const axios = require("axios");
-const { getCurrentUSDPrice } = require("../coingecko");
 const { formatBalance } = require("../../utils");
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
@@ -13,21 +12,22 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
   if (existingTokens && Array.isArray(existingTokens)) {
     for (let i = 0; i < existingTokens.length; i++) {
       if (existingTokens[i].balance > 0) {
-        const balance = formatBalance(
-          existingTokens[i].balance,
-          parseInt(existingTokens[i].contract_decimals)
+        const balance = parseFloat(
+          formatBalance(
+            existingTokens[i].balance,
+            parseInt(existingTokens[i].contract_decimals)
+          )
         );
-        const currentUSDPrice = await getCurrentUSDPrice(
-          existingTokens[i].contract_ticker_symbol.toLowerCase()
-        );
-        if (currentUSDPrice) {
+        const usdValue = existingTokens[i].quote_rate;
+        if (usdValue) {
           response.push({
             name: existingTokens[i].contract_name,
             symbol: existingTokens[i].contract_ticker_symbol,
             contractAddress: existingTokens[i].contract_address,
             type: existingTokens[i].type,
-            balance: parseFloat(balance),
-            usdValue: currentUSDPrice,
+            balance,
+            usdValue,
+            holdingValue: balance * usdValue,
           });
         }
       }

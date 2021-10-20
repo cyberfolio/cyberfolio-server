@@ -22,6 +22,7 @@ const addOrUpdateAllCryptoPriceInUSD = async (page) => {
             name: cryptoCurrencies[i].name,
             symbol: cryptoCurrencies[i].symbol.toLowerCase(),
             price: parseFloat(cryptoCurrencies[i].current_price),
+            image: cryptoCurrencies[i].image,
           });
         }
       }

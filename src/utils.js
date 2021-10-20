@@ -21,8 +21,13 @@ const formatBalance = (balance, decimals) => {
   return ethers.utils.formatUnits(balance, parseInt(decimals));
 };
 
+const sathoshiToBtcBalance = (satoshi) => {
+  return satoshi * 0.00000001;
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
   formatBalance,
+  sathoshiToBtcBalance,
 };

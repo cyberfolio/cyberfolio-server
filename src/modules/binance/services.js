@@ -47,6 +47,7 @@ const getHoldings = async (type) => {
             contractAddress,
             balance: parseFloat(latestSnapShot[i].free),
             usdValue,
+            holdingValue: parseFloat(latestSnapShot[i].free) * usdValue,
           });
         }
       }
