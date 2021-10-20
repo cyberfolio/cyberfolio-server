@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { getBEP20Balances } = require("./services");
+const { getTokenBalancesFromCovalent } = require("./services");
 
 router.get("/token-balances", async (req, res, next) => {
   const walletAddress = req?.query?.address;
 
   try {
-    const balances = await getBEP20Balances(walletAddress);
+    const balances = await getTokenBalancesFromCovalent(walletAddress);
     res.send(balances);
   } catch (e) {
     next(e);

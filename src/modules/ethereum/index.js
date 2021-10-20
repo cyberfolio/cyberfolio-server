@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  getERC20Balances,
+  getTokenBalancesFromCovalent,
   getEthBalance,
   isValidEthAddress,
 } = require("./services");
@@ -16,7 +16,7 @@ router.get("/token-balances", async (req, res, next) => {
     throw new Error("Eth address is invalid");
   }
   try {
-    const balance = await getERC20Balances(walletAddress);
+    const balance = await getTokenBalancesFromCovalent(walletAddress);
     res.send(balance);
   } catch (e) {
     next(e);

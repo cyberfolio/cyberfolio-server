@@ -4,6 +4,7 @@ const {
   getCryptoPriceBySymbol,
   setLastCurrencyUpdateDate,
   getLastCurrencyUpdateDate,
+  getFullNameOfTheCurrencyBySymbol,
 } = require("./repository");
 
 const addOrUpdateAllCryptoPriceInUSD = async (page) => {
@@ -34,6 +35,10 @@ const getCurrentUSDPrice = async (symbol) => {
   return await getCryptoPriceBySymbol(symbol);
 };
 
+const getFullNameOfTheCurrency = async (symbol) => {
+  return await getFullNameOfTheCurrencyBySymbol(symbol);
+};
+
 const getLastCurrencyUpdate = async () => {
   return await getLastCurrencyUpdateDate();
 };
@@ -42,4 +47,5 @@ module.exports = {
   addOrUpdateAllCryptoPriceInUSD,
   getCurrentUSDPrice,
   getLastCurrencyUpdate,
+  getFullNameOfTheCurrency,
 };

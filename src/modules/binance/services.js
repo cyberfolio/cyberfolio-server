@@ -1,6 +1,11 @@
 const axios = require("axios");
 const crypto = require("crypto-js");
 
+const {
+  getCurrentUSDPrice,
+  getFullNameOfTheCurrency,
+} = require("../coingecko");
+
 const API_KEY = process.env.BINANCE_API_KEY;
 const API_SECRET = process.env.BINANCE_API_SECRET;
 const API_URL = process.env.BINANCE_API_URL;
@@ -11,7 +16,7 @@ const getHoldings = async (type) => {
     .HmacSHA256(queryString, API_SECRET)
     .toString(crypto.enc.Hex);
   try {
-    const response = await axios({
+    const accountInfo = await axios({
       url: `${API_URL}/sapi/v1/accountSnapshot?${queryString}&signature=${signature}`,
       method: "get",
       headers: {
@@ -19,18 +24,35 @@ const getHoldings = async (type) => {
       },
     });
 
-    let data = response.data;
+    let data = accountInfo.data;
     let latestSnapshotIndex = 0;
     if (data?.snapshotVos?.length) {
       latestSnapshotIndex = data.snapshotVos.length - 1;
     }
-    if (data?.snapshotVos[latestSnapshotIndex]?.data?.balances[0]?.free) {
-      const assetsBiggerThanZero = data?.snapshotVos[
-        latestSnapshotIndex
-      ]?.data?.balances?.filter((asset) => asset.free > 0);
-      data = assetsBiggerThanZero;
+    const latestSnapShot =
+      data?.snapshotVos[latestSnapshotIndex]?.data?.balances;
+    const response = [];
+    if (latestSnapShot && latestSnapShot.length > 0) {
+      for (let i = 0; i < latestSnapShot.length; i++) {
+        if (parseFloat(latestSnapShot[i].free) > 0) {
+          const usdValue = await getCurrentUSDPrice(
+            latestSnapShot[i].asset.toLowerCase()
+          );
+          const name = await getFullNameOfTheCurrency(
+            latestSnapShot[i].asset.toLowerCase()
+          );
+          response.push({
+            name,
+            symbol: latestSnapShot[i].asset,
+            type: "cryptocurrency",
+            balance: parseFloat(latestSnapShot[i].free),
+            usdValue,
+          });
+        }
+      }
     }
-    return data;
+
+    return response;
   } catch (e) {
     if (e?.response?.data?.code) {
       throw new Error(e.response.data.code);

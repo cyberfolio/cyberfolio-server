@@ -30,6 +30,15 @@ const getCryptoPriceBySymbol = async (symbol) => {
   }
 };
 
+const getFullNameOfTheCurrencyBySymbol = async (symbol) => {
+  try {
+    const currency = await currencyModel.findOne({ symbol });
+    return currency?.name ? currency.name : "";
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
 const setLastCurrencyUpdateDate = async (lastUpdateDate) => {
   try {
     await lastCurrencyUpdateModel.findOneAndUpdate(
@@ -56,4 +65,5 @@ module.exports = {
   getCryptoPriceBySymbol,
   setLastCurrencyUpdateDate,
   getLastCurrencyUpdateDate,
+  getFullNameOfTheCurrencyBySymbol,
 };

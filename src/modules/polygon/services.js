@@ -2,13 +2,13 @@ const axios = require("axios");
 const { getCurrentUSDPrice } = require("../coingecko");
 const { formatBalance } = require("../../utils");
 
-const getTokenBalances = async (walletAddress) => {
-  const avalancheData = await axios({
+const getTokenBalancesFromCovalent = async (walletAddress) => {
+  const walletInfo = await axios({
     url: `${process.env.COVALENT_V1_API_URL}/${process.env.POLYGON_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
     method: "get",
   });
 
-  let existingTokens = avalancheData?.data?.data?.items;
+  let existingTokens = walletInfo?.data?.data?.items;
   const response = [];
   if (existingTokens && Array.isArray(existingTokens)) {
     for (let i = 0; i < existingTokens.length; i++) {
@@ -25,7 +25,8 @@ const getTokenBalances = async (walletAddress) => {
             name: existingTokens[i].contract_name,
             symbol: existingTokens[i].contract_ticker_symbol,
             contractAddress: existingTokens[i].contract_address,
-            balance,
+            type: existingTokens[i].type,
+            balance: parseFloat(balance),
             usdValue: currentUSDPrice,
           });
         }
@@ -36,5 +37,5 @@ const getTokenBalances = async (walletAddress) => {
 };
 
 module.exports = {
-  getTokenBalances,
+  getTokenBalancesFromCovalent,
 };
