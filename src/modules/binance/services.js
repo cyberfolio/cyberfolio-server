@@ -4,6 +4,7 @@ const crypto = require("crypto-js");
 const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
+  getContractAddress,
 } = require("../coingecko");
 
 const API_KEY = process.env.BINANCE_API_KEY;
@@ -35,16 +36,15 @@ const getHoldings = async (type) => {
     if (latestSnapShot && latestSnapShot.length > 0) {
       for (let i = 0; i < latestSnapShot.length; i++) {
         if (parseFloat(latestSnapShot[i].free) > 0) {
-          const usdValue = await getCurrentUSDPrice(
-            latestSnapShot[i].asset.toLowerCase()
-          );
-          const name = await getFullNameOfTheCurrency(
-            latestSnapShot[i].asset.toLowerCase()
-          );
+          const symbol = latestSnapShot[i].asset.toLowerCase();
+          const usdValue = await getCurrentUSDPrice(symbol);
+          const name = await getFullNameOfTheCurrency(symbol);
+          const contractAddress = await getContractAddress(symbol);
           response.push({
             name,
-            symbol: latestSnapShot[i].asset,
+            symbol,
             type: "cryptocurrency",
+            contractAddress,
             balance: parseFloat(latestSnapShot[i].free),
             usdValue,
           });

@@ -39,6 +39,15 @@ const getFullNameOfTheCurrencyBySymbol = async (symbol) => {
   }
 };
 
+const getContractAddressOfTheCurrencyBySymbol = async (symbol) => {
+  try {
+    const currency = await currencyModel.findOne({ symbol });
+    return currency?.contractAddress ? currency.contractAddress : "";
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
 const setLastCurrencyUpdateDate = async (lastUpdateDate) => {
   try {
     await lastCurrencyUpdateModel.findOneAndUpdate(
@@ -66,4 +75,5 @@ module.exports = {
   setLastCurrencyUpdateDate,
   getLastCurrencyUpdateDate,
   getFullNameOfTheCurrencyBySymbol,
+  getContractAddressOfTheCurrencyBySymbol,
 };
