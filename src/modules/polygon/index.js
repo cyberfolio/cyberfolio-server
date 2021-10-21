@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { getTokenBalancesFromCovalent } = require("./services");
 
-router.get("/token-balances", async (req, res, next) => {
+router.get("/balance", async (req, res, next) => {
   const walletAddress = req?.query?.address;
 
   try {

@@ -7,20 +7,19 @@ const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const arbitrum = require("./modules/arbitrum");
 const avalanche = require("./modules/avalanche");
+const polkadot = require("./modules/polkadot");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
 const binance = require("./modules/binance");
-const coingecko = require("./modules/coingecko");
 
-const { sleep } = require("./utils");
+const { updateCoins } = require("./init");
 
 const main = async () => {
   try {
     await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
-    // await updateCoins();
     cron.schedule("0 0 */1 * * *", async () => {
       // every hour
-      console.log("Ran cryptoprice update");
+      console.log("Ran cryptoprice update at: " + new Date());
       await updateCoins();
     });
   } catch (e) {
@@ -40,6 +39,7 @@ const main = async () => {
   app.use("/api/ethereum", ethereum);
   app.use("/api/arbitrum", arbitrum);
   app.use("/api/avalanche", avalanche);
+  app.use("/api/polkadot", polkadot);
   app.use("/api/smartchain", smartchain);
   app.use("/api/polygon", polygon);
   app.use("/api/binance", binance);
@@ -47,24 +47,6 @@ const main = async () => {
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
   });
-};
-
-const updateCoins = async () => {
-  const lastUpdate = await coingecko.getLastCurrencyUpdate();
-  if (lastUpdate) {
-    const hourDifference = Math.abs(new Date() - lastUpdate) / 36e5;
-    if (hourDifference >= 1) {
-      for (let i = 1; i <= 99; i++) {
-        await coingecko.addOrUpdateAllCryptoPriceInUSD(i);
-        await sleep(500);
-      }
-    }
-  } else {
-    for (let i = 1; i <= 99; i++) {
-      await coingecko.addOrUpdateAllCryptoPriceInUSD(i);
-      await sleep(500);
-    }
-  }
 };
 
 main();
