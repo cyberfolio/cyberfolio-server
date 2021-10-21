@@ -5,6 +5,7 @@ const cron = require("node-cron");
 
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
+const arbitrum = require("./modules/arbitrum");
 const avalanche = require("./modules/avalanche");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
@@ -37,6 +38,7 @@ const main = async () => {
   // Api Routes
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
+  app.use("/api/arbitrum", arbitrum);
   app.use("/api/avalanche", avalanche);
   app.use("/api/smartchain", smartchain);
   app.use("/api/polygon", polygon);
