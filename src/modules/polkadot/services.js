@@ -2,7 +2,7 @@ const { ApiPromise, WsProvider } = require("@polkadot/api");
 
 const getTokenBalances = async (walletAddress) => {
   try {
-    const wsProvider = new WsProvider("wss://rpc.polkadot.io");
+    const wsProvider = new WsProvider(`${process.env.POLKADOT_WEBSOCKET_URL}`);
     const api = await ApiPromise.create({
       provider: wsProvider,
       typesAlias: {
@@ -16,11 +16,14 @@ const getTokenBalances = async (walletAddress) => {
         },
       },
     });
+    const decimals = process.env.POLKADOT_DECIMALS;
 
     const { data: balance } = await api.query.system.account(walletAddress);
-    const formattedBalance = balance.free / 10000000000;
+    const formattedFreeBalance = balance.free / decimals;
+    const formattedReservedBalance = balance.reserved / decimals;
     return {
-      balance: formattedBalance,
+      freeBalance: formattedFreeBalance,
+      reservedBalance: formattedReservedBalance,
     };
   } catch (e) {
     throw new Error(e);

@@ -10,6 +10,7 @@ const avalanche = require("./modules/avalanche");
 const polkadot = require("./modules/polkadot");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
+const solana = require("./modules/solana");
 const binance = require("./modules/binance");
 
 const { updateCoins } = require("./init");
@@ -19,8 +20,10 @@ const main = async () => {
     await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
     cron.schedule("0 0 */1 * * *", async () => {
       // every hour
-      console.log("Ran cryptoprice update at: " + new Date());
+      console.log("Running cryptoprice update at: " + new Date());
       await updateCoins();
+      console.log("Cryptoprice update completed at: " + new Date());
+      console.log(" ");
     });
   } catch (e) {
     console.log(e);
@@ -42,10 +45,11 @@ const main = async () => {
   app.use("/api/polkadot", polkadot);
   app.use("/api/smartchain", smartchain);
   app.use("/api/polygon", polygon);
+  app.use("/api/solana", solana);
   app.use("/api/binance", binance);
 
   app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port}`);
   });
 };
 
