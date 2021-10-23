@@ -18,19 +18,29 @@ const getTokenBalances = async (walletAddress) => {
     const tokenList = tokens
       .filterByClusterSlug(process.env.SOLANA_ENVIRONMET)
       .getList();
+
+    const avaliableTokens = [];
+    avaliableTokens.push({
+      name: "Solana",
+      symbol: "SOL",
+      balance: formattedSolanaBalance,
+    });
     for (const token of tokenList) {
       if (token.address === "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp") {
-        const aaa = await getTokenBalance(walletAddress, token.address);
-        if (aaa > 0) {
-          console.log(aaa);
-          console.log(token.name);
+        const balance = await getTokenBalance(walletAddress, token.address);
+        if (balance > 0) {
+          avaliableTokens.push({
+            name: token.name,
+            address: token.address,
+            symbol: token.symbol,
+            logoURI: token.logoURI,
+            balance,
+          });
         }
       }
     }
 
-    return {
-      balalnce: formattedSolanaBalance,
-    };
+    return avaliableTokens;
   } catch (e) {
     throw new Error(e);
   }
