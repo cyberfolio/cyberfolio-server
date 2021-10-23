@@ -57,7 +57,6 @@ const getTokenBalance = async (walletAddress, tokenMintAddress) => {
     },
   });
   await sleep(1000);
-  console.log(JSON.stringify(response?.data?.result, null, 2));
   if (
     Array.isArray(response?.data?.result?.value) &&
     response?.data?.result?.value?.length > 0 &&
