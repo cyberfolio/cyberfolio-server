@@ -26,17 +26,16 @@ const getTokenBalances = async (walletAddress) => {
       balance: formattedSolanaBalance,
     });
     for (const token of tokenList) {
-      if (token.address === "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp") {
-        const balance = await getTokenBalance(walletAddress, token.address);
-        if (balance > 0) {
-          avaliableTokens.push({
-            name: token.name,
-            address: token.address,
-            symbol: token.symbol,
-            logoURI: token.logoURI,
-            balance,
-          });
-        }
+      const balance = await getTokenBalance(walletAddress, token.address);
+      await sleep(1000);
+      if (balance > 0) {
+        avaliableTokens.push({
+          name: token.name,
+          address: token.address,
+          symbol: token.symbol,
+          logoURI: token.logoURI,
+          balance,
+        });
       }
     }
 
@@ -66,7 +65,6 @@ const getTokenBalance = async (walletAddress, tokenMintAddress) => {
       ],
     },
   });
-  await sleep(1000);
   if (
     Array.isArray(response?.data?.result?.value) &&
     response?.data?.result?.value?.length > 0 &&
