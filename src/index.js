@@ -12,6 +12,7 @@ const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
 const solana = require("./modules/solana");
 const binance = require("./modules/binance");
+const kucoin = require("./modules/kucoin");
 
 const { updateCoins } = require("./init");
 
@@ -47,6 +48,7 @@ const main = async () => {
   app.use("/api/polygon", polygon);
   app.use("/api/solana", solana);
   app.use("/api/binance", binance);
+  app.use("/api/kucoin", kucoin);
 
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

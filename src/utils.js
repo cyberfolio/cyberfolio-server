@@ -25,9 +25,14 @@ const sathoshiToBtcBalance = (satoshi) => {
   return satoshi * 0.00000001;
 };
 
+const toBase64 = (string) => {
+  return Buffer.from(string).toString("base64");
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
   formatBalance,
   sathoshiToBtcBalance,
+  toBase64,
 };
