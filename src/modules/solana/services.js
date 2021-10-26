@@ -1,7 +1,7 @@
 const { Connection, clusterApiUrl, PublicKey } = require("@solana/web3.js");
 const axios = require("axios");
 const { TokenListProvider } = require("@solana/spl-token-registry");
-const { sleep } = require("../../utils");
+const { intDivide } = require("../../utils");
 
 const getTokenBalances = async (walletAddress) => {
   try {
@@ -25,19 +25,8 @@ const getTokenBalances = async (walletAddress) => {
       symbol: "SOL",
       balance: formattedSolanaBalance,
     });
-    for (const token of tokenList) {
-      const balance = await getTokenBalance(walletAddress, token.address);
-      await sleep(1000);
-      if (balance > 0) {
-        avaliableTokens.push({
-          name: token.name,
-          address: token.address,
-          symbol: token.symbol,
-          logoURI: token.logoURI,
-          balance,
-        });
-      }
-    }
+    const otherBalalnces = await getBalances(walletAddress, tokenList);
+    avaliableTokens.push(...otherBalalnces);
 
     return avaliableTokens;
   } catch (e) {
@@ -45,43 +34,154 @@ const getTokenBalances = async (walletAddress) => {
   }
 };
 
-const getTokenBalance = async (walletAddress, tokenMintAddress) => {
-  const response = await axios({
-    url: `${process.env.SOLANA_RPC_ENDPOINT}`,
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    data: {
+const getBalances = async (walletAddress, tokens) => {
+  const response = [];
+  const eachIterationCount = 200;
+  const iterations = intDivide(tokens.length, eachIterationCount);
+  const resOfTheTokens = tokens.length % eachIterationCount;
+  let start = 0;
+  let request = [];
+  let tokensInfo = [];
+
+  for (let iteration = 1; iteration <= iterations; iteration++) {
+    for (let i = start; i < eachIterationCount * iteration; i++) {
+      request.push({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "getTokenAccountsByOwner",
+        params: [
+          walletAddress,
+          {
+            mint: tokens[i].address,
+          },
+          {
+            encoding: "jsonParsed",
+          },
+        ],
+      });
+      tokensInfo.push({
+        name: tokens[i].name,
+        symbol: tokens[i].symbol,
+        logoURI: tokens[i].logoURI,
+        address: tokens[i].address,
+      });
+    }
+
+    const solanaResponse = await axios({
+      url: `${process.env.SOLANA_RPC_ENDPOINT}`,
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      data: [...request],
+    });
+
+    for (let data = 0; data < solanaResponse.data.length; data++) {
+      if (
+        Array.isArray(solanaResponse.data[data]?.result?.value) &&
+        solanaResponse.data[data]?.result?.value?.length > 0 &&
+        solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
+          ?.tokenAmount?.amount > 0
+      ) {
+        response.push({
+          name: tokensInfo[data].name,
+          symbol: tokensInfo[data].symbol,
+          logoURI: tokensInfo[data].logoURI,
+          address: tokensInfo[data].address,
+          balance:
+            Number(
+              solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
+                ?.info?.tokenAmount?.amount
+            ) / process.env.SOLANA_DECIMALS,
+        });
+      }
+    }
+    start += eachIterationCount;
+    request = [];
+    tokensInfo = [];
+  }
+  for (let i = start; i < start + resOfTheTokens; i++) {
+    request.push({
       jsonrpc: "2.0",
       id: 1,
       method: "getTokenAccountsByOwner",
       params: [
         walletAddress,
         {
-          mint: tokenMintAddress,
+          mint: tokens[i].address,
         },
         {
           encoding: "jsonParsed",
         },
       ],
-    },
-  });
-  if (
-    Array.isArray(response?.data?.result?.value) &&
-    response?.data?.result?.value?.length > 0 &&
-    response?.data?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount
-      ?.amount > 0
-  ) {
-    return (
-      Number(
-        response?.data?.result?.value[0]?.account?.data?.parsed?.info
-          ?.tokenAmount?.amount
-      ) / process.env.SOLANA_DECIMALS
-    );
-  } else {
-    return 0;
+    });
+    tokensInfo.push({
+      name: tokens[i].name,
+      symbol: tokens[i].symbol,
+      logoURI: tokens[i].logoURI,
+      address: tokens[i].address,
+    });
   }
+
+  const solanaResponse = await axios({
+    url: `${process.env.SOLANA_RPC_ENDPOINT}`,
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    data: [...request],
+  });
+
+  for (let data = 0; data < solanaResponse.data.length; data++) {
+    if (
+      Array.isArray(solanaResponse.data[data]?.result?.value) &&
+      solanaResponse.data[data]?.result?.value?.length > 0 &&
+      solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
+        ?.tokenAmount?.amount > 0
+    ) {
+      response.push({
+        name: tokensInfo[data].name,
+        symbol: tokensInfo[data].symbol,
+        logoURI: tokensInfo[data].logoURI,
+        address: tokensInfo[data].address,
+        balance:
+          Number(
+            solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
+              ?.info?.tokenAmount?.amount
+          ) / process.env.SOLANA_DECIMALS,
+      });
+    }
+  }
+
+  return response;
 };
 
 module.exports = {
   getTokenBalances,
 };
+
+/*
+
+
+
+const solanaResponse = await axios({
+      url: `${process.env.SOLANA_RPC_ENDPOINT}`,
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      data: [...request],
+    });
+    console.log(JSON.stringify(solanaResponse.data, null, 2));
+
+    if (
+      Array.isArray(solanaResponse?.data?.result?.value) &&
+      solanaResponse?.data?.result?.value?.length > 0 &&
+      solanaResponse?.data?.result?.value[0]?.account?.data?.parsed?.info
+        ?.tokenAmount?.amount > 0
+    ) {
+      return (
+        Number(
+          solanaResponse?.data?.result?.value[0]?.account?.data?.parsed?.info
+            ?.tokenAmount?.amount
+        ) / process.env.SOLANA_DECIMALS
+      );
+    } else {
+      return 0;
+    }
+
+    */

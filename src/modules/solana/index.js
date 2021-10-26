@@ -10,6 +10,7 @@ router.get("/balance", async (req, res, next) => {
     const balances = await getTokenBalances(walletAddress);
     res.send(balances);
   } catch (e) {
+    console.log(e);
     next(e);
   }
 });

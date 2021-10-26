@@ -29,10 +29,15 @@ const toBase64 = (string) => {
   return Buffer.from(string).toString("base64");
 };
 
+const intDivide = (numerator, denominator) => {
+  return parseInt((numerator / denominator).toString().split(".")[0]);
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
   formatBalance,
   sathoshiToBtcBalance,
   toBase64,
+  intDivide,
 };
