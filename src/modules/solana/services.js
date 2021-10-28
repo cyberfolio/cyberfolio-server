@@ -2,6 +2,7 @@ const { Connection, clusterApiUrl, PublicKey } = require("@solana/web3.js");
 const axios = require("axios");
 const { TokenListProvider } = require("@solana/spl-token-registry");
 const { intDivide } = require("../../utils");
+const { getCurrentUSDPrice } = require("../coingecko");
 
 const getTokenBalances = async (walletAddress) => {
   try {
@@ -20,10 +21,12 @@ const getTokenBalances = async (walletAddress) => {
       .getList();
 
     const avaliableTokens = [];
+    const solanaUsdValue = await getCurrentUSDPrice("sol");
     avaliableTokens.push({
       name: "Solana",
       symbol: "SOL",
       balance: formattedSolanaBalance,
+      usdValue: solanaUsdValue * formattedSolanaBalance,
     });
     const otherBalalnces = await getBalances(walletAddress, tokenList);
     avaliableTokens.push(...otherBalalnces);
@@ -81,16 +84,21 @@ const getBalances = async (walletAddress, tokens) => {
         solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
           ?.tokenAmount?.amount > 0
       ) {
+        const usdValue = await getCurrentUSDPrice(
+          tokensInfo[data].symbol.toLowerCase()
+        );
+        const balance =
+          Number(
+            solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
+              ?.info?.tokenAmount?.amount
+          ) / process.env.SOLANA_DECIMALS;
         response.push({
           name: tokensInfo[data].name,
           symbol: tokensInfo[data].symbol,
           logoURI: tokensInfo[data].logoURI,
           address: tokensInfo[data].address,
-          balance:
-            Number(
-              solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-                ?.info?.tokenAmount?.amount
-            ) / process.env.SOLANA_DECIMALS,
+          balance,
+          usdValue: balance * usdValue,
         });
       }
     }
@@ -135,6 +143,9 @@ const getBalances = async (walletAddress, tokens) => {
       solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
         ?.tokenAmount?.amount > 0
     ) {
+      const usdValue = await getCurrentUSDPrice(
+        tokensInfo[data].symbol.toLowerCase()
+      );
       response.push({
         name: tokensInfo[data].name,
         symbol: tokensInfo[data].symbol,
@@ -145,6 +156,7 @@ const getBalances = async (walletAddress, tokens) => {
             solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
               ?.info?.tokenAmount?.amount
           ) / process.env.SOLANA_DECIMALS,
+        usdValue,
       });
     }
   }
@@ -155,33 +167,3 @@ const getBalances = async (walletAddress, tokens) => {
 module.exports = {
   getTokenBalances,
 };
-
-/*
-
-
-
-const solanaResponse = await axios({
-      url: `${process.env.SOLANA_RPC_ENDPOINT}`,
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      data: [...request],
-    });
-    console.log(JSON.stringify(solanaResponse.data, null, 2));
-
-    if (
-      Array.isArray(solanaResponse?.data?.result?.value) &&
-      solanaResponse?.data?.result?.value?.length > 0 &&
-      solanaResponse?.data?.result?.value[0]?.account?.data?.parsed?.info
-        ?.tokenAmount?.amount > 0
-    ) {
-      return (
-        Number(
-          solanaResponse?.data?.result?.value[0]?.account?.data?.parsed?.info
-            ?.tokenAmount?.amount
-        ) / process.env.SOLANA_DECIMALS
-      );
-    } else {
-      return 0;
-    }
-
-    */
