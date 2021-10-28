@@ -13,6 +13,7 @@ const polygon = require("./modules/polygon");
 const solana = require("./modules/solana");
 const binance = require("./modules/binance");
 const kucoin = require("./modules/kucoin");
+const gateio = require("./modules/gateio");
 
 const { updateCoins } = require("./init");
 
@@ -49,6 +50,7 @@ const main = async () => {
   app.use("/api/solana", solana);
   app.use("/api/binance", binance);
   app.use("/api/kucoin", kucoin);
+  app.use("/api/gateio", gateio);
 
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
