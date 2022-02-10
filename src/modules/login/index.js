@@ -1,7 +1,9 @@
 const express = require("express");
-const { ethers } = require("ethers");
-const { generateNonce } = require("../../utils");
 const router = express.Router();
+const { ethers } = require("ethers");
+
+const { generateNonce } = require("../../utils");
+const { signJwt } = require("../../config/jwt");
 
 const {
   createUser,
@@ -44,6 +46,14 @@ router.post("/validateSignature", async (req, res, next) => {
     if (!user) {
       throw new Error("User not found");
     }
+
+    // set jwt to the user's borser cookies
+    const token = signJwt(user);
+    const secure = process.env.NODE_ENV !== "development";
+    res.cookie("jwt", token, {
+      secure,
+      httpOnly: true,
+    });
     res.status(200).json({ user });
   } catch (e) {
     next(e);
