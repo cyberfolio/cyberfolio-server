@@ -1,5 +1,6 @@
 const Web3 = require("web3");
 const ethers = require("ethers");
+const { v4: uuidv4 } = require("uuid");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -33,6 +34,21 @@ const intDivide = (numerator, denominator) => {
   return parseInt((numerator / denominator).toString().split(".")[0]);
 };
 
+const generateNonce = () => {
+  return `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`;
+};
+
+const deleteMongoVersionAndId = (object) => {
+  const clone = JSON.parse(JSON.stringify(object));
+  if (clone) {
+    Object.keys(clone).forEach(function (key) {
+      key.indexOf("_") == 0 && delete clone[key];
+    });
+    return clone;
+  }
+  return null;
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
@@ -40,4 +56,6 @@ module.exports = {
   sathoshiToBtcBalance,
   toBase64,
   intDivide,
+  generateNonce,
+  deleteMongoVersionAndId,
 };

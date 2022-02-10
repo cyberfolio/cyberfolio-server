@@ -1,7 +1,12 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+
 const cron = require("node-cron");
+
+const login = require("./modules/login");
 
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
@@ -17,7 +22,7 @@ const gateio = require("./modules/gateio");
 
 const { updateCoins } = require("./init");
 
-const main = async () => {
+const boot = async () => {
   try {
     await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
     cron.schedule("0 0 */1 * * *", async () => {
@@ -33,13 +38,22 @@ const main = async () => {
   }
 
   const app = express();
-  const port = process.env.PORT;
+
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_URL,
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    })
+  );
+  app.use(bodyParser.json());
 
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
 
   // Api Routes
+  app.use("/api/login", login);
+
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
   app.use("/api/arbitrum", arbitrum);
@@ -52,9 +66,10 @@ const main = async () => {
   app.use("/api/kucoin", kucoin);
   app.use("/api/gateio", gateio);
 
+  const port = process.env.PORT;
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
   });
 };
 
-main();
+boot();
