@@ -11,21 +11,15 @@ const signJwt = (user) => {
   }
 };
 
-const verifyJwt = (req, res, next) => {
-  const token = req.cookies?.jwt;
-  if (!token) {
-    throw new Error("Unauthenticated");
-  }
+const verifyJwtAndReturnUser = (jwt) => {
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    next();
+    return jwt.verify(jwt, process.env.JWT_SECRET);
   } catch (e) {
-    res.clearCookie("jwt");
-    throw new Error("Unauthenticated");
+    throw new Error(e);
   }
 };
 
 module.exports = {
   signJwt,
-  verifyJwt,
+  verifyJwtAndReturnUser,
 };

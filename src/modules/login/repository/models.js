@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  evmAddress: String,
+  keyIdentifier: String,
   nonce: String,
 });
 const userModel = mongoose.model("user", userSchema);

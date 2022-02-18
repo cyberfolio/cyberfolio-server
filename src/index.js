@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const cron = require("node-cron");
 
 const login = require("./modules/login");
+
+const wallets = require("./modules/wallets");
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const arbitrum = require("./modules/arbitrum");
@@ -20,7 +22,7 @@ const kucoin = require("./modules/kucoin");
 const gateio = require("./modules/gateio");
 
 const { updateCoins } = require("./init");
-const { allowedMethods } = require("./config/middleware");
+const { allowedMethods, authenticateUser } = require("./config/middleware");
 
 const boot = async () => {
   try {
@@ -55,6 +57,7 @@ const boot = async () => {
 
   // Api Routes
   app.use("/api/login", login);
+  app.use("/api/wallets", authenticateUser, wallets);
 
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
