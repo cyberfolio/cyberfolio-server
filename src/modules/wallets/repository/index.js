@@ -7,7 +7,10 @@ const addWalletByKeyIdentifier = async ({
   walletName,
   chain,
 }) => {
-  const wallet = await evmWalletsModel.findOne({ keyIdentifier });
+  const wallet = await evmWalletsModel.findOne({
+    keyIdentifier,
+    walletAddress,
+  });
   if (wallet) {
     return;
   }

@@ -10,11 +10,13 @@ const getBitcoinBalance = async (walletAddress) => {
       method: "get",
     });
     const balance = sathoshiToBtcBalance(data);
-    const usdValue = await getCurrentUSDPrice("btc");
+    const price = await getCurrentUSDPrice("btc");
     return {
+      name: "Bitcoin",
       balance,
-      usdValue,
-      holdingValue: balance * usdValue,
+      price,
+      value: (balance * price).toFixed(2),
+      chain: "Bitcoin",
     };
   } catch (e) {
     throw new Error(e);

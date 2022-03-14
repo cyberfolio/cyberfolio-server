@@ -5,6 +5,7 @@ const arbitrum = require("../arbitrum/services");
 const router = express.Router();
 
 const { getWallet } = require("../wallets/repository");
+const { getBitcoinBalance } = require("../bitcoin/services");
 
 router.get("/", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
@@ -14,7 +15,10 @@ router.get("/", async (req, res) => {
     chainToQuery = "Evm";
   }
   try {
-    const wallet = await getWallet({ keyIdentifier, chain: chainToQuery });
+    const wallet = await getWallet({
+      keyIdentifier,
+      chain: chainToQuery ? chainToQuery : chain,
+    });
     if (!wallet) {
       return [];
     }
@@ -48,6 +52,11 @@ router.get("/", async (req, res) => {
         return { ...avalancheToken, chain: "Arbitrum" };
       });
       return res.status(200).send(arbTokens);
+    }
+
+    if (chain === "Bitcoin") {
+      let bitcoin = await getBitcoinBalance(wallet.walletAddress);
+      return res.status(200).send([bitcoin]);
     }
 
     return res.status(200).send([]);
