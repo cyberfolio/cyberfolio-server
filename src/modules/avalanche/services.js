@@ -16,17 +16,17 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
             existingTokens[i].balance,
             parseInt(existingTokens[i].contract_decimals)
           )
-        );
-        const usdValue = existingTokens[i].quote_rate;
-        if (usdValue) {
+        )?.toFixed(2);
+        const price = existingTokens[i]?.quote_rate?.toFixed(2);
+        if (price) {
           response.push({
             name: existingTokens[i].contract_name,
             symbol: existingTokens[i].contract_ticker_symbol,
             contractAddress: existingTokens[i].contract_address,
             type: existingTokens[i].type,
             balance,
-            usdValue,
-            holdingValue: balance * usdValue,
+            price,
+            value: (balance * price).toFixed(2),
           });
         }
       }

@@ -7,11 +7,12 @@ const cookieParser = require("cookie-parser");
 const login = require("./modules/login");
 
 const wallets = require("./modules/wallets");
+const dexTokens = require("./modules/dex-tokens");
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const arbitrum = require("./modules/arbitrum");
 const avalanche = require("./modules/avalanche");
-const polkadot = require("./modules/login/polkadot");
+const polkadot = require("./modules/polkadot");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
 const solana = require("./modules/solana");
@@ -44,6 +45,8 @@ const boot = async () => {
   // init api routes
   app.use("/api/login", login);
   app.use("/api/wallets", authenticateUser, wallets);
+  app.use("/api/tokens/dex", authenticateUser, dexTokens);
+
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
   app.use("/api/arbitrum", arbitrum);
