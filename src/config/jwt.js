@@ -11,9 +11,10 @@ const signJwt = (user) => {
   }
 };
 
-const verifyJwtAndReturnUser = (jwt) => {
+const verifyJwtAndReturnUser = ({ jwtToken }) => {
   try {
-    return jwt.verify(jwt, process.env.JWT_SECRET);
+    const result = jwt.verify(jwtToken, process.env.JWT_SECRET);
+    return result;
   } catch (e) {
     throw new Error(e);
   }

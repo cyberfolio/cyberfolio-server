@@ -9,9 +9,9 @@ const createUser = async ({ evmAddress, nonce }) => {
   }
 };
 
-const getUserByEvmAddress = async (keyIdentifier) => {
+const getUserByEvmAddress = async ({ evmAddress }) => {
   try {
-    const user = await userModel.findOne({ keyIdentifier });
+    const user = await userModel.findOne({ keyIdentifier: evmAddress });
     return deleteMongoVersionAndId(user);
   } catch (e) {
     throw new Error(e);

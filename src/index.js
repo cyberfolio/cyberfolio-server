@@ -1,10 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const cron = require("node-cron");
 
 const login = require("./modules/login");
 
@@ -13,7 +11,7 @@ const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const arbitrum = require("./modules/arbitrum");
 const avalanche = require("./modules/avalanche");
-const polkadot = require("./modules/polkadot");
+const polkadot = require("./modules/login/polkadot");
 const smartchain = require("./modules/smartchain");
 const polygon = require("./modules/polygon");
 const solana = require("./modules/solana");
@@ -21,23 +19,11 @@ const binance = require("./modules/binance");
 const kucoin = require("./modules/kucoin");
 const gateio = require("./modules/gateio");
 
-const { updateCoins } = require("./init");
+const { init } = require("./init");
 const { allowedMethods, authenticateUser } = require("./config/middleware");
 
 const boot = async () => {
-  try {
-    await mongoose.connect(`mongodb://localhost:27017/${process.env.APP_NAME}`);
-    cron.schedule("0 0 */1 * * *", async () => {
-      // every hour
-      console.log("Running cryptoprice update at: " + new Date());
-      await updateCoins();
-      console.log("Cryptoprice update completed at: " + new Date());
-      console.log(" ");
-    });
-  } catch (e) {
-    console.log(e);
-    process.exit(1);
-  }
+  await init();
 
   const app = express();
   app.use(allowedMethods);
@@ -55,10 +41,9 @@ const boot = async () => {
     res.send("Hello World!");
   });
 
-  // Api Routes
+  // init api routes
   app.use("/api/login", login);
   app.use("/api/wallets", authenticateUser, wallets);
-
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
   app.use("/api/arbitrum", arbitrum);
@@ -71,6 +56,7 @@ const boot = async () => {
   app.use("/api/kucoin", kucoin);
   app.use("/api/gateio", gateio);
 
+  // start
   const port = process.env.PORT;
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

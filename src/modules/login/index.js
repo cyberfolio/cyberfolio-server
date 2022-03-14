@@ -17,7 +17,7 @@ router.post("/metamask", async (req, res, next) => {
   evmAddress = evmAddress.toLowerCase();
   try {
     const nonce = generateNonce();
-    let user = await getUserByEvmAddress(evmAddress);
+    let user = await getUserByEvmAddress({ evmAddress });
     if (!user) {
       user = {
         evmAddress,
@@ -46,15 +46,15 @@ router.post("/validateSignature", async (req, res, next) => {
     if (!user) {
       throw new Error("User not found");
     }
-
-    // set jwt to the user's borser cookies
+    // set jwt to the user's browser cookies
     const token = signJwt(user);
     const secure = process.env.NODE_ENV !== "development";
     res.cookie("jwt", token, {
       secure,
       httpOnly: true,
     });
-    res.status(200).json({ user });
+    const keyIdentifier = user.keyIdentifier;
+    res.status(200).json({ keyIdentifier });
   } catch (e) {
     next(e);
   }

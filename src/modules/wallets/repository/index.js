@@ -7,7 +7,7 @@ const addWalletByKeyIdentifier = async ({
 }) => {
   const wallet = await evmWalletsModel.findOne({ keyIdentifier });
   if (wallet) {
-    throw new Error("Wallet already added");
+    return;
   }
 
   await evmWalletsModel.create({

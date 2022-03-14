@@ -3,15 +3,14 @@ const router = express.Router();
 
 const { addEvmWallets } = require("./services");
 
-router.get("/addEvmWallets", async (req, res, next) => {
+router.post("/add", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
-  const walletAddresses = req.body?.addresses;
-
+  const wallets = req.body?.wallets;
   try {
-    await addEvmWallets({ keyIdentifier, walletAddresses });
+    await addEvmWallets({ keyIdentifier, wallets });
+    return res.status(200);
   } catch (e) {
-    console.log(e);
-    next(e);
+    return res.status(500).send(e.message);
   }
 });
 

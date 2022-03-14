@@ -14,23 +14,23 @@ const allowedMethods = (req, res, next) => {
   ];
 
   if (!allowedMethods.includes(req.method)) {
-    res.status(405).send(`${req.method} not allowed.`);
+    return res.status(405).send(`${req.method} not allowed.`);
   }
   next();
 };
 
 const authenticateUser = (req, res, next) => {
-  const jwt = req.cookies?.jwt;
-  if (!jwt) {
-    throw new Error("Unauthenticated");
+  const jwtToken = req.cookies?.jwt;
+  if (!jwtToken) {
+    return res.status(401).send("Token could not be found");
   }
   try {
-    const user = verifyJwtAndReturnUser(jwt);
+    const user = verifyJwtAndReturnUser({ jwtToken });
     req.keyIdentifier = user.keyIdentifier;
     next();
   } catch (e) {
     res.clearCookie("jwt");
-    throw new Error("Unauthenticated");
+    res.status(401).send(`Unauthenticated`);
   }
 };
 
