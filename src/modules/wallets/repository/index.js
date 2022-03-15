@@ -1,5 +1,5 @@
 const { deleteMongoVersionAndId } = require("../../../utils");
-const { evmWalletsModel } = require("./models");
+const { walletsModel } = require("./models");
 
 const addWalletByKeyIdentifier = async ({
   keyIdentifier,
@@ -7,7 +7,7 @@ const addWalletByKeyIdentifier = async ({
   walletName,
   chain,
 }) => {
-  const wallet = await evmWalletsModel.findOne({
+  const wallet = await walletsModel.findOne({
     keyIdentifier,
     walletAddress,
   });
@@ -15,7 +15,7 @@ const addWalletByKeyIdentifier = async ({
     return;
   }
 
-  await evmWalletsModel.create({
+  await walletsModel.create({
     keyIdentifier,
     walletAddress,
     walletName,
@@ -24,7 +24,7 @@ const addWalletByKeyIdentifier = async ({
 };
 
 const getWallet = async ({ keyIdentifier, chain }) => {
-  const wallet = await evmWalletsModel.findOne({ keyIdentifier, chain });
+  const wallet = await walletsModel.findOne({ keyIdentifier, chain });
   return deleteMongoVersionAndId(wallet);
 };
 

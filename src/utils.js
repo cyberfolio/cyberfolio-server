@@ -1,6 +1,7 @@
 const Web3 = require("web3");
 const ethers = require("ethers");
 const { v4: uuidv4 } = require("uuid");
+const { default: axios } = require("axios");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -49,6 +50,18 @@ const deleteMongoVersionAndId = (object) => {
   return null;
 };
 
+const doesImageExists = async (url) => {
+  try {
+    await axios({
+      url,
+      method: "get",
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
@@ -58,4 +71,5 @@ module.exports = {
   intDivide,
   generateNonce,
   deleteMongoVersionAndId,
+  doesImageExists,
 };

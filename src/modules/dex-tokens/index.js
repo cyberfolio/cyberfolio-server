@@ -1,8 +1,11 @@
 const express = require("express");
+const router = express.Router();
+
 const { getTokenBalancesFromCovalent } = require("../avalanche/services");
 const eth = require("../ethereum/services");
 const arbitrum = require("../arbitrum/services");
-const router = express.Router();
+const smartchain = require("../smartchain/services");
+const polygon = require("../polygon/services");
 
 const { getWallet } = require("../wallets/repository");
 const { getBitcoinBalance } = require("../bitcoin/services");
@@ -11,7 +14,12 @@ router.get("/", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
   let chain = req.query?.chain;
   let chainToQuery = "";
-  if (chain === "Ethereum" || chain === "Avalanche" || chain === "Arbitrum") {
+  if (
+    chain === "Ethereum" ||
+    chain === "Avalanche" ||
+    chain === "Arbitrum" ||
+    chain === "SmartChain"
+  ) {
     chainToQuery = "Evm";
   }
   try {
@@ -20,7 +28,7 @@ router.get("/", async (req, res) => {
       chain: chainToQuery ? chainToQuery : chain,
     });
     if (!wallet) {
-      return [];
+      return res.status(200).send([]);
     }
 
     if (chain === "Ethereum") {
@@ -52,6 +60,25 @@ router.get("/", async (req, res) => {
         return { ...avalancheToken, chain: "Arbitrum" };
       });
       return res.status(200).send(arbTokens);
+    }
+
+    if (chain === "Polygon") {
+      let tokens = await polygon.getTokenBalancesFromCovalent(
+        wallet.walletAddress
+      );
+      const polyTokens = tokens.map((token) => {
+        return { ...token, chain: "Polygon" };
+      });
+      return res.status(200).send(polyTokens);
+    }
+    if (chain === "SmartChain") {
+      let tokens = await smartchain.getTokenBalancesFromCovalent(
+        wallet.walletAddress
+      );
+      const smartTokens = tokens.map((token) => {
+        return { ...token, chain: "Smart Chain" };
+      });
+      return res.status(200).send(smartTokens);
     }
 
     if (chain === "Bitcoin") {

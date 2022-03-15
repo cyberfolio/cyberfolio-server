@@ -1,7 +1,7 @@
 const { getUserByEvmAddress } = require("../login/repository");
 const { addWalletByKeyIdentifier } = require("./repository");
 
-const addEvmWallets = async ({ keyIdentifier, wallets }) => {
+const addWallets = async ({ keyIdentifier, wallets }) => {
   const user = await getUserByEvmAddress({ evmAddress: keyIdentifier });
   if (!user) {
     throw new Error("User not found");
@@ -21,5 +21,5 @@ const addEvmWallets = async ({ keyIdentifier, wallets }) => {
 };
 
 module.exports = {
-  addEvmWallets,
+  addWallets,
 };

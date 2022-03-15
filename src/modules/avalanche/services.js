@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { formatBalance } = require("../../utils");
+const { formatBalance, doesImageExists } = require("../../utils");
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
   const walletInfo = await axios({
@@ -17,16 +17,30 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
             parseInt(existingTokens[i].contract_decimals)
           )
         )?.toFixed(2);
+
         const price = existingTokens[i]?.quote_rate?.toFixed(2);
+        const value = (balance * price).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        });
+
+        let logo = await doesImageExists(existingTokens[i]?.logo_url);
+        if (logo) {
+          logo = existingTokens[i]?.logo_url;
+        } else {
+          logo = "";
+        }
+
         if (price) {
           response.push({
             name: existingTokens[i].contract_name,
             symbol: existingTokens[i].contract_ticker_symbol,
             contractAddress: existingTokens[i].contract_address,
             type: existingTokens[i].type,
+            logo,
             balance,
             price,
-            value: (balance * price).toFixed(2),
+            value,
           });
         }
       }
