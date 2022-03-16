@@ -15,7 +15,7 @@ const getCryptoCurrencyLogo = async ({ symbol }) => {
     }
     return response?.data?.data?.logo;
   } catch (e) {
-    console.log(e.message);
+    // console.log(e.message);
   }
 };
 

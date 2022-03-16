@@ -20,11 +20,15 @@ const getTokenBalances = async (walletAddress) => {
 
     const { data: balance } = await api.query.system.account(walletAddress);
     const formattedFreeBalance = balance.free / decimals;
-    const formattedReservedBalance = balance.reserved / decimals;
-    return {
-      freeBalance: formattedFreeBalance,
-      reservedBalance: formattedReservedBalance,
-    };
+    // const formattedReservedBalance = balance.reserved / decimals;
+    return [
+      {
+        name: "Polkadot",
+        price: 25,
+        symbol: "DOT",
+        balance: formattedFreeBalance,
+      },
+    ];
   } catch (e) {
     throw new Error(e);
   }

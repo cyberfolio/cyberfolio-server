@@ -18,8 +18,12 @@ const getBitcoinBalance = async (walletAddress) => {
 
     return {
       name: "Bitcoin",
+      symbol: "BTC",
       balance,
-      price,
+      price: price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      }),
       value,
       chain: "Bitcoin",
     };

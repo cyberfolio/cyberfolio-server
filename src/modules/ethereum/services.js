@@ -128,20 +128,26 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
           )
         )?.toFixed(2);
 
-        const price = existingTokens[i]?.quote_rate?.toFixed(2);
-        const value = (balance * price).toLocaleString("en-US", {
+        const price = existingTokens[i]?.quote_rate?.toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
         });
+        const value = (balance * existingTokens[i]?.quote_rate).toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD",
+          }
+        );
 
-        const name = existingTokens[i].contract_ticker_symbol;
-        const symbol = existingTokens[i].contract_name;
+        const name = existingTokens[i].contract_name;
+        const symbol = existingTokens[i].contract_ticker_symbol;
         const contractAddress = existingTokens[i].contract_address;
         const logo = await getCryptoCurrencyLogo({
           symbol,
         });
 
-        if (price) {
+        if (price && symbol) {
           response.push({
             name,
             symbol,
