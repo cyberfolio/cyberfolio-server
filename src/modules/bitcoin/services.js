@@ -24,6 +24,7 @@ const getBitcoinBalance = async (walletAddress) => {
         style: "currency",
         currency: "USD",
       }),
+      logo: "https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg",
       value,
       chain: "Bitcoin",
     };
