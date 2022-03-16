@@ -4,10 +4,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
-const login = require("./modules/login");
+const login = require("./api/login");
+const dexTokens = require("./api/dex-tokens");
+const wallets = require("./api/wallets");
 
-const wallets = require("./modules/wallets");
-const dexTokens = require("./modules/dex-tokens");
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
 const arbitrum = require("./modules/arbitrum");

@@ -2,7 +2,8 @@ const Web3 = require("web3");
 const axios = require("axios");
 
 const { getCurrentUSDPrice } = require("../coingecko");
-const { formatBalance, doesImageExists } = require("../../utils");
+const { formatBalance } = require("../../utils");
+const { getCryptoCurrencyLogo } = require("../coinmarketcap");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -133,18 +134,18 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
           currency: "USD",
         });
 
-        let logo = await doesImageExists(existingTokens[i]?.logo_url);
-        if (logo) {
-          logo = existingTokens[i]?.logo_url;
-        } else {
-          logo = "";
-        }
+        const name = existingTokens[i].contract_ticker_symbol;
+        const symbol = existingTokens[i].contract_name;
+        const contractAddress = existingTokens[i].contract_address;
+        const logo = await getCryptoCurrencyLogo({
+          symbol,
+        });
 
         if (price) {
           response.push({
-            name: existingTokens[i].contract_name,
-            symbol: existingTokens[i].contract_ticker_symbol,
-            contractAddress: existingTokens[i].contract_address,
+            name,
+            symbol,
+            contractAddress,
             type: existingTokens[i].type,
             logo,
             balance,

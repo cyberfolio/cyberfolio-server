@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-const { getTokenBalancesFromCovalent } = require("../avalanche/services");
-const eth = require("../ethereum/services");
-const arbitrum = require("../arbitrum/services");
-const smartchain = require("../smartchain/services");
-const polygon = require("../polygon/services");
+const {
+  getTokenBalancesFromCovalent,
+} = require("../../modules/avalanche/services");
+const eth = require("../../modules/ethereum/services");
+const arbitrum = require("../../modules/arbitrum/services");
+const smartchain = require("../../modules/smartchain/services");
+const polygon = require("../../modules/polygon/services");
 
 const { getWallet } = require("../wallets/repository");
-const { getBitcoinBalance } = require("../bitcoin/services");
+const { getBitcoinBalance } = require("../../modules/bitcoin/services");
 
 router.get("/", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
@@ -36,7 +38,11 @@ router.get("/", async (req, res) => {
         wallet.walletAddress
       );
       const ethTokens = ethereumTokens.map((ethToken) => {
-        return { ...ethToken, chain: "Ethereum" };
+        return {
+          ...ethToken,
+          chain: "Ethereum",
+          walletName: wallet?.walletName,
+        };
       });
       return res.status(200).send(ethTokens);
     }
@@ -47,7 +53,11 @@ router.get("/", async (req, res) => {
       );
 
       const lancheTokens = avalancheTokens.map((avalancheToken) => {
-        return { ...avalancheToken, chain: "Avalanche" };
+        return {
+          ...avalancheToken,
+          chain: "Avalanche",
+          walletName: wallet?.walletName,
+        };
       });
       return res.status(200).send(lancheTokens);
     }
@@ -57,7 +67,11 @@ router.get("/", async (req, res) => {
         wallet.walletAddress
       );
       const arbTokens = arbitrumTokens.map((avalancheToken) => {
-        return { ...avalancheToken, chain: "Arbitrum" };
+        return {
+          ...avalancheToken,
+          chain: "Arbitrum",
+          walletName: wallet?.walletName,
+        };
       });
       return res.status(200).send(arbTokens);
     }
@@ -67,7 +81,7 @@ router.get("/", async (req, res) => {
         wallet.walletAddress
       );
       const polyTokens = tokens.map((token) => {
-        return { ...token, chain: "Polygon" };
+        return { ...token, chain: "Polygon", walletName: wallet?.walletName };
       });
       return res.status(200).send(polyTokens);
     }
@@ -76,13 +90,18 @@ router.get("/", async (req, res) => {
         wallet.walletAddress
       );
       const smartTokens = tokens.map((token) => {
-        return { ...token, chain: "Smart Chain" };
+        return {
+          ...token,
+          chain: "Smart Chain",
+          walletName: wallet?.walletName,
+        };
       });
       return res.status(200).send(smartTokens);
     }
 
     if (chain === "Bitcoin") {
       let bitcoin = await getBitcoinBalance(wallet.walletAddress);
+      bitcoin.walletName = wallet?.walletName;
       return res.status(200).send([bitcoin]);
     }
 
