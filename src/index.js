@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const login = require("./api/login");
 const dexTokens = require("./api/dex-tokens");
 const wallets = require("./api/wallets");
+const cex = require("./api/cex");
 
 const bitcoin = require("./modules/bitcoin");
 const ethereum = require("./modules/ethereum");
@@ -45,6 +46,7 @@ const boot = async () => {
   // init api routes
   app.use("/api/login", login);
   app.use("/api/wallets", authenticateUser, wallets);
+  app.use("/api/cex", authenticateUser, cex);
   app.use("/api/tokens/dex", authenticateUser, dexTokens);
   app.get("/api/authenticated", authenticateUser, (req, res) => {
     res.send({ keyIdentifier: req.keyIdentifier });
