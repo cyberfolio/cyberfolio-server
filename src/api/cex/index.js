@@ -24,7 +24,6 @@ router.get("/assets/:cexName", async (req, res) => {
       keyIdentifier,
       cexName,
     });
-    console.log(assets);
     return res.status(200).send({ assets });
   } catch (e) {
     return res.status(500).send(e.message);
