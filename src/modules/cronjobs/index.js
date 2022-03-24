@@ -1,5 +1,5 @@
 const cron = require("node-cron");
-const updateCoins = require("./updateCoins");
+const { updateCoins } = require("./updateCoins");
 
 const initCronJobs = () => {
   // every hour
