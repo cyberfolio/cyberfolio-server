@@ -12,9 +12,9 @@ const polygon = require("../../modules/polygon/services");
 const { getWallet } = require("../wallets/repository");
 const { getBitcoinBalance } = require("../../modules/bitcoin/services");
 
-router.get("/", async (req, res) => {
+router.get("/assets/:chain", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
-  let chain = req.query?.chain;
+  let chain = req.params?.chain;
   let chainToQuery = "";
   if (
     chain === "Ethereum" ||

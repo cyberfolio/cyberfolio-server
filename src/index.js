@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const auth = require("./api/auth");
-const dexTokens = require("./api/dex-tokens");
 const wallets = require("./api/wallets");
+const dex = require("./api/dex");
 const cex = require("./api/cex");
 
 const bitcoin = require("./modules/bitcoin");
@@ -47,7 +47,7 @@ const boot = async () => {
   app.use("/api/auth", auth);
   app.use("/api/wallets", authenticateUser, wallets);
   app.use("/api/cex", authenticateUser, cex);
-  app.use("/api/tokens/dex", authenticateUser, dexTokens);
+  app.use("/api/dex", authenticateUser, dex);
 
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);
