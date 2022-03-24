@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { addCex } = require("./services");
+const { addCex, getSpotAssets } = require("./services");
 
 router.post("/add", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
@@ -9,8 +9,23 @@ router.post("/add", async (req, res) => {
   const apiSecret = req.body?.apiSecret;
   const cexName = req.body?.cexName;
   try {
-    await addCex({ keyIdentifier, apiKey, apiSecret, cexName });
-    return res.status(200).send("success");
+    const assets = await addCex({ keyIdentifier, apiKey, apiSecret, cexName });
+    return res.status(200).send({ assets });
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+});
+
+router.get("/assets/:cexName", async (req, res) => {
+  const keyIdentifier = req.keyIdentifier;
+  const cexName = req.params?.cexName;
+  try {
+    const assets = await getSpotAssets({
+      keyIdentifier,
+      cexName,
+    });
+    console.log(assets);
+    return res.status(200).send({ assets });
   } catch (e) {
     return res.status(500).send(e.message);
   }

@@ -6,8 +6,20 @@ const cexSchema = mongoose.Schema({
   apiSecret: String,
   cexName: String,
 });
-const cexModel = mongoose.model("cex", cexSchema);
+const cexInfoModel = mongoose.model("cex-info", cexSchema);
+
+const cexHoldingSchema = mongoose.Schema({
+  keyIdentifier: String,
+  cexName: String,
+  name: String,
+  symbol: String,
+  balance: Number,
+  price: Number,
+  value: Number,
+});
+const cexAssetModel = mongoose.model("cex-asset", cexHoldingSchema);
 
 module.exports = {
-  cexModel,
+  cexInfoModel,
+  cexAssetModel,
 };

@@ -9,25 +9,7 @@ const {
 
 router.get("/spot", async (req, res, next) => {
   try {
-    const data = await getHoldings("SPOT");
-    res.json(data);
-  } catch (e) {
-    next(e);
-  }
-});
-
-router.get("/margin", async (req, res, next) => {
-  try {
-    const data = await getHoldings("MARGIN");
-    res.json(data);
-  } catch (e) {
-    next(e);
-  }
-});
-
-router.get("/futures", async (req, res, next) => {
-  try {
-    const data = await getHoldings("FUTURES");
+    const data = await getHoldings();
     res.json(data);
   } catch (e) {
     next(e);

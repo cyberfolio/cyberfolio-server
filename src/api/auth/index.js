@@ -11,8 +11,9 @@ const {
   getUserByEvmAddress,
   getUserByEvmAddressAndNonce,
 } = require("./repository");
+const { authenticateUser } = require("../../config/middleware");
 
-router.post("/metamask", async (req, res, next) => {
+router.post("/login/metamask", async (req, res, next) => {
   let { evmAddress } = req.body;
   evmAddress = evmAddress.toLowerCase();
   try {
@@ -34,7 +35,7 @@ router.post("/metamask", async (req, res, next) => {
   }
 });
 
-router.post("/validateSignature", async (req, res, next) => {
+router.post("/login/validateSignature", async (req, res, next) => {
   let { evmAddress, signature, nonce } = req.body;
   evmAddress = evmAddress.toLowerCase();
   try {
@@ -58,6 +59,19 @@ router.post("/validateSignature", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+router.get("/isAuthenticated", authenticateUser, (req, res) => {
+  if (req?.keyIdentifier) {
+    res.status(200).send({ keyIdentifier: req?.keyIdentifier });
+  } else {
+    res.status(401).send("nein");
+  }
+});
+
+router.post("/logout", authenticateUser, (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).send("");
 });
 
 module.exports = router;

@@ -40,8 +40,6 @@ const getERC20Balances = async (walletAddress) => {
         );
         existingTokens[i].usdValue = price;
       } catch (e) {
-        console.log("Token Address: " + existingTokens[i].contractAddress);
-        console.log("Error message: " + e.message);
         continue;
       }
     }
@@ -78,8 +76,6 @@ const getExistingTokensOfWallet = async (walletAddress) => {
         };
         existingTokens.push(existingToken);
       } catch (e) {
-        console.log("Token Address: " + tokens[i].address);
-        console.log("Error message: " + e.message);
         continue;
       }
     }

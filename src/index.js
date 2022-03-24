@@ -4,7 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
-const login = require("./api/login");
+const auth = require("./api/auth");
 const dexTokens = require("./api/dex-tokens");
 const wallets = require("./api/wallets");
 const cex = require("./api/cex");
@@ -44,17 +44,10 @@ const boot = async () => {
   });
 
   // init api routes
-  app.use("/api/login", login);
+  app.use("/api/auth", auth);
   app.use("/api/wallets", authenticateUser, wallets);
   app.use("/api/cex", authenticateUser, cex);
   app.use("/api/tokens/dex", authenticateUser, dexTokens);
-  app.get("/api/authenticated", authenticateUser, (req, res) => {
-    res.send({ keyIdentifier: req.keyIdentifier });
-  });
-  app.post("/api/logout", authenticateUser, (req, res) => {
-    res.clearCookie("jwt");
-    res.status(200).send("");
-  });
 
   app.use("/api/bitcoin", bitcoin);
   app.use("/api/ethereum", ethereum);

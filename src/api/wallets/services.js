@@ -1,4 +1,4 @@
-const { getUserByEvmAddress } = require("../login/repository");
+const { getUserByEvmAddress } = require("../auth/repository");
 const { addWalletByKeyIdentifier } = require("./repository");
 
 const addWallets = async ({ keyIdentifier, wallets }) => {
