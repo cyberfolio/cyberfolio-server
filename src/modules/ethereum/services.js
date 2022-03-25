@@ -107,58 +107,61 @@ const getERC20Tokens = async () => {
 };
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
-  const walletInfo = await axios({
-    url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
-    method: "get",
-  });
+  try {
+    const walletInfo = await axios({
+      url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
+      method: "get",
+    });
 
-  let existingTokens = walletInfo?.data?.data?.items;
-  const response = [];
-  if (existingTokens && Array.isArray(existingTokens)) {
-    for (let i = 0; i < existingTokens.length; i++) {
-      if (existingTokens[i].balance > 0) {
-        const balance = parseFloat(
-          formatBalance(
-            existingTokens[i].balance,
-            parseInt(existingTokens[i].contract_decimals)
-          )
-        )?.toFixed(2);
+    let existingTokens = walletInfo?.data?.data?.items;
+    const response = [];
+    if (existingTokens && Array.isArray(existingTokens)) {
+      for (let i = 0; i < existingTokens.length; i++) {
+        if (existingTokens[i].balance > 0) {
+          const balance = parseFloat(
+            formatBalance(
+              existingTokens[i].balance,
+              parseInt(existingTokens[i].contract_decimals)
+            )
+          )?.toFixed(2);
 
-        const price = existingTokens[i]?.quote_rate?.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
-        const value = (balance * existingTokens[i]?.quote_rate).toLocaleString(
-          "en-US",
-          {
+          const price = existingTokens[i]?.quote_rate?.toLocaleString("en-US", {
             style: "currency",
             currency: "USD",
-          }
-        );
-
-        const name = existingTokens[i].contract_name;
-        const symbol = existingTokens[i].contract_ticker_symbol;
-        const contractAddress = existingTokens[i].contract_address;
-        const logo = await getCryptoCurrencyLogo({
-          symbol,
-        });
-
-        if (price && symbol) {
-          response.push({
-            name,
-            symbol,
-            contractAddress,
-            type: existingTokens[i].type,
-            logo,
-            balance,
-            price,
-            value,
           });
+          const value = (
+            balance * existingTokens[i]?.quote_rate
+          ).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          });
+
+          const name = existingTokens[i].contract_name;
+          const symbol = existingTokens[i].contract_ticker_symbol;
+          const contractAddress = existingTokens[i].contract_address;
+          const logo = await getCryptoCurrencyLogo({
+            symbol,
+          });
+
+          if (price && symbol) {
+            response.push({
+              name,
+              symbol,
+              contractAddress,
+              type: existingTokens[i].type,
+              logo,
+              balance,
+              price,
+              value,
+            });
+          }
         }
       }
     }
+    return response;
+  } catch (e) {
+    throw new Error(e.message);
   }
-  return response;
 };
 
 module.exports = {

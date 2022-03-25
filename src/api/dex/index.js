@@ -34,17 +34,21 @@ router.get("/assets/:chain", async (req, res) => {
     }
 
     if (chain === "Ethereum") {
-      let ethereumTokens = await eth.getTokenBalancesFromCovalent(
-        wallet.walletAddress
-      );
-      const ethTokens = ethereumTokens.map((ethToken) => {
-        return {
-          ...ethToken,
-          chain: "Ethereum",
-          walletName: wallet?.walletName,
-        };
-      });
-      return res.status(200).send(ethTokens);
+      try {
+        let ethereumTokens = await eth.getTokenBalancesFromCovalent(
+          wallet.walletAddress
+        );
+        const ethTokens = ethereumTokens.map((ethToken) => {
+          return {
+            ...ethToken,
+            chain: "Ethereum",
+            walletName: wallet?.walletName,
+          };
+        });
+        return res.status(200).send(ethTokens);
+      } catch (e) {
+        return res.status(500).send(e.message);
+      }
     }
 
     if (chain === "Avalanche") {

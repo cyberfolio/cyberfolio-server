@@ -10,14 +10,22 @@ const updateCoins = async () => {
     const hourDifference = Math.abs(new Date() - lastUpdate) / 36e5;
     if (hourDifference >= 1) {
       for (let i = 1; i <= 6000; i++) {
-        await addOrUpdateAllCryptoPriceInUSD(i);
-        await sleep(1000);
+        try {
+          await addOrUpdateAllCryptoPriceInUSD(i);
+          await sleep(1000);
+        } catch (e) {
+          throw new Error(e);
+        }
       }
     }
   } else {
     for (let i = 1; i <= 6000; i++) {
-      await addOrUpdateAllCryptoPriceInUSD(i);
-      await sleep(1000);
+      try {
+        await addOrUpdateAllCryptoPriceInUSD(i);
+        await sleep(1000);
+      } catch (e) {
+        throw new Error(e);
+      }
     }
   }
 };

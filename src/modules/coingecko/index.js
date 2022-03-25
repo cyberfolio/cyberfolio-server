@@ -29,7 +29,7 @@ const addOrUpdateAllCryptoPriceInUSD = async (page) => {
     }
     await setLastCurrencyUpdateDate(new Date());
   } catch (e) {
-    console.log(e);
+    throw new Error(e);
   }
 };
 
