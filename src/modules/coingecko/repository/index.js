@@ -1,14 +1,15 @@
 const { currencyModel, lastCurrencyUpdateModel } = require("./models");
 
-const addOrUpdateCryptoCurrency = async (currency) => {
-  if (currency.name && currency.symbol && currency.price) {
+const addOrUpdateCryptoCurrency = async ({ name, symbol, price, image }) => {
+  if (name && symbol && price) {
     try {
       await currencyModel.findOneAndUpdate(
-        { name: currency.name },
+        { name },
         {
-          name: currency.name,
-          symbol: currency.symbol,
-          price: currency.price,
+          name,
+          symbol,
+          price,
+          logo: image ? image : "",
         },
         {
           upsert: true, // creates if none

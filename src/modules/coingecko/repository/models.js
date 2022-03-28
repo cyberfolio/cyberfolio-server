@@ -5,6 +5,7 @@ const currencySchema = mongoose.Schema({
   symbol: String,
   contractAddress: String,
   price: Number,
+  logo: String,
 });
 const currencyModel = mongoose.model("currency", currencySchema);
 
