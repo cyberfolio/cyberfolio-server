@@ -66,6 +66,10 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+const roundNumber = (num) => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
 module.exports = {
   sleep,
   isValid0xAddress,
@@ -77,4 +81,5 @@ module.exports = {
   deleteMongoVersionAndId,
   doesImageExists,
   capitalizeFirstLetter,
+  roundNumber,
 };

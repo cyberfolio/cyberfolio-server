@@ -1,5 +1,6 @@
 const axios = require("axios");
 const crypto = require("crypto-js");
+const { roundNumber } = require("../../utils");
 
 const {
   getCurrentUSDPrice,
@@ -35,16 +36,19 @@ const getAssetsAtSpot = async ({ apiKey, apiSecret }) => {
         const price = await getCurrentUSDPrice(symbol);
         const name = await getFullNameOfTheCurrency(symbol);
         const contractAddress = await getContractAddress(symbol);
-        response.push({
-          name,
-          symbol,
-          type: "cryptocurrency",
-          contractAddress,
-          balance: parseFloat(balances[i].free),
-          price,
-          value: parseFloat(balances[i].free) * price,
-          cexName: "binance",
-        });
+        const value = roundNumber(parseFloat(balances[i].free) * price);
+        if (value !== 0) {
+          response.push({
+            name,
+            symbol,
+            type: "cryptocurrency",
+            contractAddress,
+            balance: parseFloat(balances[i].free),
+            price,
+            value,
+            cexName: "binance",
+          });
+        }
       }
     }
     return response;
