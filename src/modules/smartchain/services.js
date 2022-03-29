@@ -4,7 +4,7 @@ const { getCryptoCurrencyLogo } = require("../coinmarketcap");
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
   const walletInfo = await axios({
-    url: `${process.env.COVALENT_V1_API_URL}/${process.env.SMARTCHAIN_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
+    url: `${process.env.COVALENT_V1_API_URL}/${process.env.SMARTCHAIN_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
     method: "get",
   });
   let existingTokens = walletInfo?.data?.data?.items;

@@ -109,7 +109,7 @@ const getERC20Tokens = async () => {
 const getTokenBalancesFromCovalent = async (walletAddress) => {
   try {
     const walletInfo = await axios({
-      url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}&nft=true`,
+      url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
       method: "get",
     });
 
