@@ -1,5 +1,4 @@
 const { getAssetsAtSpot } = require("../../modules/binance/services");
-const { capitalizeFirstLetter } = require("../../utils");
 const { getUserByEvmAddress } = require("../auth/repository");
 const {
   addCexByKeyIdentifier,
@@ -20,7 +19,7 @@ const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
       apiSecret,
       cexName,
     });
-    if (cexName === "Binance") {
+    if (cexName.toLowerCase() === "binance") {
       const assets = await saveBinanceSpotAssets({
         apiKey,
         apiSecret,
@@ -35,27 +34,24 @@ const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
 };
 
 const getSpotAssets = async ({ keyIdentifier, cexName }) => {
-  if (cexName === "binance") {
-    try {
-      const cexInfo = await getCexInfoByKeyIdentifier({
-        keyIdentifier,
-        cexName,
-      });
-      await saveBinanceSpotAssets({
-        apiKey: cexInfo?.apiKey,
-        apiSecret: cexInfo?.apiSecret,
-        keyIdentifier,
-      });
-      const assets = await fetchSpotAssets({
-        keyIdentifier,
-        cexName: capitalizeFirstLetter(cexName),
-      });
-      return assets;
-    } catch (e) {
-      throw new Error(e.message);
-    }
+  try {
+    const cexInfo = await getCexInfoByKeyIdentifier({
+      keyIdentifier,
+      cexName,
+    });
+    await saveBinanceSpotAssets({
+      apiKey: cexInfo?.apiKey,
+      apiSecret: cexInfo?.apiSecret,
+      keyIdentifier,
+    });
+    const assets = await fetchSpotAssets({
+      keyIdentifier,
+      cexName,
+    });
+    return assets;
+  } catch (e) {
+    throw new Error(e.message);
   }
-  return [];
 };
 
 const saveBinanceSpotAssets = async ({ apiKey, apiSecret, keyIdentifier }) => {

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { initCronJobs } = require("./modules/cronjobs");
+const { initCronJobs } = require("./modules/cronjob");
 
 const init = async () => {
   try {
