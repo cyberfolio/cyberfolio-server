@@ -13,6 +13,7 @@ const cexHoldingSchema = mongoose.Schema({
   cexName: String,
   name: String,
   symbol: String,
+  logo: String,
   balance: Number,
   price: Number,
   value: Number,

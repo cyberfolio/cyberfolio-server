@@ -1,3 +1,4 @@
+const { getCurrenyInfo } = require("../../../modules/coingecko/repository");
 const { deleteMongoVersionAndId } = require("../../../utils");
 const { cexInfoModel, cexAssetModel } = require("./models");
 
@@ -20,7 +21,7 @@ const addCexByKeyIdentifier = async ({
       keyIdentifier,
       apiKey,
       apiSecret,
-      cexName,
+      cexName: cexName.toLowerCase(),
     });
   } catch (e) {
     throw new Error(e);
@@ -38,7 +39,7 @@ const getCexInfoByKeyIdentifier = async ({ keyIdentifier, cexName }) => {
 const fetchSpotAssets = async ({ keyIdentifier, cexName }) => {
   const assets = await cexAssetModel.find({
     keyIdentifier,
-    cexName,
+    cexName: cexName.toLowerCase(),
   });
   const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
   return filtered;
@@ -53,37 +54,22 @@ const addCexHoldingByKeyIdentifier = async ({
   price,
   value,
 }) => {
-  const asset = await cexAssetModel.findOne({
-    keyIdentifier,
-    cexName,
-    name,
-  });
-  if (asset) {
-    try {
-      await cexAssetModel.updateOne(
-        { keyIdentifier, cexName, name, symbol },
-        {
-          balance,
-          price,
-          value,
-        },
-        { upsert: true }
-      );
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-
   try {
-    await cexAssetModel.create({
-      keyIdentifier,
-      cexName,
-      name,
-      symbol,
-      balance,
-      price,
-      value,
-    });
+    const currenyInfo = await getCurrenyInfo(symbol.toLowerCase());
+    await cexAssetModel.findOneAndUpdate(
+      { keyIdentifier, cexName, name, symbol },
+      {
+        keyIdentifier,
+        cexName,
+        name,
+        symbol,
+        balance,
+        price,
+        value,
+        logo: currenyInfo.logo,
+      },
+      { upsert: true, new: true }
+    );
   } catch (e) {
     throw new Error(e);
   }

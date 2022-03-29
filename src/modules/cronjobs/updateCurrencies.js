@@ -4,7 +4,7 @@ const {
   addOrUpdateAllCryptoPriceInUSD,
 } = require("../coingecko");
 
-const updateCoins = async () => {
+const updateCurrencies = async () => {
   const lastUpdate = await getLastCurrencyUpdate();
   if (lastUpdate) {
     const hourDifference = Math.abs(new Date() - lastUpdate) / 36e5;
@@ -31,5 +31,5 @@ const updateCoins = async () => {
 };
 
 module.exports = {
-  updateCoins,
+  updateCurrencies,
 };

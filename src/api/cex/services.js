@@ -5,6 +5,7 @@ const {
   addCexByKeyIdentifier,
   addCexHoldingByKeyIdentifier,
   fetchSpotAssets,
+  getCexInfoByKeyIdentifier,
 } = require("./repository");
 
 const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
@@ -13,20 +14,21 @@ const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
     throw new Error("User not found");
   }
   try {
+    await addCexByKeyIdentifier({
+      keyIdentifier,
+      apiKey,
+      apiSecret,
+      cexName,
+    });
     if (cexName === "Binance") {
-      await addCexByKeyIdentifier({
-        keyIdentifier,
-        apiKey,
-        apiSecret,
-        cexName,
-      });
-      const assets = await getBinanceSpotAssets({
+      const assets = await saveBinanceSpotAssets({
         apiKey,
         apiSecret,
         keyIdentifier,
       });
       return assets;
     }
+    return [];
   } catch (e) {
     throw new Error(e.message);
   }
@@ -35,6 +37,15 @@ const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
 const getSpotAssets = async ({ keyIdentifier, cexName }) => {
   if (cexName === "binance") {
     try {
+      const cexInfo = await getCexInfoByKeyIdentifier({
+        keyIdentifier,
+        cexName,
+      });
+      await saveBinanceSpotAssets({
+        apiKey: cexInfo?.apiKey,
+        apiSecret: cexInfo?.apiSecret,
+        keyIdentifier,
+      });
       const assets = await fetchSpotAssets({
         keyIdentifier,
         cexName: capitalizeFirstLetter(cexName),
@@ -47,7 +58,7 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
   return [];
 };
 
-const getBinanceSpotAssets = async ({ apiKey, apiSecret, keyIdentifier }) => {
+const saveBinanceSpotAssets = async ({ apiKey, apiSecret, keyIdentifier }) => {
   try {
     const spotAssets = await getAssetsAtSpot({ apiKey, apiSecret });
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
