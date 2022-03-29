@@ -11,19 +11,13 @@ const getBitcoinBalance = async (walletAddress) => {
     });
     const balance = sathoshiToBtcBalance(data);
     const price = await getCurrentUSDPrice("btc");
-    const value = (balance * price).toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
+    const value = balance * price;
 
     return {
       name: "Bitcoin",
       symbol: "BTC",
       balance,
-      price: price.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      }),
+      price,
       logo: "https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg",
       value,
       chain: "Bitcoin",

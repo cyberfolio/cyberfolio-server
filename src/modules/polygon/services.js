@@ -18,21 +18,11 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
             existingTokens[i].balance,
             parseInt(existingTokens[i].contract_decimals)
           )
-        )
-          ?.toFixed(2)
-          .toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-          });
-        const value = (balance * price).toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
+        )?.toFixed(2);
 
-        const price = existingTokens[i]?.quote_rate?.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
+        const value = balance * price;
+
+        const price = existingTokens[i]?.quote_rate;
         const symbol = existingTokens[i].contract_ticker_symbol;
         const logo = await getCryptoCurrencyLogo({
           symbol,

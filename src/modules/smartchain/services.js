@@ -19,10 +19,7 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
           )
         )?.toFixed(2);
 
-        const price = existingTokens[i]?.quote_rate?.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
+        const price = existingTokens[i]?.quote_rate;
         const value = (balance * existingTokens[i]?.quote_rate).toLocaleString(
           "en-US",
           {
