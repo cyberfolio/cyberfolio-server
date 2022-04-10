@@ -1,5 +1,3 @@
-const { getAssetsAtSpot } = require("../../modules/binance/services");
-const { getUserByEvmAddress } = require("../auth/repository");
 const {
   addCexByKeyIdentifier,
   addCexHoldingByKeyIdentifier,
@@ -7,7 +5,17 @@ const {
   getCexInfoByKeyIdentifier,
 } = require("./repository");
 
-const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
+const binance = require("../../modules/cex/binance/services");
+const kucoin = require("../../modules/cex/kucoin/services");
+const { getUserByEvmAddress } = require("../auth/repository");
+
+const addCex = async ({
+  keyIdentifier,
+  apiKey,
+  apiSecret,
+  cexName,
+  passphrase,
+}) => {
   const user = await getUserByEvmAddress({ evmAddress: keyIdentifier });
   if (!user) {
     throw new Error("User not found");
@@ -18,16 +26,16 @@ const addCex = async ({ keyIdentifier, apiKey, apiSecret, cexName }) => {
       apiKey,
       apiSecret,
       cexName,
+      passphrase,
     });
-    if (cexName.toLowerCase() === "binance") {
-      const assets = await saveBinanceSpotAssets({
-        apiKey,
-        apiSecret,
-        keyIdentifier,
-      });
-      return assets;
-    }
-    return [];
+    const assets = await saveSpotAssets({
+      cexName,
+      apiKey,
+      apiSecret,
+      keyIdentifier,
+      passphrase,
+    });
+    return assets;
   } catch (e) {
     throw new Error(e.message);
   }
@@ -39,7 +47,7 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
       keyIdentifier,
       cexName,
     });
-    await saveBinanceSpotAssets({
+    await saveSpotAssets({
       apiKey: cexInfo?.apiKey,
       apiSecret: cexInfo?.apiSecret,
       keyIdentifier,
@@ -54,9 +62,26 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
   }
 };
 
-const saveBinanceSpotAssets = async ({ apiKey, apiSecret, keyIdentifier }) => {
+const saveSpotAssets = async ({
+  cexName,
+  apiKey,
+  apiSecret,
+  passphrase,
+  keyIdentifier,
+}) => {
+  let spotAssets = [];
   try {
-    const spotAssets = await getAssetsAtSpot({ apiKey, apiSecret });
+    if (cexName.toLowerCase() === "binance") {
+      spotAssets = await binance.getAssets({ apiKey, apiSecret });
+    } else if (cexName.toLowerCase() === "kucoin") {
+      console.log("aaaaa");
+      spotAssets = await kucoin.getAssets({
+        type: "main",
+        apiKey,
+        apiSecret,
+        passphrase,
+      });
+    }
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
       try {
         for (let i = 0; i < spotAssets.length; i++) {

@@ -1,36 +1,35 @@
 const axios = require("axios");
 const crypto = require("crypto");
+const { roundNumber } = require("../../../utils");
 
 const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../coingecko");
+} = require("../../coingecko");
 
-const API_KEY = process.env.KUCOIN_API_KEY;
-const API_SECRET = process.env.KUCOIN_API_SECRET;
-const API_PASSPHRASE = process.env.KUCOIN_API_PASSPHRASE;
 const API_VERSION = process.env.KUCOIN_API_VERSION;
 const API_URL = process.env.KUCOIN_API_URL;
 
-const getHoldings = async (type) => {
+const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
   const timestamp = Date.now().toString();
   const endpoint = `/api/v1/accounts?type=${type}`;
   const stringToSign = `${timestamp}GET${endpoint}`;
   const signedString = crypto
-    .createHmac("sha256", API_SECRET)
+    .createHmac("sha256", apiKey)
     .update(stringToSign)
     .digest("base64");
   const encryptedPassphrase = crypto
-    .createHmac("sha256", API_SECRET)
-    .update(API_PASSPHRASE)
+    .createHmac("sha256", apiSecret)
+    .update(passphrase)
     .digest("base64");
+  console.log("bbbb");
   try {
     const accountInfo = await axios({
       url: `${API_URL}${endpoint}`,
       method: "GET",
       headers: {
-        "KC-API-KEY": API_KEY,
+        "KC-API-KEY": apiKey,
         "KC-API-SIGN": signedString,
         "KC-API-TIMESTAMP": timestamp,
         "KC-API-PASSPHRASE": encryptedPassphrase,
@@ -38,6 +37,7 @@ const getHoldings = async (type) => {
         "Content-Type": "application/json",
       },
     });
+    console.log("ccccc");
 
     let data = accountInfo?.data?.data;
     const response = [];
@@ -46,17 +46,19 @@ const getHoldings = async (type) => {
         const balance = parseFloat(data[i].holds);
         if (balance > 0) {
           const symbol = data[i].currency.toLowerCase();
-          const usdValue = await getCurrentUSDPrice(symbol);
+          const price = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
+          const value = roundNumber(balance * price);
           response.push({
             name,
             symbol,
             type: "cryptocurrency",
             contractAddress,
             balance,
-            usdValue,
-            holdingValue: balance * usdValue,
+            price,
+            value,
+            cexName: "kucoin",
           });
         }
       }
@@ -73,5 +75,5 @@ const getHoldings = async (type) => {
 };
 
 module.exports = {
-  getHoldings,
+  getAssets,
 };

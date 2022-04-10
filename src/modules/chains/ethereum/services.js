@@ -1,9 +1,9 @@
 const Web3 = require("web3");
 const axios = require("axios");
 
-const { getCurrentUSDPrice } = require("../coingecko");
-const { formatBalance } = require("../../utils");
-const { getCryptoCurrencyLogo } = require("../coinmarketcap");
+const { getCurrentUSDPrice } = require("../../coingecko");
+const { formatBalance } = require("../../../utils");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(

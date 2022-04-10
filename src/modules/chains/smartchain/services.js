@@ -1,6 +1,6 @@
 const axios = require("axios");
-const { formatBalance } = require("../../utils");
-const { getCryptoCurrencyLogo } = require("../coinmarketcap");
+const { formatBalance } = require("../../../utils");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
   const walletInfo = await axios({

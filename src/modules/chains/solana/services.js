@@ -1,8 +1,8 @@
 const { Connection, clusterApiUrl, PublicKey } = require("@solana/web3.js");
 const axios = require("axios");
 const { TokenListProvider } = require("@solana/spl-token-registry");
-const { intDivide } = require("../../utils");
-const { getCurrentUSDPrice } = require("../coingecko");
+const { intDivide } = require("../../../utils");
+const { getCurrentUSDPrice } = require("../../coingecko");
 
 const getTokenBalances = async (walletAddress) => {
   try {

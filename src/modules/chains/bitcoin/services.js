@@ -1,7 +1,7 @@
 const axios = require("axios");
 
-const { sathoshiToBtcBalance } = require("../../utils");
-const { getCurrentUSDPrice } = require("../coingecko");
+const { sathoshiToBtcBalance } = require("../../../utils");
+const { getCurrentUSDPrice } = require("../../coingecko");
 
 const getBitcoinBalance = async (walletAddress) => {
   try {

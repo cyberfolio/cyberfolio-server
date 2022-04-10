@@ -1,12 +1,13 @@
 const axios = require("axios");
-const { formatBalance } = require("../../utils");
-const { getCryptoCurrencyLogo } = require("../coinmarketcap");
+const { formatBalance } = require("../../../utils");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const getTokenBalancesFromCovalent = async (walletAddress) => {
   const walletInfo = await axios({
-    url: `${process.env.COVALENT_V1_API_URL}/${process.env.ARBITRUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
+    url: `${process.env.COVALENT_V1_API_URL}/${process.env.POLYGON_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
     method: "get",
   });
+
   let existingTokens = walletInfo?.data?.data?.items;
   const response = [];
   if (existingTokens && Array.isArray(existingTokens)) {
@@ -19,8 +20,9 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
           )
         )?.toFixed(2);
 
+        const value = balance * price;
+
         const price = existingTokens[i]?.quote_rate;
-        const value = balance * existingTokens[i]?.quote_rate;
         const symbol = existingTokens[i].contract_ticker_symbol;
         const logo = await getCryptoCurrencyLogo({
           symbol,

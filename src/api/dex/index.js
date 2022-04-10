@@ -3,14 +3,14 @@ const router = express.Router();
 
 const {
   getTokenBalancesFromCovalent,
-} = require("../../modules/avalanche/services");
-const eth = require("../../modules/ethereum/services");
-const arbitrum = require("../../modules/arbitrum/services");
-const smartchain = require("../../modules/smartchain/services");
-const polygon = require("../../modules/polygon/services");
+} = require("../../modules/chains/avalanche/services");
+const eth = require("../../modules/chains/ethereum/services");
+const arbitrum = require("../../modules/chains/arbitrum/services");
+const smartchain = require("../../modules/chains/smartchain/services");
+const polygon = require("../../modules/chains/polygon/services");
 
 const { getWallet } = require("../wallets/repository");
-const { getBitcoinBalance } = require("../../modules/bitcoin/services");
+const { getBitcoinBalance } = require("../../modules/chains/bitcoin/services");
 
 router.get("/assets/:chain", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;

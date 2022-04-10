@@ -4,7 +4,7 @@ const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../coingecko");
+} = require("../../coingecko");
 
 const API_KEY = process.env.GATEIO_API_KEY;
 const API_SECRET = process.env.GATEIO_API_SECRET;

@@ -1,16 +1,16 @@
 const axios = require("axios");
 const crypto = require("crypto-js");
-const { roundNumber } = require("../../utils");
+const { roundNumber } = require("../../../utils");
 
 const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../coingecko");
+} = require("../../coingecko");
 
 const API_URL = process.env.BINANCE_API_URL;
 
-const getAssetsAtSpot = async ({ apiKey, apiSecret }) => {
+const getAssets = async ({ apiKey, apiSecret }) => {
   const queryString = `timestamp=${Date.now()}`;
   const signature = crypto
     .HmacSHA256(queryString, apiSecret)
@@ -120,7 +120,7 @@ const getFiatPaymentBuyAndSellHistory = async ({
 };
 
 module.exports = {
-  getAssetsAtSpot,
+  getAssets,
   getFiatDepositAndWithDrawalHistory,
   getFiatPaymentBuyAndSellHistory,
 };

@@ -7,6 +7,7 @@ const addCexByKeyIdentifier = async ({
   apiKey,
   apiSecret,
   cexName,
+  passphrase,
 }) => {
   const cex = await cexInfoModel.findOne({
     keyIdentifier,
@@ -22,6 +23,7 @@ const addCexByKeyIdentifier = async ({
       apiKey,
       apiSecret,
       cexName: cexName.toLowerCase(),
+      passphrase,
     });
   } catch (e) {
     throw new Error(e);

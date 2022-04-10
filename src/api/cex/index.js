@@ -8,8 +8,16 @@ router.post("/add", async (req, res) => {
   const apiKey = req.body?.apiKey;
   const apiSecret = req.body?.apiSecret;
   const cexName = req.body?.cexName;
+  const passphrase = req.body?.passphrase;
+
   try {
-    const assets = await addCex({ keyIdentifier, apiKey, apiSecret, cexName });
+    const assets = await addCex({
+      keyIdentifier,
+      apiKey,
+      apiSecret,
+      cexName,
+      passphrase,
+    });
     return res.status(200).send({ assets });
   } catch (e) {
     return res.status(500).send(e.message);

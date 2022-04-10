@@ -5,6 +5,7 @@ const cexSchema = mongoose.Schema({
   apiKey: String,
   apiSecret: String,
   cexName: String,
+  passphrase: String,
 });
 const cexInfoModel = mongoose.model("cex-info", cexSchema);
 
