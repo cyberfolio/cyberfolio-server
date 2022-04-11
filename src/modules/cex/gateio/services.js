@@ -6,12 +6,9 @@ const {
   getContractAddress,
 } = require("../../coingecko");
 
-const API_KEY = process.env.GATEIO_API_KEY;
-const API_SECRET = process.env.GATEIO_API_SECRET;
-
-const getHoldingsSpot = async () => {
+const getAssets = async ({ apiKey, apiSecret }) => {
   const client = new GateApi.ApiClient();
-  client.setApiKeySecret(API_KEY, API_SECRET);
+  client.setApiKeySecret(apiKey, apiSecret);
 
   const spotApi = new GateApi.SpotApi(client);
   try {
@@ -21,22 +18,24 @@ const getHoldingsSpot = async () => {
     const response = [];
     if (data && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
-        const balance = parseFloat(data[i]?.available);
+        let balance = parseFloat(data[i]?.available);
         const locked = parseFloat(data[i]?.locked);
         if (balance > 0.5 || locked > 0.5) {
           const symbol = data[i].currency.toLowerCase();
-          const usdValue = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
+          balance = balance + locked;
+          const price = await getCurrentUSDPrice(symbol);
+          const value = balance * price;
           response.push({
             name,
             symbol,
             type: "cryptocurrency",
             contractAddress,
             balance,
-            locked,
-            usdValue,
-            holdingValue: balance * usdValue + locked * usdValue,
+            price,
+            value,
+            cexName: "gateio",
           });
         }
       }
@@ -52,9 +51,9 @@ const getHoldingsSpot = async () => {
   }
 };
 
-const getHoldingsMargin = async () => {
+const getHoldingsMargin = async ({ apiKey, apiSecret }) => {
   const client = new GateApi.ApiClient();
-  client.setApiKeySecret(API_KEY, API_SECRET);
+  client.setApiKeySecret(apiKey, apiSecret);
 
   const marginApi = new GateApi.MarginApi(client);
   try {
@@ -95,6 +94,6 @@ const getHoldingsMargin = async () => {
 };
 
 module.exports = {
-  getHoldingsSpot,
+  getAssets,
   getHoldingsMargin,
 };

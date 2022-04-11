@@ -7,6 +7,7 @@ const {
 
 const binance = require("../../modules/cex/binance/services");
 const kucoin = require("../../modules/cex/kucoin/services");
+const gateio = require("../../modules/cex/gateio/services");
 const { getUserByEvmAddress } = require("../auth/repository");
 
 const addCex = async ({
@@ -79,6 +80,12 @@ const saveSpotAssets = async ({
         apiKey,
         apiSecret,
         passphrase,
+      });
+    } else if (cexName.toLowerCase() === "gateio") {
+      console.log("gateio");
+      spotAssets = await gateio.getAssets({
+        apiKey,
+        apiSecret,
       });
     }
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
