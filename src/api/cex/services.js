@@ -49,8 +49,10 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
       cexName,
     });
     await saveSpotAssets({
+      cexName,
       apiKey: cexInfo?.apiKey,
       apiSecret: cexInfo?.apiSecret,
+      passphrase: cexInfo?.passphrase,
       keyIdentifier,
     });
     const assets = await fetchSpotAssets({

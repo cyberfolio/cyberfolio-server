@@ -5,6 +5,7 @@ const {
   getFullNameOfTheCurrency,
   getContractAddress,
 } = require("../../coingecko");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const getAssets = async ({ apiKey, apiSecret }) => {
   const client = new GateApi.ApiClient();
@@ -21,12 +22,15 @@ const getAssets = async ({ apiKey, apiSecret }) => {
         let balance = parseFloat(data[i]?.available);
         const locked = parseFloat(data[i]?.locked);
         if (balance > 0.5 || locked > 0.5) {
-          const symbol = data[i].currency.toLowerCase();
+          const symbol = data[i].currency?.toLowerCase();
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
           balance = balance + locked;
           const price = await getCurrentUSDPrice(symbol);
           const value = balance * price;
+          const logo = await getCryptoCurrencyLogo({
+            symbol,
+          });
           response.push({
             name,
             symbol,
@@ -35,6 +39,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
             balance,
             price,
             value,
+            logo,
             cexName: "gateio",
           });
         }
@@ -65,7 +70,7 @@ const getHoldingsMargin = async ({ apiKey, apiSecret }) => {
         const balance = parseFloat(data[i]?.available);
         const locked = parseFloat(data[i]?.locked);
         if (balance > 0.5 || locked > 0.5) {
-          const symbol = data[i].currency.toLowerCase();
+          const symbol = data[i].currency?.toLowerCase();
           const usdValue = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);

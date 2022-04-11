@@ -85,7 +85,7 @@ const getBalances = async (walletAddress, tokens) => {
           ?.tokenAmount?.amount > 0
       ) {
         const usdValue = await getCurrentUSDPrice(
-          tokensInfo[data].symbol.toLowerCase()
+          tokensInfo[data].symbol?.toLowerCase()
         );
         const balance =
           Number(
@@ -144,7 +144,7 @@ const getBalances = async (walletAddress, tokens) => {
         ?.tokenAmount?.amount > 0
     ) {
       const usdValue = await getCurrentUSDPrice(
-        tokensInfo[data].symbol.toLowerCase()
+        tokensInfo[data].symbol?.toLowerCase()
       );
       response.push({
         name: tokensInfo[data].name,

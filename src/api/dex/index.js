@@ -9,7 +9,7 @@ const arbitrum = require("../../modules/chains/arbitrum/services");
 const smartchain = require("../../modules/chains/smartchain/services");
 const polygon = require("../../modules/chains/polygon/services");
 
-const { getWallet } = require("../wallets/repository");
+const { getWallet } = require("../wallet/repository");
 const { getBitcoinBalance } = require("../../modules/chains/bitcoin/services");
 
 router.get("/assets/:chain", async (req, res) => {

@@ -7,6 +7,7 @@ const {
   getFullNameOfTheCurrency,
   getContractAddress,
 } = require("../../coingecko");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const API_URL = process.env.BINANCE_API_URL;
 
@@ -32,11 +33,14 @@ const getAssets = async ({ apiKey, apiSecret }) => {
     const response = [];
     if (Array.isArray(balances) && balances.length > 0) {
       for (let i = 0; i < balances.length; i++) {
-        const symbol = balances[i].asset.toLowerCase();
+        const symbol = balances[i].asset?.toLowerCase();
         const price = await getCurrentUSDPrice(symbol);
         const name = await getFullNameOfTheCurrency(symbol);
         const contractAddress = await getContractAddress(symbol);
         const value = roundNumber(parseFloat(balances[i].free) * price);
+        const logo = await getCryptoCurrencyLogo({
+          symbol,
+        });
         if (value !== 0) {
           response.push({
             name,
@@ -47,6 +51,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
             price,
             value,
             cexName: "binance",
+            logo,
           });
         }
       }

@@ -22,7 +22,7 @@ const addCexByKeyIdentifier = async ({
       keyIdentifier,
       apiKey,
       apiSecret,
-      cexName: cexName.toLowerCase(),
+      cexName: cexName?.toLowerCase(),
       passphrase,
     });
   } catch (e) {
@@ -41,7 +41,7 @@ const getCexInfoByKeyIdentifier = async ({ keyIdentifier, cexName }) => {
 const fetchSpotAssets = async ({ keyIdentifier, cexName }) => {
   const assets = await cexAssetModel.find({
     keyIdentifier,
-    cexName: cexName.toLowerCase(),
+    cexName: cexName?.toLowerCase(),
   });
   const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
   return filtered;
@@ -57,7 +57,7 @@ const addCexHoldingByKeyIdentifier = async ({
   value,
 }) => {
   try {
-    const currenyInfo = await getCurrenyInfo(symbol.toLowerCase());
+    const currenyInfo = await getCurrenyInfo(symbol?.toLowerCase());
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
       {

@@ -7,6 +7,7 @@ const {
   getFullNameOfTheCurrency,
   getContractAddress,
 } = require("../../coingecko");
+const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
 
 const API_VERSION = process.env.KUCOIN_API_VERSION;
 const API_URL = process.env.KUCOIN_API_URL;
@@ -42,11 +43,14 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
       for (let i = 0; i < data.length; i++) {
         const balance = parseFloat(data[i].holds);
         if (balance > 0) {
-          const symbol = data[i].currency.toLowerCase();
+          const symbol = data[i].currency?.toLowerCase();
           const price = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
           const value = roundNumber(balance * price);
+          const logo = await getCryptoCurrencyLogo({
+            symbol,
+          });
           response.push({
             name,
             symbol,
@@ -55,6 +59,7 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
             balance,
             price,
             value,
+            logo,
             cexName: "kucoin",
           });
         }

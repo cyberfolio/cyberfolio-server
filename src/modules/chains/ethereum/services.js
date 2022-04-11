@@ -4,6 +4,7 @@ const axios = require("axios");
 const { getCurrentUSDPrice } = require("../../coingecko");
 const { formatBalance } = require("../../../utils");
 const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
+const scamTokens = require("../../../config/scamTokenList");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -36,7 +37,7 @@ const getERC20Balances = async (walletAddress) => {
     if (existingTokens[i].symbol) {
       try {
         const price = await getCurrentUSDPrice(
-          existingTokens[i].symbol.toLowerCase()
+          existingTokens[i].symbol?.toLowerCase()
         );
         existingTokens[i].usdValue = price;
       } catch (e) {
@@ -125,17 +126,21 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
             )
           )?.toFixed(2);
 
-          const price = existingTokens[i]?.quote_rate;
-          const value = balance * existingTokens[i]?.quote_rate;
-
+          const price = existingTokens[i].quote_rate;
+          const value = balance * existingTokens[i].quote_rate;
           const name = existingTokens[i].contract_name;
           const symbol = existingTokens[i].contract_ticker_symbol;
           const contractAddress = existingTokens[i].contract_address;
           const logo = await getCryptoCurrencyLogo({
             symbol,
           });
-
-          if (price && symbol) {
+          const isScamToken =
+            scamTokens.filter(
+              (scamToken) =>
+                scamToken.name.toLowerCase() === name?.toLowerCase() ||
+                scamToken?.contractAddress === contractAddress
+            ).length > 0;
+          if (price && symbol && !isScamToken) {
             response.push({
               name,
               symbol,
