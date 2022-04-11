@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { addCex, getSpotAssets, checkIfExists } = require("./services");
+const { addCex, getSpotAssets } = require("./services");
 
 router.post("/add", async (req, res) => {
   const keyIdentifier = req.keyIdentifier;
@@ -11,7 +11,6 @@ router.post("/add", async (req, res) => {
   const passphrase = req.body?.passphrase;
 
   try {
-    await checkIfExists({ keyIdentifier, cexName });
     const assets = await addCex({
       keyIdentifier,
       apiKey,

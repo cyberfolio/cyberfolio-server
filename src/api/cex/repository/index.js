@@ -16,7 +16,6 @@ const addCexByKeyIdentifier = async ({
   if (cex) {
     return;
   }
-
   try {
     await cexInfoModel.create({
       keyIdentifier,

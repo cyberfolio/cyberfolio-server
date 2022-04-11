@@ -21,9 +21,9 @@ const addCex = async ({
   if (!user) {
     throw new Error("User not found");
   }
-  await checkIfExists({ keyIdentifier, cexName });
 
   try {
+    await checkIfExists({ keyIdentifier, cexName });
     const assets = await saveSpotAssets({
       cexName,
       apiKey,
@@ -49,7 +49,6 @@ const checkIfExists = async ({ keyIdentifier, cexName }) => {
     keyIdentifier,
     cexName,
   });
-  console.log(keyIdentifier, cexName);
   if (cexInfo) {
     throw new Error(`You have already added ${cexName}`);
   }
