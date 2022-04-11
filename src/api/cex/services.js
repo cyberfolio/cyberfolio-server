@@ -21,18 +21,18 @@ const addCex = async ({
     throw new Error("User not found");
   }
   try {
-    await addCexByKeyIdentifier({
-      keyIdentifier,
-      apiKey,
-      apiSecret,
-      cexName,
-      passphrase,
-    });
     const assets = await saveSpotAssets({
       cexName,
       apiKey,
       apiSecret,
       keyIdentifier,
+      passphrase,
+    });
+    await addCexByKeyIdentifier({
+      keyIdentifier,
+      apiKey,
+      apiSecret,
+      cexName,
       passphrase,
     });
     return assets;
@@ -74,7 +74,6 @@ const saveSpotAssets = async ({
     if (cexName.toLowerCase() === "binance") {
       spotAssets = await binance.getAssets({ apiKey, apiSecret });
     } else if (cexName.toLowerCase() === "kucoin") {
-      console.log("aaaaa");
       spotAssets = await kucoin.getAssets({
         type: "main",
         apiKey,

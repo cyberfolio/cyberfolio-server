@@ -1,5 +1,5 @@
 const axios = require("axios");
-const crypto = require("crypto");
+const crypto = require("crypto-js");
 const { roundNumber } = require("../../../utils");
 
 const {
@@ -16,14 +16,13 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
   const endpoint = `/api/v1/accounts?type=${type}`;
   const stringToSign = `${timestamp}GET${endpoint}`;
   const signedString = crypto
-    .createHmac("sha256", apiKey)
-    .update(stringToSign)
-    .digest("base64");
-  const encryptedPassphrase = crypto
-    .createHmac("sha256", apiSecret)
-    .update(passphrase)
-    .digest("base64");
-  console.log("bbbb");
+    .HmacSHA256(stringToSign, apiSecret)
+    .toString(crypto.enc.Base64);
+
+  const encryptedApiVersion = crypto
+    .HmacSHA256(API_VERSION, apiSecret)
+    .toString(crypto.enc.Base64);
+
   try {
     const accountInfo = await axios({
       url: `${API_URL}${endpoint}`,
@@ -32,12 +31,10 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
         "KC-API-KEY": apiKey,
         "KC-API-SIGN": signedString,
         "KC-API-TIMESTAMP": timestamp,
-        "KC-API-PASSPHRASE": encryptedPassphrase,
-        "KC-API-KEY-VERSION": API_VERSION,
-        "Content-Type": "application/json",
+        "KC-API-PASSPHRASE": passphrase,
+        "KC-API-KEY-VERSION": encryptedApiVersion,
       },
     });
-    console.log("ccccc");
 
     let data = accountInfo?.data?.data;
     const response = [];
@@ -66,9 +63,12 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase }) => {
 
     return response;
   } catch (e) {
-    if (e?.response?.data?.code) {
-      throw new Error(e.response.data.code);
+    if (e.response?.data?.code === "400003") {
+      throw new Error("Api key or secret is not valid.");
+    } else if (e?.response?.data?.code === "400005") {
+      throw new Error("Server error, please contact the admin.");
     } else {
+      console.log(e.response);
       throw new Error(e.message);
     }
   }
