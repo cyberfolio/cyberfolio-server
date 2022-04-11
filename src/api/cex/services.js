@@ -21,13 +21,8 @@ const addCex = async ({
   if (!user) {
     throw new Error("User not found");
   }
-  const alreadyExists = await getCexInfoByKeyIdentifier({
-    keyIdentifier,
-    cexName,
-  });
-  if (alreadyExists) {
-    throw new Error(`You have already added ${cexName}`);
-  }
+  await checkIfExists({ keyIdentifier, cexName });
+
   try {
     const assets = await saveSpotAssets({
       cexName,
@@ -49,12 +44,26 @@ const addCex = async ({
   }
 };
 
+const checkIfExists = async ({ keyIdentifier, cexName }) => {
+  const cexInfo = await getCexInfoByKeyIdentifier({
+    keyIdentifier,
+    cexName,
+  });
+  console.log(keyIdentifier, cexName);
+  if (cexInfo) {
+    throw new Error(`You have already added ${cexName}`);
+  }
+};
+
 const getSpotAssets = async ({ keyIdentifier, cexName }) => {
   try {
     const cexInfo = await getCexInfoByKeyIdentifier({
       keyIdentifier,
       cexName,
     });
+    if (!cexInfo) {
+      return [];
+    }
     await saveSpotAssets({
       cexName,
       apiKey: cexInfo?.apiKey,
@@ -119,4 +128,4 @@ const saveSpotAssets = async ({
   }
 };
 
-module.exports = { addCex, getSpotAssets };
+module.exports = { addCex, getSpotAssets, checkIfExists };
