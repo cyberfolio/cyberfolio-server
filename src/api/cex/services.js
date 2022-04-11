@@ -21,6 +21,13 @@ const addCex = async ({
   if (!user) {
     throw new Error("User not found");
   }
+  const alreadyExists = await getCexInfoByKeyIdentifier({
+    keyIdentifier,
+    cexName,
+  });
+  if (alreadyExists) {
+    throw new Error(`You have already added ${cexName}`);
+  }
   try {
     const assets = await saveSpotAssets({
       cexName,
@@ -84,7 +91,6 @@ const saveSpotAssets = async ({
         passphrase,
       });
     } else if (cexName.toLowerCase() === "gateio") {
-      console.log("gateio");
       spotAssets = await gateio.getAssets({
         apiKey,
         apiSecret,
