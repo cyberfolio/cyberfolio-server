@@ -16,10 +16,6 @@ const addCexByKeyIdentifier = async ({
   if (cex) {
     return;
   }
-  cexName = cexName.toLowerCase();
-  if (cexName !== "kucoin") {
-    passphrase = undefined;
-  }
 
   try {
     await cexInfoModel.create({
