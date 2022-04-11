@@ -24,6 +24,7 @@ router.get("/assets/:chain", async (req, res) => {
   ) {
     chainToQuery = "Evm";
   }
+
   try {
     const wallet = await getWallet({
       keyIdentifier,

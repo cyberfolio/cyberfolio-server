@@ -9,11 +9,7 @@ const web3 = new Web3(
   )
 );
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+const sleep = require("timers/promises").setTimeout;
 
 const isValid0xAddress = (address) => {
   return web3.utils.isAddress(address);
