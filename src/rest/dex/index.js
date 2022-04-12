@@ -19,7 +19,10 @@ router.get("/assets/:chain", async (req, res) => {
   let chain = req.params.chain.toLowerCase();
   try {
     const assets = await getAssets({ keyIdentifier, chain });
-    return res.status(200).send({ assets });
+    const totalTokenValue = assets.reduce(function (acc, obj) {
+      return acc + obj.value;
+    }, 0);
+    return res.status(200).send({ assets, totalTokenValue });
   } catch (e) {
     return res.status(500).send(e.message);
   }

@@ -3,10 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const { Server } = require("socket.io");
+const http = require("http");
 
-const auth = require("./api/auth");
-const dex = require("./api/dex");
-const cex = require("./api/cex");
+const auth = require("./rest/auth");
+const dex = require("./rest/dex");
+const cex = require("./rest/cex");
+
+const socket = require("./socket");
 
 const { init } = require("./init");
 const { allowedMethods, authenticateUser } = require("./config/middleware");
@@ -34,6 +38,13 @@ const boot = async () => {
   app.use("/api/auth", auth);
   app.use("/api/cex", authenticateUser, cex);
   app.use("/api/dex", authenticateUser, dex);
+
+  // init socket endpoint
+  const server = http.createServer(app);
+  const io = new Server(server, {
+    cookie: true,
+  });
+  socket(io);
 
   // start
   const port = process.env.PORT;

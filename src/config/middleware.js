@@ -1,4 +1,4 @@
-const { getUserByEvmAddress } = require("../api/auth/repository");
+const { getUserByEvmAddress } = require("../rest/auth/repository");
 const { verifyJwtAndReturnUser } = require("./jwt");
 
 const allowedMethods = (req, res, next) => {
