@@ -4,8 +4,8 @@ const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../../coingecko");
-const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
+} = require("../../providers/coingecko");
+const { getCryptoCurrencyLogo } = require("../../providers/coinmarketcap");
 
 const getAssets = async ({ apiKey, apiSecret }) => {
   const client = new GateApi.ApiClient();

@@ -6,8 +6,8 @@ const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../../coingecko");
-const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
+} = require("../../providers/coingecko");
+const { getCryptoCurrencyLogo } = require("../../providers/coinmarketcap");
 
 const API_VERSION = process.env.KUCOIN_API_VERSION;
 const API_URL = process.env.KUCOIN_API_URL;

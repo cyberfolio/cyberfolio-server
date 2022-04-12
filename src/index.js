@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const auth = require("./api/auth");
-const wallet = require("./api/wallet");
 const dex = require("./api/dex");
 const cex = require("./api/cex");
 
@@ -33,7 +32,6 @@ const boot = async () => {
 
   // init api routes
   app.use("/api/auth", auth);
-  app.use("/api/wallets", authenticateUser, wallet);
   app.use("/api/cex", authenticateUser, cex);
   app.use("/api/dex", authenticateUser, dex);
 

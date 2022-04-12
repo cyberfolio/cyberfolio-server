@@ -1,10 +1,9 @@
 const Web3 = require("web3");
 const axios = require("axios");
 
-const { getCurrentUSDPrice } = require("../../coingecko");
+const { getCurrentUSDPrice } = require("../../providers/coingecko");
 const { formatBalance } = require("../../../utils");
-const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
-const scamTokens = require("../../../config/scamTokenList");
+const { getCryptoCurrencyLogo } = require("../../providers/coinmarketcap");
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -107,7 +106,7 @@ const getERC20Tokens = async () => {
   }
 };
 
-const getTokenBalancesFromCovalent = async (walletAddress) => {
+const getTokenBalances = async (walletAddress) => {
   try {
     const walletInfo = await axios({
       url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
@@ -129,18 +128,14 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
           const price = existingTokens[i].quote_rate;
           const value = balance * existingTokens[i].quote_rate;
           const name = existingTokens[i].contract_name;
-          const symbol = existingTokens[i].contract_ticker_symbol;
+          const symbol =
+            existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const contractAddress = existingTokens[i].contract_address;
           const logo = await getCryptoCurrencyLogo({
             symbol,
           });
-          const isScamToken =
-            scamTokens.filter(
-              (scamToken) =>
-                scamToken.name.toLowerCase() === name?.toLowerCase() ||
-                scamToken?.contractAddress === contractAddress
-            ).length > 0;
-          if (price && symbol && !isScamToken) {
+
+          if (price && symbol) {
             response.push({
               name,
               symbol,
@@ -150,6 +145,7 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
               balance,
               price,
               value,
+              chain: "ethereum",
             });
           }
         }
@@ -165,5 +161,5 @@ module.exports = {
   getEthBalance,
   getERC20Balances,
   isValidEthAddress,
-  getTokenBalancesFromCovalent,
+  getTokenBalances,
 };

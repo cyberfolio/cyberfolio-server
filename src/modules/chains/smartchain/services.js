@@ -1,8 +1,8 @@
 const axios = require("axios");
 const { formatBalance } = require("../../../utils");
-const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
+const { getCryptoCurrencyLogo } = require("../../providers/coinmarketcap");
 
-const getTokenBalancesFromCovalent = async (walletAddress) => {
+const getTokenBalances = async (walletAddress) => {
   const walletInfo = await axios({
     url: `${process.env.COVALENT_V1_API_URL}/${process.env.SMARTCHAIN_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
     method: "get",
@@ -20,15 +20,8 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
         )?.toFixed(2);
 
         const price = existingTokens[i]?.quote_rate;
-        const value = (balance * existingTokens[i]?.quote_rate).toLocaleString(
-          "en-US",
-          {
-            style: "currency",
-            currency: "USD",
-          }
-        );
-
-        const symbol = existingTokens[i].contract_ticker_symbol;
+        const value = balance * existingTokens[i]?.quote_rate;
+        const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
         const logo = await getCryptoCurrencyLogo({
           symbol,
         });
@@ -43,6 +36,7 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
             balance,
             price,
             value,
+            chain: "smartchain",
           });
         }
       }
@@ -52,5 +46,5 @@ const getTokenBalancesFromCovalent = async (walletAddress) => {
 };
 
 module.exports = {
-  getTokenBalancesFromCovalent,
+  getTokenBalances,
 };

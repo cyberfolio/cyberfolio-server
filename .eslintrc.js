@@ -34,5 +34,7 @@ module.exports = {
     "promise/no-new-statics": "error",
     "promise/no-return-in-finally": "warn",
     "promise/valid-params": "warn",
+    "no-use-before-define": ["error", { variables: false }],
+    "no-unsafe-optional-chaining": "error",
   },
 };

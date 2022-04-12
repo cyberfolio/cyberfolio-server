@@ -6,8 +6,8 @@ const {
   getCurrentUSDPrice,
   getFullNameOfTheCurrency,
   getContractAddress,
-} = require("../../coingecko");
-const { getCryptoCurrencyLogo } = require("../../coinmarketcap");
+} = require("../../providers/coingecko");
+const { getCryptoCurrencyLogo } = require("../../providers/coinmarketcap");
 
 const API_URL = process.env.BINANCE_API_URL;
 

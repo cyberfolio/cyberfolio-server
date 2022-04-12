@@ -25,8 +25,9 @@ const getTokenBalances = async (walletAddress) => {
       {
         name: "Polkadot",
         price: 25,
-        symbol: "DOT",
+        symbol: "dot",
         balance: formattedFreeBalance,
+        chain: "polkadot",
       },
     ];
   } catch (e) {

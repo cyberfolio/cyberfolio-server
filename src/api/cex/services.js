@@ -1,14 +1,18 @@
-const {
-  addCexByKeyIdentifier,
-  addCexHoldingByKeyIdentifier,
-  fetchSpotAssets,
-  getCexInfoByKeyIdentifier,
-} = require("./repository");
+const repository = require("./repository");
 
 const binance = require("../../modules/cex/binance/services");
 const kucoin = require("../../modules/cex/kucoin/services");
 const gateio = require("../../modules/cex/gateio/services");
-const { getUserByEvmAddress } = require("../auth/repository");
+
+const checkIfExists = async ({ keyIdentifier, cexName }) => {
+  const cexInfo = await repository.getCexInfoByKeyIdentifier({
+    keyIdentifier,
+    cexName,
+  });
+  if (cexInfo) {
+    throw new Error(`You have already added ${cexName}`);
+  }
+};
 
 const addCex = async ({
   keyIdentifier,
@@ -17,11 +21,6 @@ const addCex = async ({
   cexName,
   passphrase,
 }) => {
-  const user = await getUserByEvmAddress({ evmAddress: keyIdentifier });
-  if (!user) {
-    throw new Error("User not found");
-  }
-
   try {
     await checkIfExists({ keyIdentifier, cexName });
     const assets = await saveSpotAssets({
@@ -31,48 +30,12 @@ const addCex = async ({
       keyIdentifier,
       passphrase,
     });
-    await addCexByKeyIdentifier({
+    await repository.addCexByKeyIdentifier({
       keyIdentifier,
       apiKey,
       apiSecret,
       cexName,
       passphrase,
-    });
-    return assets;
-  } catch (e) {
-    throw new Error(e.message);
-  }
-};
-
-const checkIfExists = async ({ keyIdentifier, cexName }) => {
-  const cexInfo = await getCexInfoByKeyIdentifier({
-    keyIdentifier,
-    cexName,
-  });
-  if (cexInfo) {
-    throw new Error(`You have already added ${cexName}`);
-  }
-};
-
-const getSpotAssets = async ({ keyIdentifier, cexName }) => {
-  try {
-    const cexInfo = await getCexInfoByKeyIdentifier({
-      keyIdentifier,
-      cexName,
-    });
-    if (!cexInfo) {
-      return [];
-    }
-    await saveSpotAssets({
-      cexName,
-      apiKey: cexInfo?.apiKey,
-      apiSecret: cexInfo?.apiSecret,
-      passphrase: cexInfo?.passphrase,
-      keyIdentifier,
-    });
-    const assets = await fetchSpotAssets({
-      keyIdentifier,
-      cexName,
     });
     return assets;
   } catch (e) {
@@ -107,9 +70,9 @@ const saveSpotAssets = async ({
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
       try {
         for (let i = 0; i < spotAssets.length; i++) {
-          await addCexHoldingByKeyIdentifier({
+          await repository.addCexAsset({
             name: spotAssets[i].name,
-            symbol: spotAssets[i].symbol,
+            symbol: spotAssets[i].symbol?.toLowerCase(),
             balance: spotAssets[i].balance,
             price: spotAssets[i].price,
             value: spotAssets[i].value,
@@ -122,6 +85,25 @@ const saveSpotAssets = async ({
       }
     }
     return spotAssets;
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
+const getSpotAssets = async ({ keyIdentifier, cexName }) => {
+  try {
+    const cexInfo = await repository.getCexInfo({
+      keyIdentifier,
+      cexName,
+    });
+    if (!cexInfo) {
+      return [];
+    }
+    const assets = await repository.fetchSpotAssets({
+      keyIdentifier,
+      cexName,
+    });
+    return assets;
   } catch (e) {
     throw new Error(e.message);
   }

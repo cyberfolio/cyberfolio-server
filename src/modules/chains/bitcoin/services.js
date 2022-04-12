@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const { sathoshiToBtcBalance } = require("../../../utils");
-const { getCurrentUSDPrice } = require("../../coingecko");
+const { getCurrentUSDPrice } = require("../../providers/coingecko");
 
 const getBitcoinBalance = async (walletAddress) => {
   try {
@@ -15,12 +15,12 @@ const getBitcoinBalance = async (walletAddress) => {
 
     return {
       name: "Bitcoin",
-      symbol: "BTC",
+      symbol: "btc",
       balance,
       price,
       logo: "https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg",
       value,
-      chain: "Bitcoin",
+      chain: "bitcoin",
     };
   } catch (e) {
     throw new Error(e);

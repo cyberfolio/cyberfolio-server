@@ -1,4 +1,6 @@
-const { getCurrenyInfo } = require("../../../modules/coingecko/repository");
+const {
+  getCurrenyInfo,
+} = require("../../../modules/providers/coingecko/repository");
 const { deleteMongoVersionAndId } = require("../../../utils");
 const { cexInfoModel, cexAssetModel } = require("./models");
 
@@ -29,7 +31,7 @@ const addCexByKeyIdentifier = async ({
   }
 };
 
-const getCexInfoByKeyIdentifier = async ({ keyIdentifier, cexName }) => {
+const getCexInfo = async ({ keyIdentifier, cexName }) => {
   const cex = await cexInfoModel.findOne({
     keyIdentifier,
     cexName,
@@ -46,7 +48,7 @@ const fetchSpotAssets = async ({ keyIdentifier, cexName }) => {
   return filtered;
 };
 
-const addCexHoldingByKeyIdentifier = async ({
+const addCexAsset = async ({
   keyIdentifier,
   cexName,
   name,
@@ -55,8 +57,9 @@ const addCexHoldingByKeyIdentifier = async ({
   price,
   value,
 }) => {
+  symbol = symbol.toLowerCase();
   try {
-    const currenyInfo = await getCurrenyInfo(symbol?.toLowerCase());
+    const currenyInfo = await getCurrenyInfo(symbol);
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
       {
@@ -78,7 +81,7 @@ const addCexHoldingByKeyIdentifier = async ({
 
 module.exports = {
   addCexByKeyIdentifier,
-  addCexHoldingByKeyIdentifier,
-  getCexInfoByKeyIdentifier,
+  addCexAsset,
+  getCexInfo,
   fetchSpotAssets,
 };

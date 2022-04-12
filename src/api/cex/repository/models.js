@@ -9,7 +9,7 @@ const cexSchema = mongoose.Schema({
 });
 const cexInfoModel = mongoose.model("cex-info", cexSchema);
 
-const cexHoldingSchema = mongoose.Schema({
+const cexAssetSchema = mongoose.Schema({
   keyIdentifier: String,
   cexName: String,
   name: String,
@@ -19,7 +19,7 @@ const cexHoldingSchema = mongoose.Schema({
   price: Number,
   value: Number,
 });
-const cexAssetModel = mongoose.model("cex-asset", cexHoldingSchema);
+const cexAssetModel = mongoose.model("cex-asset", cexAssetSchema);
 
 module.exports = {
   cexInfoModel,

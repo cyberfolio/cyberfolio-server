@@ -2,7 +2,7 @@ const { sleep } = require("../../utils");
 const {
   getLastCurrencyUpdate,
   addOrUpdateAllCryptoPriceInUSD,
-} = require("../coingecko");
+} = require("../providers/coingecko");
 
 const updateCurrencies = async () => {
   const lastUpdate = await getLastCurrencyUpdate();

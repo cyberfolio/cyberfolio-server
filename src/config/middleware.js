@@ -1,3 +1,4 @@
+const { getUserByEvmAddress } = require("../api/auth/repository");
 const { verifyJwtAndReturnUser } = require("./jwt");
 
 const allowedMethods = (req, res, next) => {
@@ -19,7 +20,7 @@ const allowedMethods = (req, res, next) => {
   next();
 };
 
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   const jwtToken = req.cookies?.jwt;
   if (!jwtToken) {
     return res.status(401).send("Token could not be found");
@@ -27,6 +28,12 @@ const authenticateUser = (req, res, next) => {
   try {
     const user = verifyJwtAndReturnUser({ jwtToken });
     req.keyIdentifier = user.keyIdentifier;
+    const userInDb = await getUserByEvmAddress({
+      evmAddress: user?.keyIdentifier,
+    });
+    if (!userInDb) {
+      throw new Error("User not found");
+    }
     next();
   } catch (e) {
     res.clearCookie("jwt");

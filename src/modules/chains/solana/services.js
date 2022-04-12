@@ -2,7 +2,7 @@ const { Connection, clusterApiUrl, PublicKey } = require("@solana/web3.js");
 const axios = require("axios");
 const { TokenListProvider } = require("@solana/spl-token-registry");
 const { intDivide } = require("../../../utils");
-const { getCurrentUSDPrice } = require("../../coingecko");
+const { getCurrentUSDPrice } = require("../../providers/coingecko");
 
 const getTokenBalances = async (walletAddress) => {
   try {
@@ -24,7 +24,7 @@ const getTokenBalances = async (walletAddress) => {
     const solanaUsdValue = await getCurrentUSDPrice("sol");
     avaliableTokens.push({
       name: "Solana",
-      symbol: "SOL",
+      symbol: "sol",
       balance: formattedSolanaBalance,
       usdValue: solanaUsdValue * formattedSolanaBalance,
     });
@@ -157,6 +157,7 @@ const getBalances = async (walletAddress, tokens) => {
               ?.info?.tokenAmount?.amount
           ) / process.env.SOLANA_DECIMALS,
         usdValue,
+        chain: "solana",
       });
     }
   }
