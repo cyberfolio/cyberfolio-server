@@ -9,6 +9,7 @@ const http = require("http");
 const auth = require("./rest/auth");
 const dex = require("./rest/dex");
 const cex = require("./rest/cex");
+const info = require("./rest/info");
 
 const socket = require("./socket");
 
@@ -38,6 +39,7 @@ const boot = async () => {
   app.use("/api/auth", auth);
   app.use("/api/cex", authenticateUser, cex);
   app.use("/api/dex", authenticateUser, dex);
+  app.use("/api/info", authenticateUser, info);
 
   // init socket endpoint
   const server = http.createServer(app);

@@ -48,6 +48,14 @@ const fetchSpotAssets = async ({ keyIdentifier, cexName }) => {
   return filtered;
 };
 
+const fetchAllSpotAssets = async ({ keyIdentifier }) => {
+  const assets = await cexAssetModel.find({
+    keyIdentifier,
+  });
+  const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
+  return filtered;
+};
+
 const addCexAsset = async ({
   keyIdentifier,
   cexName,
@@ -84,4 +92,5 @@ module.exports = {
   addCexAsset,
   getCexInfo,
   fetchSpotAssets,
+  fetchAllSpotAssets,
 };

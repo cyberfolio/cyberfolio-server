@@ -7,7 +7,14 @@ const cexSchema = mongoose.Schema({
   cexName: String,
   passphrase: String,
 });
+cexSchema.index({ keyIdentifier: 1, cexName: 1 });
+
 const cexInfoModel = mongoose.model("cex-info", cexSchema);
+cexInfoModel.on("index", (error) => {
+  if (error) {
+    console.log(error);
+  }
+});
 
 const cexAssetSchema = mongoose.Schema({
   keyIdentifier: String,
@@ -19,7 +26,14 @@ const cexAssetSchema = mongoose.Schema({
   price: Number,
   value: Number,
 });
+cexAssetSchema.index({ keyIdentifier: 1, cexName: 1, name: 1, symbol: 1 });
+
 const cexAssetModel = mongoose.model("cex-asset", cexAssetSchema);
+cexAssetModel.on("index", (error) => {
+  if (error) {
+    console.log(error);
+  }
+});
 
 module.exports = {
   cexInfoModel,

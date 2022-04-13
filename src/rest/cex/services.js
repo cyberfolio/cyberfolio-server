@@ -109,4 +109,15 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
   }
 };
 
-module.exports = { addCex, getSpotAssets, checkIfExists };
+const getAllSpot = async ({ keyIdentifier }) => {
+  try {
+    const assets = await repository.fetchAllSpotAssets({
+      keyIdentifier,
+    });
+    return assets;
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
+module.exports = { addCex, getSpotAssets, checkIfExists, getAllSpot };

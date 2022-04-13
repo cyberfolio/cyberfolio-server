@@ -81,10 +81,21 @@ const getAssets = async ({ keyIdentifier, chain }) => {
   }
 };
 
+const getAssetsByKey = async ({ keyIdentifier }) => {
+  try {
+    const assets = await dexAssetModel.find({ keyIdentifier });
+    const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
+    return filtered;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
 module.exports = {
   addWalletByKeyIdentifier,
   getWallet,
   addAssets,
   getAssets,
+  getAssetsByKey,
   getWalletByName,
 };
