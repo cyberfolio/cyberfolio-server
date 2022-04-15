@@ -1,0 +1,21 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "<node_internals>/**"],
+  "ts-node": {
+    "esm": true
+  },
+  "lib": ["esnext"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": "./",
+    "useUnknownInCatchVariables": false, // TypeScript 4.4+ only!
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@config/*": ["./src/config/*"],
+      "@providers/*": ["./src/modules/providers/*"],
+      "@chains/*": ["./src/modules/chains/*"],
+      "@cex/*": ["./src/modules/cex/*"]
+    }
+  }
+}
