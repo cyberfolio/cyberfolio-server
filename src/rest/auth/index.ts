@@ -40,7 +40,7 @@ router.post("/login/validateSignature", async (req, res, next) => {
   let { evmAddress, signature, nonce } = req.body;
   evmAddress = evmAddress.toLowerCase();
   try {
-    const signerAddress = await ethers.utils.verifyMessage(nonce, signature);
+    const signerAddress = ethers.utils.verifyMessage(nonce, signature);
     if (signerAddress.toLocaleLowerCase() !== evmAddress) {
       throw new Error("Signature validation failed");
     }

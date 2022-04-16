@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 
-const walletSchema = new mongoose.Schema({
-  keyIdentifier: String,
-  walletAddress: String,
-  walletName: String,
-  chain: String,
+interface Wallet {
+  keyIdentifier: String;
+  walletAddress: String;
+  walletName: String;
+  chain: String;
+}
+const walletSchema = new mongoose.Schema<Wallet>({
+  keyIdentifier: { type: String, required: true },
+  walletAddress: { type: String, required: true },
+  walletName: { type: String, required: true },
+  chain: { type: String, required: true },
 });
 walletSchema.index({
   keyIdentifier: 1,
@@ -12,25 +18,36 @@ walletSchema.index({
   walletName: 1,
   chain: 1,
 });
-
-export const walletsModel = mongoose.model("wallet", walletSchema);
+export const walletsModel = mongoose.model<Wallet>("wallet", walletSchema);
 walletsModel.on("index", (error) => {
   if (error) {
     console.log(error);
   }
 });
 
-const dexAssetSchema = new mongoose.Schema({
-  keyIdentifier: String,
-  chain: String,
-  name: String,
-  symbol: String,
-  logo: String,
-  balance: Number,
-  price: Number,
-  value: Number,
-  walletName: String,
-  contractAddress: String,
+interface DexAsset {
+  keyIdentifier: String;
+  chain: String;
+  name: String;
+  symbol: String;
+  logo: String;
+  balance: Number;
+  price: Number;
+  value: Number;
+  walletName: String;
+  contractAddress: String;
+}
+const dexAssetSchema = new mongoose.Schema<DexAsset>({
+  keyIdentifier: { type: String, required: true },
+  chain: { type: String, required: true },
+  name: { type: String, required: true },
+  symbol: { type: String, required: true },
+  logo: { type: String, required: true },
+  balance: { type: Number, required: true },
+  price: { type: Number, required: true },
+  value: { type: Number, required: true },
+  walletName: { type: String, required: true },
+  contractAddress: { type: String },
 });
 dexAssetSchema.index({
   keyIdentifier: 1,
@@ -38,8 +55,10 @@ dexAssetSchema.index({
   name: 1,
   symbol: 1,
 });
-
-export const dexAssetModel = mongoose.model("dex-asset", dexAssetSchema);
+export const dexAssetModel = mongoose.model<DexAsset>(
+  "dex-asset",
+  dexAssetSchema
+);
 dexAssetModel.on("index", (error) => {
   if (error) {
     console.log(error);

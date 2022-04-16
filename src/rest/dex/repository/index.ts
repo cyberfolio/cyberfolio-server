@@ -13,10 +13,12 @@ export const addWalletByKeyIdentifier = async ({
   walletName: string;
   chain: string;
 }) => {
-  const wallet = await walletsModel.findOne({
-    keyIdentifier,
-    walletAddress,
-  });
+  const wallet = await walletsModel
+    .findOne({
+      keyIdentifier,
+      walletAddress,
+    })
+    .lean();
   if (wallet) {
     return;
   }
@@ -35,8 +37,8 @@ export const getWallet = async ({
   keyIdentifier: string;
   chain: string;
 }) => {
-  const wallet = await walletsModel.findOne({ keyIdentifier, chain });
-  return deleteMongoVersionAndId(wallet);
+  const wallet = await walletsModel.findOne({ keyIdentifier, chain }).lean();
+  return wallet;
 };
 
 export const getWalletByName = async ({
@@ -46,8 +48,10 @@ export const getWalletByName = async ({
   keyIdentifier: string;
   walletName: string;
 }) => {
-  const wallet = await walletsModel.findOne({ keyIdentifier, walletName });
-  return deleteMongoVersionAndId(wallet);
+  const wallet = await walletsModel
+    .findOne({ keyIdentifier, walletName })
+    .lean();
+  return wallet;
 };
 
 export const addAsset = async ({
@@ -96,7 +100,7 @@ export const addAsset = async ({
   }
 };
 
-export const getAssets = async ({
+export const getAssetsByKeyAndChain = async ({
   keyIdentifier,
   chain,
 }: {
@@ -104,9 +108,8 @@ export const getAssets = async ({
   chain: string;
 }) => {
   try {
-    const assets = await dexAssetModel.find({ keyIdentifier, chain });
-    const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
-    return filtered;
+    const assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
+    return assets;
   } catch (e) {
     throw new Error(e);
   }
@@ -118,9 +121,8 @@ export const getAssetsByKey = async ({
   keyIdentifier: string;
 }) => {
   try {
-    const assets = await dexAssetModel.find({ keyIdentifier });
-    const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
-    return filtered;
+    const assets = await dexAssetModel.find({ keyIdentifier }).lean();
+    return assets;
   } catch (e) {
     throw new Error(e);
   }

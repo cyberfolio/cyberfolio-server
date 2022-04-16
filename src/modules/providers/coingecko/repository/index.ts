@@ -34,7 +34,7 @@ export const addOrUpdateCryptoCurrency = async ({
 
 export const getCryptoPriceBySymbol = async (symbol: string) => {
   try {
-    const currency = await currencyModel.findOne({ symbol });
+    const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.price ? parseFloat(currency.price.toFixed(2)) : null;
   } catch (e) {
     throw new Error(e);
@@ -43,7 +43,7 @@ export const getCryptoPriceBySymbol = async (symbol: string) => {
 
 export const getCurrenyInfo = async (symbol: string) => {
   try {
-    const currency = await currencyModel.findOne({ symbol });
+    const currency = await currencyModel.findOne({ symbol }).lean();
     return currency;
   } catch (e) {
     throw new Error(e);
@@ -52,7 +52,7 @@ export const getCurrenyInfo = async (symbol: string) => {
 
 export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
   try {
-    const currency = await currencyModel.findOne({ symbol });
+    const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.name ? currency.name : "";
   } catch (e) {
     throw new Error(e);
@@ -63,7 +63,7 @@ export const getContractAddressOfTheCurrencyBySymbol = async (
   symbol: string
 ) => {
   try {
-    const currency = await currencyModel.findOne({ symbol });
+    const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.contractAddress ? currency.contractAddress : "";
   } catch (e) {
     throw new Error(e);
@@ -72,11 +72,9 @@ export const getContractAddressOfTheCurrencyBySymbol = async (
 
 export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
   try {
-    await lastCurrencyUpdateModel.findOneAndUpdate(
-      { id: 1 },
-      { lastUpdateDate },
-      { upsert: true }
-    );
+    await lastCurrencyUpdateModel
+      .findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true })
+      .lean();
   } catch (e) {
     throw new Error(e);
   }
@@ -84,7 +82,9 @@ export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
 
 export const getLastCurrencyUpdateDate = async (): Promise<Date> => {
   try {
-    const lastCurrencyUpdate = await lastCurrencyUpdateModel.findOne({ id: 1 });
+    const lastCurrencyUpdate = await lastCurrencyUpdateModel
+      .findOne({ id: 1 })
+      .lean();
     return lastCurrencyUpdate?.lastUpdateDate;
   } catch (e) {
     throw new Error(e);

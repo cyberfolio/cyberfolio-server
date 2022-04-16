@@ -48,7 +48,10 @@ export const getAssets = async ({
   chain: string;
 }) => {
   try {
-    const assets = await repository.getAssets({ keyIdentifier, chain });
+    const assets = await repository.getAssetsByKeyAndChain({
+      keyIdentifier,
+      chain,
+    });
     return assets;
   } catch (e) {
     throw new Error(e);

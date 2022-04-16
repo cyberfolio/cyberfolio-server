@@ -16,10 +16,12 @@ export const addCexByKeyIdentifier = async ({
   cexName: string;
   passphrase: string;
 }) => {
-  const cex = await cexInfoModel.findOne({
-    keyIdentifier,
-    cexName,
-  });
+  const cex = await cexInfoModel
+    .findOne({
+      keyIdentifier,
+      cexName,
+    })
+    .lean();
   if (cex) {
     return;
   }
@@ -43,10 +45,12 @@ export const getCexInfo = async ({
   keyIdentifier: string;
   cexName: string;
 }) => {
-  const cex = await cexInfoModel.findOne({
-    keyIdentifier,
-    cexName,
-  });
+  const cex = await cexInfoModel
+    .findOne({
+      keyIdentifier,
+      cexName,
+    })
+    .lean();
   return cex;
 };
 
@@ -57,12 +61,13 @@ export const fetchSpotAssets = async ({
   keyIdentifier: string;
   cexName: string;
 }) => {
-  const assets = await cexAssetModel.find({
-    keyIdentifier,
-    cexName: cexName?.toLowerCase(),
-  });
-  const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
-  return filtered;
+  const assets = await cexAssetModel
+    .find({
+      keyIdentifier,
+      cexName: cexName?.toLowerCase(),
+    })
+    .lean();
+  return assets;
 };
 
 export const fetchAllSpotAssets = async ({
@@ -70,11 +75,12 @@ export const fetchAllSpotAssets = async ({
 }: {
   keyIdentifier: string;
 }) => {
-  const assets = await cexAssetModel.find({
-    keyIdentifier,
-  });
-  const filtered = assets.map((asset) => deleteMongoVersionAndId(asset));
-  return filtered;
+  const assets = await cexAssetModel
+    .find({
+      keyIdentifier,
+    })
+    .lean();
+  return assets;
 };
 
 export const addCexAsset = async ({
