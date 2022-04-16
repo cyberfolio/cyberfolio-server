@@ -30,7 +30,7 @@ export const getAssets = async ({
         "X-MBX-APIKEY": apiKey,
       },
     })) as any;
-    let balances = accountInfo?.data?.balances.filter((balance: any) => {
+    let balances = accountInfo?.data?.balances?.filter((balance: any) => {
       if (Number(balance.free) > 0) {
         return balance;
       }
