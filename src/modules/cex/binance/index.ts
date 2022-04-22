@@ -59,6 +59,9 @@ export const getAssets = async ({
     }
     return response
   } catch (e) {
+    if (e?.response?.data?.code === -1022) {
+      throw new Error('API Secret is invalid')
+    }
     if (e?.response?.data?.code === -2015) {
       throw new Error(
         'API key is invalid or IP restricted or permissions are missing',
