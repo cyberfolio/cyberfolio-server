@@ -7,6 +7,7 @@ import {
   getFullNameOfTheCurrency,
   getContractAddress,
 } from '@providers/coingecko'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string
 const API_URL = process.env.KUCOIN_API_URL
@@ -57,6 +58,9 @@ export const getAssets = async ({
           const name = await getFullNameOfTheCurrency(symbol)
           const contractAddress = await getContractAddress(symbol)
           const value = roundNumber(balance * price)
+          const logo = await getCryptoCurrencyLogo({
+            symbol,
+          })
           response.push({
             name,
             symbol,
@@ -65,6 +69,7 @@ export const getAssets = async ({
             balance,
             price,
             value,
+            logo,
             cexName: 'kucoin',
           })
         }

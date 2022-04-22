@@ -70,26 +70,29 @@ export const saveSpotAssets = async ({
   keyIdentifier: string
 }) => {
   let spotAssets = [] as any
+  cexName = cexName.toLowerCase()
   try {
-    if (cexName.toLowerCase() === 'binance') {
+    if (cexName === 'binance') {
       spotAssets = await binance.getAssets({ apiKey, apiSecret })
-    } else if (cexName.toLowerCase() === 'kucoin') {
+    } else if (cexName === 'kucoin') {
       spotAssets = await kucoin.getAssets({
         type: 'main',
         apiKey,
         apiSecret,
         passphrase,
       })
-    } else if (cexName.toLowerCase() === 'gateio') {
+    } else if (cexName === 'gateio') {
       spotAssets = await gateio.getAssets({
         apiKey,
         apiSecret,
       })
-    } else if (cexName.toLowerCase() === 'ftx') {
+    } else if (cexName === 'ftx') {
       spotAssets = await ftx.getAssets({
         apiKey,
         apiSecret,
       })
+    } else {
+      throw new Error(`We do not support ${cexName} currently.`)
     }
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
       try {
@@ -101,6 +104,7 @@ export const saveSpotAssets = async ({
             price: spotAssets[i].price,
             value: spotAssets[i].value,
             cexName: spotAssets[i].cexName,
+            logo: spotAssets[i].logo,
             keyIdentifier,
           })
         }

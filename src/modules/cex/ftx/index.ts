@@ -2,6 +2,7 @@ import axios from 'axios'
 import crypto from 'crypto-js'
 
 import { roundNumber } from '@src/utils'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 const API_URL = process.env.FTX_API_URL
 
@@ -41,12 +42,20 @@ export const getAssets = async ({
         const price = balances[i].usdValue / balances[i].total
         const name = balances[i].coin
         const value = roundNumber(parseFloat(balances[i].usdValue))
+        let logo = await getCryptoCurrencyLogo({
+          symbol,
+        })
+        if (symbol === 'usd') {
+          logo =
+            'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Dollar-USD-icon.png'
+        }
         response.push({
           name,
           symbol,
           balance,
           price,
           value,
+          logo,
           cexName: 'ftx',
         })
       }

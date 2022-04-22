@@ -1,5 +1,3 @@
-import { getCurrenyInfo } from '@providers/coingecko/repository'
-
 import { cexInfoModel, cexAssetModel } from './models'
 
 export const addCexByKeyIdentifier = async ({
@@ -90,6 +88,7 @@ export const addCexAsset = async ({
   balance,
   price,
   value,
+  logo,
 }: {
   keyIdentifier: string
   cexName: string
@@ -98,11 +97,10 @@ export const addCexAsset = async ({
   balance: number
   price: number
   value: number
+  logo: string | undefined
 }) => {
   symbol = symbol.toLowerCase()
   try {
-    const currenyInfo = await getCurrenyInfo(symbol)
-    const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
       {

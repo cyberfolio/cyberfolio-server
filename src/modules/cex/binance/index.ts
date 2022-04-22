@@ -7,6 +7,7 @@ import {
   getFullNameOfTheCurrency,
   getContractAddress,
 } from '@providers/coingecko'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 const API_URL = process.env.BINANCE_API_URL
 
@@ -43,6 +44,9 @@ export const getAssets = async ({
         const name = await getFullNameOfTheCurrency(symbol)
         const contractAddress = await getContractAddress(symbol)
         const value = roundNumber(parseFloat(balances[i].free) * price)
+        const logo = await getCryptoCurrencyLogo({
+          symbol,
+        })
         if (value !== 0) {
           response.push({
             name,
@@ -52,6 +56,7 @@ export const getAssets = async ({
             balance: parseFloat(balances[i].free),
             price,
             value,
+            logo,
             cexName: 'binance',
           })
         }

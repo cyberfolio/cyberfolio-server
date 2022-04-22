@@ -1,6 +1,5 @@
-import { getCurrenyInfo } from "@providers/coingecko/repository";
-import { deleteMongoVersionAndId } from "@src/utils";
-import { walletsModel, dexAssetModel } from "./models";
+import { getCurrenyInfo } from '@providers/coingecko/repository'
+import { walletsModel, dexAssetModel } from './models'
 
 export const addWalletByKeyIdentifier = async ({
   keyIdentifier,
@@ -8,51 +7,51 @@ export const addWalletByKeyIdentifier = async ({
   walletName,
   chain,
 }: {
-  keyIdentifier: string;
-  walletAddress: string;
-  walletName: string;
-  chain: string;
+  keyIdentifier: string
+  walletAddress: string
+  walletName: string
+  chain: string
 }) => {
   const wallet = await walletsModel
     .findOne({
       keyIdentifier,
       walletAddress,
     })
-    .lean();
+    .lean()
   if (wallet) {
-    return;
+    return
   }
   await walletsModel.create({
     keyIdentifier,
     walletAddress,
     walletName,
     chain,
-  });
-};
+  })
+}
 
 export const getWallet = async ({
   keyIdentifier,
   chain,
 }: {
-  keyIdentifier: string;
-  chain: string;
+  keyIdentifier: string
+  chain: string
 }) => {
-  const wallet = await walletsModel.findOne({ keyIdentifier, chain }).lean();
-  return wallet;
-};
+  const wallet = await walletsModel.findOne({ keyIdentifier, chain }).lean()
+  return wallet
+}
 
 export const getWalletByName = async ({
   keyIdentifier,
   walletName,
 }: {
-  keyIdentifier: string;
-  walletName: string;
+  keyIdentifier: string
+  walletName: string
 }) => {
   const wallet = await walletsModel
     .findOne({ keyIdentifier, walletName })
-    .lean();
-  return wallet;
-};
+    .lean()
+  return wallet
+}
 
 export const addAsset = async ({
   keyIdentifier,
@@ -65,20 +64,20 @@ export const addAsset = async ({
   chain,
   contractAddress,
 }: {
-  keyIdentifier: string;
-  walletName: string;
-  name: string;
-  symbol: string;
-  balance: number;
-  price: number;
-  value: number;
-  chain: string;
-  contractAddress: string;
+  keyIdentifier: string
+  walletName: string
+  name: string
+  symbol: string
+  balance: number
+  price: number
+  value: number
+  chain: string
+  contractAddress: string
 }) => {
   try {
-    symbol = symbol.toLowerCase();
-    const currenyInfo = await getCurrenyInfo(symbol);
-    const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined;
+    symbol = symbol.toLowerCase()
+    const currenyInfo = await getCurrenyInfo(symbol)
+    const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await dexAssetModel.findOneAndUpdate(
       { keyIdentifier, name, symbol, walletName, chain },
       {
@@ -93,37 +92,37 @@ export const addAsset = async ({
         chain,
         contractAddress,
       },
-      { upsert: true, new: true }
-    );
+      { upsert: true, new: true },
+    )
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 export const getAssetsByKeyAndChain = async ({
   keyIdentifier,
   chain,
 }: {
-  keyIdentifier: string;
-  chain: string;
+  keyIdentifier: string
+  chain: string
 }) => {
   try {
-    const assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
-    return assets;
+    const assets = await dexAssetModel.find({ keyIdentifier, chain }).lean()
+    return assets
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 export const getAssetsByKey = async ({
   keyIdentifier,
 }: {
-  keyIdentifier: string;
+  keyIdentifier: string
 }) => {
   try {
-    const assets = await dexAssetModel.find({ keyIdentifier }).lean();
-    return assets;
+    const assets = await dexAssetModel.find({ keyIdentifier }).lean()
+    return assets
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}

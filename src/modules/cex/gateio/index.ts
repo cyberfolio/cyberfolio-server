@@ -5,6 +5,7 @@ import {
   getFullNameOfTheCurrency,
   getContractAddress,
 } from '@providers/coingecko'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 export const getAssets = async ({
   apiKey,
@@ -37,6 +38,9 @@ export const getAssets = async ({
           balance = balance + lockedBalance
           const price = await getCurrentUSDPrice(symbol)
           const value = balance * price
+          const logo = await getCryptoCurrencyLogo({
+            symbol,
+          })
           response.push({
             name,
             symbol,
@@ -45,6 +49,7 @@ export const getAssets = async ({
             balance,
             price,
             value,
+            logo,
             cexName: 'gateio',
           })
         }
