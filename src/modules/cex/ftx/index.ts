@@ -49,15 +49,17 @@ export const getAssets = async ({
           logo =
             'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Dollar-USD-icon.png'
         }
-        response.push({
-          name,
-          symbol,
-          balance,
-          price,
-          value,
-          logo,
-          cexName: 'ftx',
-        })
+        if (value > 1) {
+          response.push({
+            name,
+            symbol,
+            balance,
+            price,
+            value,
+            logo,
+            cexName: 'ftx',
+          })
+        }
       }
     }
     return response

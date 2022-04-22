@@ -61,17 +61,19 @@ export const getAssets = async ({
           const logo = await getCryptoCurrencyLogo({
             symbol,
           })
-          response.push({
-            name,
-            symbol,
-            type: 'cryptocurrency',
-            contractAddress,
-            balance,
-            price,
-            value,
-            logo,
-            cexName: 'kucoin',
-          })
+          if (value > 1) {
+            response.push({
+              name,
+              symbol,
+              type: 'cryptocurrency',
+              contractAddress,
+              balance,
+              price,
+              value,
+              logo,
+              cexName: 'kucoin',
+            })
+          }
         }
       }
     }

@@ -47,7 +47,7 @@ export const getAssets = async ({
         const logo = await getCryptoCurrencyLogo({
           symbol,
         })
-        if (value !== 0) {
+        if (value > 1) {
           response.push({
             name,
             symbol,
