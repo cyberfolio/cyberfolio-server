@@ -59,7 +59,11 @@ export const getAssets = async ({
     }
     return response
   } catch (e) {
-    if (e?.response?.data?.msg) {
+    if (e?.response?.data?.code === -2015) {
+      throw new Error(
+        'API key is invalid or IP restricted or permissions are missing',
+      )
+    } else if (e?.response?.data?.msg) {
       throw new Error(e.response.data.msg)
     } else {
       throw new Error(e.message)
