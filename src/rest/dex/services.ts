@@ -1,79 +1,79 @@
-import * as bitcoin from "@chains/bitcoin/services";
-import * as avalanche from "@chains/avalanche/services";
-import * as eth from "@chains/ethereum/services";
-import * as arbitrum from "@chains/arbitrum/services";
-import * as polygon from "@chains/polygon/services";
-import * as smartchain from "@chains/smartchain/services";
+import * as bitcoin from '@dex/bitcoin/services'
+import * as avalanche from '@dex/avalanche/services'
+import * as eth from '@dex/ethereum/services'
+import * as arbitrum from '@dex/arbitrum/services'
+import * as polygon from '@dex/polygon/services'
+import * as smartchain from '@dex/smartchain/services'
 
-import scamTokens from "@config/scamTokens";
-import * as repository from "./repository";
+import scamTokens from '@config/scamTokens'
+import * as repository from './repository'
 
 export const addWallets = async ({
   keyIdentifier,
   wallets,
 }: {
-  keyIdentifier: string;
-  wallets: [{ address: string; name: string; chain: string }];
+  keyIdentifier: string
+  wallets: [{ address: string; name: string; chain: string }]
 }) => {
   for (const wallet of wallets) {
-    const walletAddress = wallet.address;
-    const walletName = wallet.name;
-    const chain = wallet.chain;
+    const walletAddress = wallet.address
+    const walletName = wallet.name
+    const chain = wallet.chain
     try {
       const doesExists = await repository.getWalletByName({
         keyIdentifier,
         walletName,
-      });
+      })
       if (doesExists) {
-        throw new Error(`You already have a wallet named ${walletName}`);
+        throw new Error(`You already have a wallet named ${walletName}`)
       }
       await repository.addWalletByKeyIdentifier({
         keyIdentifier,
         walletAddress,
         walletName,
         chain,
-      });
-      saveAssets({ keyIdentifier, chain, walletName });
+      })
+      saveAssets({ keyIdentifier, chain, walletName })
     } catch (e) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     }
   }
-};
+}
 
 export const getAssets = async ({
   keyIdentifier,
   chain,
 }: {
-  keyIdentifier: string;
-  chain: string;
+  keyIdentifier: string
+  chain: string
 }) => {
   try {
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
       chain,
-    });
-    return assets;
+    })
+    return assets
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 const saveAssets = async ({
   keyIdentifier,
   chain,
   walletName,
 }: {
-  keyIdentifier: string;
-  chain: string;
-  walletName: string;
+  keyIdentifier: string
+  chain: string
+  walletName: string
 }) => {
-  if (chain === "Evm") {
+  if (chain === 'Evm') {
     try {
-      const ethereumTokens = await eth.getTokenBalances(keyIdentifier);
-      const avalancheTokens = await avalanche.getTokenBalances(keyIdentifier);
-      const arbitrumTokens = await arbitrum.getTokenBalances(keyIdentifier);
-      const polygonTokens = await polygon.getTokenBalances(keyIdentifier);
-      const smartChaintokens = await smartchain.getTokenBalances(keyIdentifier);
+      const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
+      const avalancheTokens = await avalanche.getTokenBalances(keyIdentifier)
+      const arbitrumTokens = await arbitrum.getTokenBalances(keyIdentifier)
+      const polygonTokens = await polygon.getTokenBalances(keyIdentifier)
+      const smartChaintokens = await smartchain.getTokenBalances(keyIdentifier)
 
       const allEvmTokens = [
         ...ethereumTokens,
@@ -81,7 +81,7 @@ const saveAssets = async ({
         ...arbitrumTokens,
         ...polygonTokens,
         ...smartChaintokens,
-      ];
+      ]
 
       if (Array.isArray(allEvmTokens) && allEvmTokens.length > 0) {
         try {
@@ -91,8 +91,8 @@ const saveAssets = async ({
                 return (
                   scamToken.chain === allEvmTokens[i].chain &&
                   scamToken.contractAddress === allEvmTokens[i].contractAddress
-                );
-              }).length > 0;
+                )
+              }).length > 0
             if (!isScamToken && allEvmTokens[i].value >= 1) {
               await repository.addAsset({
                 name: allEvmTokens[i].name,
@@ -104,20 +104,20 @@ const saveAssets = async ({
                 chain: allEvmTokens[i].chain,
                 walletName,
                 keyIdentifier,
-              });
+              })
             }
           }
         } catch (e) {
-          throw new Error(e.message);
+          throw new Error(e.message)
         }
       }
-      return allEvmTokens;
+      return allEvmTokens
     } catch (e) {
-      throw new Error(e);
+      throw new Error(e)
     }
   }
-  if (chain === "bitcoin") {
-    const btc = await bitcoin.getBitcoinBalance(keyIdentifier);
+  if (chain === 'bitcoin') {
+    const btc = await bitcoin.getBitcoinBalance(keyIdentifier)
     const asset = {
       keyIdentifier,
       walletName,
@@ -126,14 +126,14 @@ const saveAssets = async ({
       balance: btc.balance,
       price: btc.price,
       value: btc.value,
-      chain: "bitcoin",
-      contractAddress: "",
-    };
+      chain: 'bitcoin',
+      contractAddress: '',
+    }
     try {
-      await repository.addAsset(asset);
-      return [bitcoin];
+      await repository.addAsset(asset)
+      return [bitcoin]
     } catch (e) {
-      throw new Error(e);
+      throw new Error(e)
     }
   }
-};
+}

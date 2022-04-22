@@ -1,21 +1,31 @@
-import axios from "axios";
+import axios from 'axios'
 
-const apiKey = process.env.COINMARKETCAP_API_KEY as string;
-export const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }) => {
+const apiKey = process.env.COINMARKETCAP_API_KEY as string
+export const getCryptoCurrencyLogo = async ({
+  symbol,
+}: {
+  symbol: string
+}): Promise<string | undefined> => {
   try {
     const response = (await axios.request({
       url: `${process.env.COINMARKETCAP_API_URL}/cryptocurrency/info?symbol=${symbol}`,
-      method: "get",
+      method: 'get',
       headers: {
-        "X-CMC_PRO_API_KEY": apiKey,
+        'X-CMC_PRO_API_KEY': apiKey,
       },
-    })) as any;
+    })) as any
 
     if (Array.isArray(response?.data?.data[symbol.toUpperCase()])) {
-      return response?.data?.data[symbol.toUpperCase()][0]?.logo;
+      if (response?.data?.data[symbol.toUpperCase()][0]?.logo) {
+        return response?.data?.data[symbol.toUpperCase()][0]?.logo
+      }
+      return undefined
     }
-    return response?.data?.data?.logo;
+    if (response?.data?.data?.logo) {
+      return response?.data?.data?.logo
+    }
+    return undefined
   } catch (e) {
-    // console.log(e.message);
+    console.log(e.message)
   }
-};
+}

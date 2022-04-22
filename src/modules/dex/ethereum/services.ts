@@ -1,29 +1,29 @@
-import Web3 from "web3";
-import axios from "axios";
+import Web3 from 'web3'
+import axios from 'axios'
 
 // import { getCurrentUSDPrice } from "../../providers/coingecko";
-import { formatBalance } from "../../../utils";
-import { getCryptoCurrencyLogo } from "../../providers/coinmarketcap";
+import { formatBalance } from '../../../utils'
+import { getCryptoCurrencyLogo } from '../../providers/coinmarketcap'
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
-    `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`
-  )
-);
-const coingeckoERC20TokenListURL = process.env.COINGECKO_ERC20_TOKEN_LIST_URL;
+    `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
+  ),
+)
+const coingeckoERC20TokenListURL = process.env.COINGECKO_ERC20_TOKEN_LIST_URL
 
 export const isValidEthAddress = (address: string) => {
-  return web3.utils.isAddress(address);
-};
+  return web3.utils.isAddress(address)
+}
 
 export const getEthBalance = async (walletAddress: string) => {
   try {
-    const balance = await web3.eth.getBalance(walletAddress);
-    return web3.utils.fromWei(balance, "ether");
+    const balance = await web3.eth.getBalance(walletAddress)
+    return web3.utils.fromWei(balance, 'ether')
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 /*export const getERC20Balances = async (walletAddress: string) => {
   let existingTokens = await getExistingTokensOfWallet(walletAddress);
@@ -87,34 +87,34 @@ export const getERC20Tokens = async () => {
   try {
     const response = (await axios({
       url: coingeckoERC20TokenListURL,
-      method: "get",
-    })) as any;
+      method: 'get',
+    })) as any
     if (response?.data?.tokens) {
       const contracts = response.data.tokens.map((token: any) => {
         return {
           name: token.name,
           address: token.address,
           symbol: token.symbol,
-        };
-      });
-      return contracts;
+        }
+      })
+      return contracts
     } else {
-      return [];
+      return []
     }
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
     const walletInfo = (await axios({
       url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
-      method: "get",
-    })) as any;
+      method: 'get',
+    })) as any
 
-    let existingTokens = walletInfo?.data?.data?.items;
-    const response = [];
+    const existingTokens = walletInfo?.data?.data?.items
+    const response = []
     if (existingTokens && Array.isArray(existingTokens)) {
       for (let i = 0; i < existingTokens.length; i++) {
         if (existingTokens[i].balance > 0) {
@@ -122,20 +122,19 @@ export const getTokenBalances = async (walletAddress: string) => {
             parseFloat(
               formatBalance(
                 existingTokens[i].balance,
-                parseInt(existingTokens[i].contract_decimals) as any
-              )
-            )?.toFixed(2)
-          );
+                parseInt(existingTokens[i].contract_decimals) as any,
+              ),
+            )?.toFixed(2),
+          )
 
-          const price = existingTokens[i].quote_rate;
-          const value = balance * existingTokens[i].quote_rate;
-          const name = existingTokens[i].contract_name;
-          const symbol =
-            existingTokens[i].contract_ticker_symbol?.toLowerCase();
-          const contractAddress = existingTokens[i].contract_address;
+          const price = existingTokens[i].quote_rate
+          const value = balance * existingTokens[i].quote_rate
+          const name = existingTokens[i].contract_name
+          const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase()
+          const contractAddress = existingTokens[i].contract_address
           const logo = await getCryptoCurrencyLogo({
             symbol,
-          });
+          })
 
           if (price && symbol) {
             response.push({
@@ -147,14 +146,14 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              chain: "ethereum",
-            });
+              chain: 'ethereum',
+            })
           }
         }
       }
     }
-    return response;
+    return response
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error(e.message)
   }
-};
+}

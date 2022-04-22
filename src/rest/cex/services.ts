@@ -1,24 +1,25 @@
-import * as binance from "@cex/binance/services";
-import * as kucoin from "@cex/kucoin/services";
-import * as gateio from "@cex/gateio/services";
+import * as binance from '@cex//binance'
+import * as kucoin from '@cex/kucoin'
+import * as gateio from '@cex/gateio'
+import * as ftx from '@cex/ftx'
 
-import * as repository from "./repository";
+import * as repository from './repository'
 
 export const checkIfExists = async ({
   keyIdentifier,
   cexName,
 }: {
-  keyIdentifier: string;
-  cexName: string;
+  keyIdentifier: string
+  cexName: string
 }) => {
   const cexInfo = await repository.getCexInfo({
     keyIdentifier,
     cexName,
-  });
+  })
   if (cexInfo) {
-    throw new Error(`You have already added ${cexName}`);
+    throw new Error(`You have already added ${cexName}`)
   }
-};
+}
 
 export const addCex = async ({
   keyIdentifier,
@@ -27,33 +28,33 @@ export const addCex = async ({
   cexName,
   passphrase,
 }: {
-  keyIdentifier: string;
-  apiKey: string;
-  apiSecret: string;
-  cexName: string;
-  passphrase: string;
+  keyIdentifier: string
+  apiKey: string
+  apiSecret: string
+  cexName: string
+  passphrase: string
 }) => {
   try {
-    await checkIfExists({ keyIdentifier, cexName });
+    await checkIfExists({ keyIdentifier, cexName })
     const assets = await saveSpotAssets({
       cexName,
       apiKey,
       apiSecret,
       keyIdentifier,
       passphrase,
-    });
+    })
     await repository.addCexByKeyIdentifier({
       keyIdentifier,
       apiKey,
       apiSecret,
       cexName,
       passphrase,
-    });
-    return assets;
+    })
+    return assets
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error(e.message)
   }
-};
+}
 
 export const saveSpotAssets = async ({
   cexName,
@@ -62,28 +63,33 @@ export const saveSpotAssets = async ({
   passphrase,
   keyIdentifier,
 }: {
-  cexName: string;
-  apiKey: string;
-  apiSecret: string;
-  passphrase: string;
-  keyIdentifier: string;
+  cexName: string
+  apiKey: string
+  apiSecret: string
+  passphrase: string
+  keyIdentifier: string
 }) => {
-  let spotAssets = [] as any;
+  let spotAssets = [] as any
   try {
-    if (cexName.toLowerCase() === "binance") {
-      spotAssets = await binance.getAssets({ apiKey, apiSecret });
-    } else if (cexName.toLowerCase() === "kucoin") {
+    if (cexName.toLowerCase() === 'binance') {
+      spotAssets = await binance.getAssets({ apiKey, apiSecret })
+    } else if (cexName.toLowerCase() === 'kucoin') {
       spotAssets = await kucoin.getAssets({
-        type: "main",
+        type: 'main',
         apiKey,
         apiSecret,
         passphrase,
-      });
-    } else if (cexName.toLowerCase() === "gateio") {
+      })
+    } else if (cexName.toLowerCase() === 'gateio') {
       spotAssets = await gateio.getAssets({
         apiKey,
         apiSecret,
-      });
+      })
+    } else if (cexName.toLowerCase() === 'ftx') {
+      spotAssets = await ftx.getAssets({
+        apiKey,
+        apiSecret,
+      })
     }
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
       try {
@@ -96,54 +102,54 @@ export const saveSpotAssets = async ({
             value: spotAssets[i].value,
             cexName: spotAssets[i].cexName,
             keyIdentifier,
-          });
+          })
         }
       } catch (e) {
-        throw new Error(e.message);
+        throw new Error(e.message)
       }
     }
-    return spotAssets;
+    return spotAssets
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error(e.message)
   }
-};
+}
 
-export const getSpotAssets = async ({
+export const getSpotAssetsByCexName = async ({
   keyIdentifier,
   cexName,
 }: {
-  keyIdentifier: string;
-  cexName: string;
+  keyIdentifier: string
+  cexName: string
 }) => {
   try {
     const cexInfo = await repository.getCexInfo({
       keyIdentifier,
       cexName,
-    });
+    })
     if (!cexInfo) {
-      return [];
+      return []
     }
     const assets = await repository.fetchSpotAssets({
       keyIdentifier,
       cexName,
-    });
-    return assets;
+    })
+    return assets
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error(e.message)
   }
-};
+}
 
 export const getAllSpot = async ({
   keyIdentifier,
 }: {
-  keyIdentifier: string;
+  keyIdentifier: string
 }) => {
   try {
     const assets = await repository.fetchAllSpotAssets({
       keyIdentifier,
-    });
-    return assets;
+    })
+    return assets
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error(e.message)
   }
-};
+}

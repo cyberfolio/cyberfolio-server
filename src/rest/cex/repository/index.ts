@@ -1,7 +1,6 @@
-import { getCurrenyInfo } from "@providers/coingecko/repository";
-import { deleteMongoVersionAndId } from "@src/utils";
+import { getCurrenyInfo } from '@providers/coingecko/repository'
 
-import { cexInfoModel, cexAssetModel } from "./models";
+import { cexInfoModel, cexAssetModel } from './models'
 
 export const addCexByKeyIdentifier = async ({
   keyIdentifier,
@@ -10,20 +9,20 @@ export const addCexByKeyIdentifier = async ({
   cexName,
   passphrase,
 }: {
-  keyIdentifier: string;
-  apiKey: string;
-  apiSecret: string;
-  cexName: string;
-  passphrase: string;
+  keyIdentifier: string
+  apiKey: string
+  apiSecret: string
+  cexName: string
+  passphrase: string
 }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
       cexName,
     })
-    .lean();
+    .lean()
   if (cex) {
-    return;
+    return
   }
   try {
     await cexInfoModel.create({
@@ -32,56 +31,56 @@ export const addCexByKeyIdentifier = async ({
       apiSecret,
       cexName,
       passphrase,
-    });
+    })
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 export const getCexInfo = async ({
   keyIdentifier,
   cexName,
 }: {
-  keyIdentifier: string;
-  cexName: string;
+  keyIdentifier: string
+  cexName: string
 }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
       cexName,
     })
-    .lean();
-  return cex;
-};
+    .lean()
+  return cex
+}
 
 export const fetchSpotAssets = async ({
   keyIdentifier,
   cexName,
 }: {
-  keyIdentifier: string;
-  cexName: string;
+  keyIdentifier: string
+  cexName: string
 }) => {
   const assets = await cexAssetModel
     .find({
       keyIdentifier,
       cexName: cexName?.toLowerCase(),
     })
-    .lean();
-  return assets;
-};
+    .lean()
+  return assets
+}
 
 export const fetchAllSpotAssets = async ({
   keyIdentifier,
 }: {
-  keyIdentifier: string;
+  keyIdentifier: string
 }) => {
   const assets = await cexAssetModel
     .find({
       keyIdentifier,
     })
-    .lean();
-  return assets;
-};
+    .lean()
+  return assets
+}
 
 export const addCexAsset = async ({
   keyIdentifier,
@@ -92,17 +91,18 @@ export const addCexAsset = async ({
   price,
   value,
 }: {
-  keyIdentifier: string;
-  cexName: string;
-  name: string;
-  symbol: string;
-  balance: number;
-  price: number;
-  value: number;
+  keyIdentifier: string
+  cexName: string
+  name: string
+  symbol: string
+  balance: number
+  price: number
+  value: number
 }) => {
-  symbol = symbol.toLowerCase();
+  symbol = symbol.toLowerCase()
   try {
-    const currenyInfo = await getCurrenyInfo(symbol);
+    const currenyInfo = await getCurrenyInfo(symbol)
+    const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
       {
@@ -113,11 +113,11 @@ export const addCexAsset = async ({
         balance,
         price,
         value,
-        logo: currenyInfo.logo,
+        logo,
       },
-      { upsert: true, new: true }
-    );
+      { upsert: true, new: true },
+    )
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}

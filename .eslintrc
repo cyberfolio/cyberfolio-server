@@ -6,11 +6,10 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "promise", "unicorn"],
+  "plugins": ["@typescript-eslint", "promise", "unicorn", "unused-imports"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -20,7 +19,6 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-
   "rules": {
     "no-console": "warn",
     "promise/always-return": "error",
@@ -37,6 +35,7 @@
     "promise/valid-params": "warn",
     "no-use-before-define": ["error", { "variables": false }],
     "no-unsafe-optional-chaining": "error",
-    "@typescript-eslint/no-floating-promises": ["error"]
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "error"
   }
 }

@@ -14,7 +14,7 @@
       "@src/*": ["./src/*"],
       "@config/*": ["./src/config/*"],
       "@providers/*": ["./src/modules/providers/*"],
-      "@chains/*": ["./src/modules/chains/*"],
+      "@dex/*": ["./src/modules/dex/*"],
       "@cex/*": ["./src/modules/cex/*"]
     }
   }

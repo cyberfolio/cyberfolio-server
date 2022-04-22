@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { initCronJobs } from "./modules/cronjob";
+import { initCronJobs } from "./modules/cron";
 
 export const init = async () => {
   try {

@@ -1,15 +1,15 @@
-import axios from "axios";
-import { formatBalance } from "@src/utils";
-import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
+import axios from 'axios'
+import { formatBalance } from '@src/utils'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 export const getTokenBalances = async (walletAddress: string) => {
   const walletInfo = (await axios({
     url: `${process.env.COVALENT_V1_API_URL}/${process.env.POLYGON_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
-    method: "get",
-  })) as any;
+    method: 'get',
+  })) as any
 
-  let existingTokens = walletInfo?.data?.data?.items;
-  const response = [];
+  const existingTokens = walletInfo?.data?.data?.items
+  const response = []
   if (existingTokens && Array.isArray(existingTokens)) {
     for (let i = 0; i < existingTokens.length; i++) {
       if (existingTokens[i].balance > 0) {
@@ -17,17 +17,17 @@ export const getTokenBalances = async (walletAddress: string) => {
           parseFloat(
             formatBalance(
               existingTokens[i].balance,
-              parseInt(existingTokens[i].contract_decimals) as any
-            )
-          )?.toFixed(2)
-        );
+              parseInt(existingTokens[i].contract_decimals) as any,
+            ),
+          )?.toFixed(2),
+        )
 
-        const price = existingTokens[i]?.quote_rate;
-        const value = balance * price;
-        const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
+        const price = existingTokens[i]?.quote_rate
+        const value = balance * price
+        const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase()
         const logo = await getCryptoCurrencyLogo({
           symbol,
-        });
+        })
 
         if (price && symbol) {
           response.push({
@@ -39,11 +39,11 @@ export const getTokenBalances = async (walletAddress: string) => {
             balance,
             price,
             value,
-            chain: "polygon",
-          });
+            chain: 'polygon',
+          })
         }
       }
     }
   }
-  return response;
-};
+  return response
+}
