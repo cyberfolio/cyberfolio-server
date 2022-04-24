@@ -21,6 +21,17 @@ export const checkIfExists = async ({
   }
 }
 
+export const getAvailableCexes = async ({
+  keyIdentifier,
+}: {
+  keyIdentifier: string
+}) => {
+  const cexInfo = await repository.getCexInfosByKey({
+    keyIdentifier,
+  })
+  return cexInfo
+}
+
 export const addCex = async ({
   keyIdentifier,
   apiKey,

@@ -29,6 +29,15 @@ export const addWalletByKeyIdentifier = async ({
   })
 }
 
+export const getWalletsByKey = async ({
+  keyIdentifier,
+}: {
+  keyIdentifier: string
+}) => {
+  const wallets = await walletsModel.find({ keyIdentifier }).lean().exec()
+  return wallets
+}
+
 export const getWallet = async ({
   keyIdentifier,
   chain,

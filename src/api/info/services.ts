@@ -1,46 +1,50 @@
-import * as cexRepo from "../cex/services";
-import * as dexRepo from "../dex/repository";
+import * as cexRepo from '../cex/services'
+import * as dexRepo from '../dex/repository'
 
 export const getNetWorth = async ({
   keyIdentifier,
 }: {
-  keyIdentifier: string;
+  keyIdentifier: string
 }) => {
   try {
-    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
+    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier })
     const dexTotalValue = dexAssets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value;
-    }, 0);
+      return acc + obj.value
+    }, 0)
 
-    const cexAssets = await cexRepo.getAllSpot({ keyIdentifier });
+    const cexAssets = await cexRepo.getAllSpot({ keyIdentifier })
     const cexTotalValue = cexAssets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value;
-    }, 0);
+      return acc + obj.value
+    }, 0)
 
-    return dexTotalValue + cexTotalValue;
+    return dexTotalValue + cexTotalValue
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}
 
 export const getAvailableAccounts = async ({
   keyIdentifier,
 }: {
-  keyIdentifier: string;
+  keyIdentifier: string
 }) => {
   try {
-    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
-    const dexTotalValue = dexAssets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value;
-    }, 0);
+    const dexAssets = await dexRepo.getWalletsByKey({
+      keyIdentifier,
+    })
+    const availableChains: string[] = []
+    dexAssets.map((dexAsset) => {
+      availableChains.push(dexAsset.chain.toLowerCase())
+    })
 
-    const cexAssets = await cexRepo.getAllSpot({ keyIdentifier });
-    const cexTotalValue = cexAssets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value;
-    }, 0);
+    const cexAssets = await cexRepo.getAvailableCexes({ keyIdentifier })
+    const availableCexes: string[] = []
+    cexAssets.map((dexAsset) => {
+      availableChains.push(dexAsset.cexName.toLowerCase())
+    })
 
-    return dexTotalValue + cexTotalValue;
+    return [...availableChains, ...availableCexes]
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e)
   }
-};
+}

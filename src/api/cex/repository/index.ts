@@ -35,6 +35,19 @@ export const addCexByKeyIdentifier = async ({
   }
 }
 
+export const getCexInfosByKey = async ({
+  keyIdentifier,
+}: {
+  keyIdentifier: string
+}) => {
+  const cexes = await cexInfoModel
+    .find({
+      keyIdentifier,
+    })
+    .lean()
+  return cexes
+}
+
 export const getCexInfo = async ({
   keyIdentifier,
   cexName,

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-interface Wallet {
+export interface Wallet {
   keyIdentifier: string
   walletAddress: string
   walletName: string
@@ -24,8 +24,7 @@ walletsModel.on('index', (error) => {
     console.log(error)
   }
 })
-
-interface DexAsset {
+export interface DexAsset {
   keyIdentifier: string
   chain: string
   name: string
