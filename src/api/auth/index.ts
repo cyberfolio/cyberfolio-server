@@ -15,20 +15,22 @@ import {
 const router = express.Router()
 
 router.post('/login/metamask', async (req, res, next) => {
-  let { evmAddress } = req.body
+  let evmAddress = req.body?.evmAddress as string
   evmAddress = evmAddress.toLowerCase()
   try {
     const nonce = generateNonce()
-    let user = await getUserByEvmAddress({ evmAddress })
+    const user = await getUserByEvmAddress({ evmAddress })
     if (!user) {
-      user = {
-        evmAddress,
+      const newUser = {
+        keyIdentifier: evmAddress,
         nonce,
       }
-      await createUser(user)
+      await createUser(newUser)
     } else {
-      user.nonce = nonce
-      await updateNonce(user)
+      await updateNonce({
+        nonce,
+        evmAddress,
+      })
     }
     res.status(200).json({ nonce })
   } catch (e) {

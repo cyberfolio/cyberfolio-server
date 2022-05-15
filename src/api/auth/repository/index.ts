@@ -1,14 +1,14 @@
 import { userModel } from './models'
 
 export const createUser = async ({
-  evmAddress,
+  keyIdentifier,
   nonce,
 }: {
-  evmAddress: string
+  keyIdentifier: string
   nonce: string
 }) => {
   try {
-    await userModel.create({ keyIdentifier: evmAddress, nonce })
+    await userModel.create({ keyIdentifier, nonce })
   } catch (e) {
     throw new Error(e)
   }
@@ -20,7 +20,10 @@ export const getUserByEvmAddress = async ({
   evmAddress: string
 }) => {
   try {
-    const user = await userModel.findOne({ keyIdentifier: evmAddress }).lean()
+    const user = await userModel
+      .findOne({ keyIdentifier: evmAddress })
+      .lean()
+      .exec()
     return user
   } catch (e) {
     throw new Error(e)
@@ -55,6 +58,7 @@ export const updateNonce = async ({
     const user = await userModel
       .findOneAndUpdate({ keyIdentifier: evmAddress }, { nonce })
       .lean()
+      .exec()
     return user
   } catch (e) {
     throw new Error(e)

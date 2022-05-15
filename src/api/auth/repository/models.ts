@@ -1,6 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+interface UserDoc {
+  keyIdentifier: string
+  nonce: string
+}
+
+const userSchema = new mongoose.Schema<UserDoc>({
   keyIdentifier: {
     type: String,
     required: true,
@@ -11,12 +16,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-});
-userSchema.index({ keyIdentifier: 1, nonce: 1 });
+})
 
-export const userModel = mongoose.model("user", userSchema);
-userModel.on("index", (error) => {
-  if (error) {
-    console.log(error);
-  }
-});
+userSchema.set('toJSON', {
+  virtuals: true,
+  transform: (_, ret) => {
+    delete ret.__v
+    delete ret._id
+  },
+})
+
+export const userModel = mongoose.model<UserDoc>('user', userSchema)
