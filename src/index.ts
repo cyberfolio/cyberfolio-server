@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import 'dotenv/config'
 import 'module-alias/register'
+import 'dotenv/config'
 
 import express from 'express'
 import cors from 'cors'
