@@ -4,7 +4,6 @@
   "exclude": ["node_modules", "<node_internals>/**"],
   "ts-node": {
     "esm": true,
-    "require": ["tsconfig-paths/register"]
   },
   "lib": ["esnext"],
   "compilerOptions": {
