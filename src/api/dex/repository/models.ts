@@ -12,18 +12,9 @@ const walletSchema = new mongoose.Schema<Wallet>({
   walletName: { type: String, required: true },
   chain: { type: String, required: true },
 })
-walletSchema.index({
-  keyIdentifier: 1,
-  walletAddress: 1,
-  walletName: 1,
-  chain: 1,
-})
+
 export const walletsModel = mongoose.model<Wallet>('wallet', walletSchema)
-walletsModel.on('index', (error) => {
-  if (error) {
-    console.log(error)
-  }
-})
+
 export interface DexAsset {
   keyIdentifier: string
   chain: string
@@ -48,18 +39,8 @@ const dexAssetSchema = new mongoose.Schema<DexAsset>({
   walletName: { type: String, required: true },
   contractAddress: { type: String },
 })
-dexAssetSchema.index({
-  keyIdentifier: 1,
-  chain: 1,
-  name: 1,
-  symbol: 1,
-})
+
 export const dexAssetModel = mongoose.model<DexAsset>(
   'dex-asset',
   dexAssetSchema,
 )
-dexAssetModel.on('index', (error) => {
-  if (error) {
-    console.log(error)
-  }
-})
