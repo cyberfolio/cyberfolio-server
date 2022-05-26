@@ -58,7 +58,7 @@ export const getAssets = async ({
   }
 }
 
-const saveAssets = async ({
+export const saveAssets = async ({
   keyIdentifier,
   chain,
   walletName,
