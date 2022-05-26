@@ -3,7 +3,6 @@ import axios from 'axios'
 import {
   addOrUpdateCryptoCurrency,
   getCryptoPriceBySymbol,
-  setLastCurrencyUpdateDate,
   getLastCurrencyUpdateDate,
   getFullNameOfTheCurrencyBySymbol,
   getContractAddressOfTheCurrencyBySymbol,

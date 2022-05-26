@@ -9,8 +9,7 @@ export const web3 = new Web3(
   ),
 )
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const sleep = require('timers/promises').setTimeout
+export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 export const isValid0xAddress = (address: string) => {
   return web3.utils.isAddress(address)

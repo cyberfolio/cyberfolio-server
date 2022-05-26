@@ -1,17 +1,21 @@
-import cron from "node-cron";
-import { updateCurrencies } from "./updateCurrencies";
+import cron from 'node-cron'
+import { updateCurrencies } from './updateCurrencies'
 
-const everyHourCronValue = "0 0 */1 * * *";
+const everyHourCronValue = '0 0 */1 * * *'
 
-export const initCronJobs = () => {
+export const initCronJobs = async () => {
+  try {
+    await updateCurrencies()
+  } catch (e) {
+    console.log('Cryptoprice update failed at, reason: ' + e.message)
+  }
   cron.schedule(everyHourCronValue, async () => {
-    console.log("Running cryptoprice update at: " + new Date());
+    console.log('Running cryptoprice update at: ' + new Date())
     try {
-      await updateCurrencies();
-      console.log("Cryptoprice update completed at: " + new Date());
+      await updateCurrencies()
+      console.log('Cryptoprice update completed at: ' + new Date())
     } catch (e) {
-      console.log("Cryptoprice update failed at, reason: " + e.message);
+      console.log('Cryptoprice update failed at, reason: ' + e.message)
     }
-    console.log(" ");
-  });
-};
+  })
+}
