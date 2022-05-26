@@ -74,7 +74,7 @@ router.get('/isAuthenticated', authenticateUser, (req: any, res) => {
   }
 })
 
-router.post('/logout', authenticateUser, (req, res) => {
+router.get('/logout', authenticateUser, (req, res) => {
   res.clearCookie('jwt')
   res.status(403).send('')
 })

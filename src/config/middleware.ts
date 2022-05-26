@@ -19,7 +19,6 @@ export const allowedMethods = (
     'DELETE',
     'PATCH',
   ]
-
   if (!allowedMethods.includes(req.method)) {
     return res.status(405).send(`${req.method} not allowed.`)
   }
