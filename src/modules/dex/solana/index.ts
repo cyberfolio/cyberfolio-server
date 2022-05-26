@@ -1,84 +1,147 @@
-import axios from "axios";
-import { Connection, clusterApiUrl, PublicKey, Cluster } from "@solana/web3.js";
-import { TokenListProvider } from "@solana/spl-token-registry";
+import axios from 'axios'
+import { Connection, clusterApiUrl, PublicKey, Cluster } from '@solana/web3.js'
+import { TokenListProvider } from '@solana/spl-token-registry'
 
-import { intDivide } from "@src/utils";
-import { getCurrentUSDPrice } from "@providers/coingecko";
+import { intDivide } from '@src/utils'
+import { getCurrentUSDPrice } from '@providers/coingecko'
 
-const solanaDecimals = Number(process.env.SOLANA_DECIMALS);
+const solanaDecimals = Number(process.env.SOLANA_DECIMALS)
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
     const connection = new Connection(
       clusterApiUrl(process.env.SOLANA_ENVIRONMET as Cluster),
-      "confirmed"
-    );
-    const base58publicKey = new PublicKey(walletAddress);
+      'confirmed',
+    )
+    const base58publicKey = new PublicKey(walletAddress)
 
-    const solanaBalance = await connection.getBalance(base58publicKey);
-    const formattedSolanaBalance = solanaBalance / solanaDecimals;
+    const solanaBalance = await connection.getBalance(base58publicKey)
+    const formattedSolanaBalance = solanaBalance / solanaDecimals
 
-    const tokens = await new TokenListProvider().resolve();
+    const tokens = await new TokenListProvider().resolve()
     const tokenList = tokens
       .filterByClusterSlug(process.env.SOLANA_ENVIRONMET as Cluster)
-      .getList();
+      .getList()
 
-    const avaliableTokens = [];
-    const solanaUsdValue = await getCurrentUSDPrice("sol");
+    const avaliableTokens = []
+    const solanaUsdValue = await getCurrentUSDPrice('sol')
     avaliableTokens.push({
-      name: "Solana",
-      symbol: "sol",
+      name: 'Solana',
+      symbol: 'sol',
       balance: formattedSolanaBalance,
       usdValue: solanaUsdValue * formattedSolanaBalance,
-    });
-    const otherBalalnces = await getBalances(walletAddress, tokenList);
-    avaliableTokens.push(...otherBalalnces);
+    })
+    const otherBalalnces = await getBalances(walletAddress, tokenList)
+    avaliableTokens.push(...otherBalalnces)
 
-    return avaliableTokens;
+    return avaliableTokens
   } catch (e) {
-    throw new Error(e);
+    console.log(
+      `Error at ${getTokenBalances.name} src/modules/dex/solana/index.ts`,
+    )
+    throw e
   }
-};
+}
 
 const getBalances = async (walletAddress: string, tokens: Array<any>) => {
-  const response = [];
-  const eachIterationCount = 200;
-  const iterations = intDivide(tokens.length, eachIterationCount);
-  const resOfTheTokens = tokens.length % eachIterationCount;
-  let start = 0;
-  let request = [];
-  let tokensInfo = [];
+  try {
+    const response = []
+    const eachIterationCount = 200
+    const iterations = intDivide(tokens.length, eachIterationCount)
+    const resOfTheTokens = tokens.length % eachIterationCount
+    let start = 0
+    let request = []
+    let tokensInfo = []
 
-  for (let iteration = 1; iteration <= iterations; iteration++) {
-    for (let i = start; i < eachIterationCount * iteration; i++) {
+    for (let iteration = 1; iteration <= iterations; iteration++) {
+      for (let i = start; i < eachIterationCount * iteration; i++) {
+        request.push({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'getTokenAccountsByOwner',
+          params: [
+            walletAddress,
+            {
+              mint: tokens[i].address,
+            },
+            {
+              encoding: 'jsonParsed',
+            },
+          ],
+        })
+        tokensInfo.push({
+          name: tokens[i].name,
+          symbol: tokens[i].symbol,
+          logoURI: tokens[i].logoURI,
+          address: tokens[i].address,
+        })
+      }
+
+      const solanaResponse = (await axios({
+        url: `${process.env.SOLANA_RPC_ENDPOINT}`,
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: [...request],
+      })) as any
+
+      for (let data = 0; data < solanaResponse.data.length; data++) {
+        if (
+          Array.isArray(solanaResponse.data[data]?.result?.value) &&
+          solanaResponse.data[data]?.result?.value?.length > 0 &&
+          solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
+            ?.info?.tokenAmount?.amount > 0
+        ) {
+          const usdValue = await getCurrentUSDPrice(
+            tokensInfo[data].symbol?.toLowerCase(),
+          )
+          const balance =
+            Number(
+              solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
+                ?.info?.tokenAmount?.amount,
+            ) / solanaDecimals
+          response.push({
+            name: tokensInfo[data].name,
+            symbol: tokensInfo[data].symbol,
+            logoURI: tokensInfo[data].logoURI,
+            address: tokensInfo[data].address,
+            balance,
+            usdValue: balance * usdValue,
+          })
+        }
+      }
+      start += eachIterationCount
+      request = []
+      tokensInfo = []
+    }
+    for (let i = start; i < start + resOfTheTokens; i++) {
       request.push({
-        jsonrpc: "2.0",
+        jsonrpc: '2.0',
         id: 1,
-        method: "getTokenAccountsByOwner",
+        method: 'getTokenAccountsByOwner',
         params: [
           walletAddress,
           {
             mint: tokens[i].address,
           },
           {
-            encoding: "jsonParsed",
+            encoding: 'jsonParsed',
           },
         ],
-      });
+      })
       tokensInfo.push({
         name: tokens[i].name,
         symbol: tokens[i].symbol,
         logoURI: tokens[i].logoURI,
         address: tokens[i].address,
-      });
+      })
     }
 
     const solanaResponse = (await axios({
       url: `${process.env.SOLANA_RPC_ENDPOINT}`,
-      method: "post",
-      headers: { "Content-Type": "application/json" },
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
       data: [...request],
-    })) as any;
+    })) as any
 
     for (let data = 0; data < solanaResponse.data.length; data++) {
       if (
@@ -87,84 +150,29 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
         solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
           ?.tokenAmount?.amount > 0
       ) {
-        const usdValue = await getCurrentUSDPrice(
-          tokensInfo[data].symbol?.toLowerCase()
-        );
+        const price = await getCurrentUSDPrice(
+          tokensInfo[data].symbol?.toLowerCase(),
+        )
         const balance =
           Number(
             solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-              ?.info?.tokenAmount?.amount
-          ) / solanaDecimals;
+              ?.info?.tokenAmount?.amount,
+          ) / solanaDecimals
         response.push({
           name: tokensInfo[data].name,
           symbol: tokensInfo[data].symbol,
           logoURI: tokensInfo[data].logoURI,
           address: tokensInfo[data].address,
           balance,
-          usdValue: balance * usdValue,
-        });
+          price,
+          chain: 'solana',
+        })
       }
     }
-    start += eachIterationCount;
-    request = [];
-    tokensInfo = [];
-  }
-  for (let i = start; i < start + resOfTheTokens; i++) {
-    request.push({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "getTokenAccountsByOwner",
-      params: [
-        walletAddress,
-        {
-          mint: tokens[i].address,
-        },
-        {
-          encoding: "jsonParsed",
-        },
-      ],
-    });
-    tokensInfo.push({
-      name: tokens[i].name,
-      symbol: tokens[i].symbol,
-      logoURI: tokens[i].logoURI,
-      address: tokens[i].address,
-    });
-  }
 
-  const solanaResponse = (await axios({
-    url: `${process.env.SOLANA_RPC_ENDPOINT}`,
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    data: [...request],
-  })) as any;
-
-  for (let data = 0; data < solanaResponse.data.length; data++) {
-    if (
-      Array.isArray(solanaResponse.data[data]?.result?.value) &&
-      solanaResponse.data[data]?.result?.value?.length > 0 &&
-      solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
-        ?.tokenAmount?.amount > 0
-    ) {
-      const price = await getCurrentUSDPrice(
-        tokensInfo[data].symbol?.toLowerCase()
-      );
-      const balance =
-        Number(
-          solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-            ?.info?.tokenAmount?.amount
-        ) / solanaDecimals;
-      response.push({
-        name: tokensInfo[data].name,
-        symbol: tokensInfo[data].symbol,
-        logoURI: tokensInfo[data].logoURI,
-        address: tokensInfo[data].address,
-        balance,
-        price,
-        chain: "solana",
-      });
-    }
+    return response
+  } catch (e) {
+    console.log(`Error at ${getBalances.name} src/modules/dex/solana/index.ts`)
+    throw e
   }
-
-  return response;
-};
+}

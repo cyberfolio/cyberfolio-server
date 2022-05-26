@@ -21,6 +21,9 @@ export const getEthBalance = async (walletAddress: string) => {
     const balance = await web3.eth.getBalance(walletAddress)
     return web3.utils.fromWei(balance, 'ether')
   } catch (e) {
+    console.log(
+      `Error at ${getEthBalance.name} src/modules/dex/ethereum/services.ts`,
+    )
     throw new Error(e)
   }
 }
@@ -102,6 +105,9 @@ export const getERC20Tokens = async () => {
       return []
     }
   } catch (e) {
+    console.log(
+      `Error at ${getERC20Tokens.name} src/modules/dex/ethereum/services.ts`,
+    )
     throw new Error(e)
   }
 }
@@ -154,6 +160,9 @@ export const getTokenBalances = async (walletAddress: string) => {
     }
     return response
   } catch (e) {
+    console.log(
+      `Error at ${getTokenBalances.name} src/modules/dex/ethereum/services.ts`,
+    )
     throw new Error(e.message)
   }
 }

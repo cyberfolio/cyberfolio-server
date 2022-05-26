@@ -33,6 +33,9 @@ export const getTokenBalances = async (walletAddress: string) => {
       },
     ]
   } catch (e) {
-    throw new Error(e)
+    console.log(
+      `Error at ${getTokenBalances.name} src/modules/dex/polkadot/services.ts`,
+    )
+    throw e
   }
 }

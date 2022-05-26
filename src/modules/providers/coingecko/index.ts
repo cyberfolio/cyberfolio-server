@@ -31,7 +31,10 @@ export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
       }
     }
   } catch (e) {
-    throw new Error(e)
+    console.log(
+      `Error at ${addOrUpdateAllCryptoPriceInUSD.name} src/modules/providers/coingecko/index.ts`,
+    )
+    throw e
   }
 }
 
