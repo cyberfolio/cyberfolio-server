@@ -2,8 +2,8 @@ import Web3 from 'web3'
 import axios from 'axios'
 
 // import { getCurrentUSDPrice } from "../../providers/coingecko";
-import { formatBalance } from '../../../utils'
-import { getCryptoCurrencyLogo } from '../../providers/coinmarketcap'
+import { formatBalance } from '@src/utils'
+import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -118,7 +118,6 @@ export const getTokenBalances = async (walletAddress: string) => {
       url: `${process.env.COVALENT_V1_API_URL}/${process.env.ETHEREUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
       method: 'get',
     })) as any
-
     const existingTokens = walletInfo?.data?.data?.items
     const response = []
     if (existingTokens && Array.isArray(existingTokens)) {
@@ -161,7 +160,7 @@ export const getTokenBalances = async (walletAddress: string) => {
     return response
   } catch (e) {
     console.log(
-      `Error at ${getTokenBalances.name} src/modules/dex/ethereum/services.ts`,
+      `Error at ${getTokenBalances.name} src/modules/dex/ethereum/services.ts ${e}`,
     )
     throw new Error(e.message)
   }

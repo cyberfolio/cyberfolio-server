@@ -1,3 +1,4 @@
+import { sleep } from '@src/utils'
 import axios from 'axios'
 
 const apiKey = process.env.COINMARKETCAP_API_KEY as string
@@ -14,6 +15,7 @@ export const getCryptoCurrencyLogo = async ({
         'X-CMC_PRO_API_KEY': apiKey,
       },
     })) as any
+    await sleep(1000)
 
     if (Array.isArray(response?.data?.data[symbol.toUpperCase()])) {
       if (response?.data?.data[symbol.toUpperCase()][0]?.logo) {

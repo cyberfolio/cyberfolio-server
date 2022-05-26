@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 import { default as axios } from 'axios'
 
