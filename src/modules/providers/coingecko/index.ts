@@ -14,7 +14,7 @@ export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
       url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&page=${page}`,
       method: 'get',
     })
-    await sleep(1000)
+    await sleep(1500)
     const cryptoCurrencies = response?.data as any[]
 
     if (cryptoCurrencies && Array.isArray(cryptoCurrencies)) {
