@@ -67,6 +67,10 @@ export const saveAssets = async ({
   chain: string
   walletName: string
 }) => {
+  if (chain === 'eth') {
+    const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
+    return ethereumTokens
+  }
   if (chain === 'Evm') {
     try {
       const ethereumTokens = await eth.getTokenBalances(keyIdentifier)

@@ -62,7 +62,7 @@ router.post('/login/validateSignature', async (req, res, next) => {
     })
     const keyIdentifier = user.keyIdentifier
 
-    await saveAssets({ keyIdentifier, chain: 'Evm', walletName: 'main' })
+    await saveAssets({ keyIdentifier, chain: 'eth', walletName: 'main' })
 
     res.status(200).json({ keyIdentifier })
   } catch (e) {
