@@ -31,6 +31,7 @@ export const getCryptoCurrencyLogo = async ({
     console.log(
       `Error at ${getCryptoCurrencyLogo.name} src/modules/providers/coinmarketcap/index.ts`,
     )
+    console.log(e)
     return undefined
   }
 }
