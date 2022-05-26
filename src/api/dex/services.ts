@@ -69,9 +69,36 @@ export const saveAssets = async ({
 }) => {
   if (chain === 'eth') {
     const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
-    return ethereumTokens
-  }
-  if (chain === 'Evm') {
+    if (Array.isArray(ethereumTokens) && ethereumTokens.length > 0) {
+      try {
+        for (let i = 0; i < ethereumTokens.length; i++) {
+          const isScamToken =
+            scamTokens.filter((scamToken) => {
+              return (
+                scamToken.chain === ethereumTokens[i].chain &&
+                scamToken.contractAddress === ethereumTokens[i].contractAddress
+              )
+            }).length > 0
+          if (!isScamToken && ethereumTokens[i].value >= 1) {
+            await repository.addAsset({
+              name: ethereumTokens[i].name,
+              symbol: ethereumTokens[i].symbol,
+              balance: ethereumTokens[i].balance,
+              contractAddress: ethereumTokens[i].contractAddress,
+              price: ethereumTokens[i].price,
+              value: ethereumTokens[i].value,
+              chain: ethereumTokens[i].chain,
+              walletName,
+              keyIdentifier,
+            })
+          }
+        }
+      } catch (e) {
+        throw new Error(e.message)
+      }
+      return ethereumTokens
+    }
+  } else if (chain === 'Evm') {
     try {
       const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
       const avalancheTokens = await avalanche.getTokenBalances(keyIdentifier)
@@ -119,8 +146,7 @@ export const saveAssets = async ({
     } catch (e) {
       throw new Error(e)
     }
-  }
-  if (chain === 'bitcoin') {
+  } else if (chain === 'bitcoin') {
     const btc = await bitcoin.getBitcoinBalance(keyIdentifier)
     const asset = {
       keyIdentifier,
