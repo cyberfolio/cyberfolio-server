@@ -26,7 +26,6 @@ export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
             price: parseFloat(cryptoCurrencies[i].current_price),
             image: cryptoCurrencies[i].image,
           })
-          await sleep(1000)
         }
       }
     }
