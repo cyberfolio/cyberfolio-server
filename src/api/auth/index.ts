@@ -76,7 +76,7 @@ router.get('/isAuthenticated', authenticateUser, (req: any, res) => {
 
 router.post('/logout', authenticateUser, (req, res) => {
   res.clearCookie('jwt')
-  res.status(200).send('')
+  res.status(403).send('')
 })
 
 export default router
