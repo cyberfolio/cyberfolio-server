@@ -15,7 +15,7 @@ export const getCryptoCurrencyLogo = async ({
         'X-CMC_PRO_API_KEY': apiKey,
       },
     })) as any
-    await sleep(1000)
+    await sleep(200)
 
     if (Array.isArray(response?.data?.data[symbol.toUpperCase()])) {
       if (response?.data?.data[symbol.toUpperCase()][0]?.logo) {
