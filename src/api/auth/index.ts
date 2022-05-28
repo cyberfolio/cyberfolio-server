@@ -39,7 +39,7 @@ router.post('/login/metamask', async (req, res, next) => {
   }
 })
 
-router.post('/login/validateSignature', async (req, res, next) => {
+router.post('/login/validate-signature', async (req, res, next) => {
   let evmAddress = req.body.evmAddress
   const signature = req.body.signature
   const nonce = req.body.nonce
@@ -60,7 +60,7 @@ router.post('/login/validateSignature', async (req, res, next) => {
     res.cookie('token', token, {
       secure: process.env.NODE_ENV !== 'development',
       httpOnly: true,
-      maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000,
     })
     const keyIdentifier = user.keyIdentifier
 
@@ -72,11 +72,11 @@ router.post('/login/validateSignature', async (req, res, next) => {
   }
 })
 
-router.get('/isAuthenticated', authenticateUser, (req: any, res) => {
+router.get('/is-authenticated', authenticateUser, (req: any, res) => {
   if (req?.keyIdentifier) {
     res.status(200).send({ keyIdentifier: req.keyIdentifier })
   } else {
-    res.status(401).send('nein')
+    res.status(401).send('Unauthenticated')
   }
 })
 

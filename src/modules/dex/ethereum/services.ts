@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import axios from 'axios'
 
-// import { getCurrentUSDPrice } from "../../providers/coingecko";
 import { formatBalance } from '@src/utils'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 
@@ -27,64 +26,6 @@ export const getEthBalance = async (walletAddress: string) => {
     throw new Error(e)
   }
 }
-
-/*export const getERC20Balances = async (walletAddress: string) => {
-  let existingTokens = await getExistingTokensOfWallet(walletAddress);
-
-  existingTokens = existingTokens.filter(
-    (existingToken) => existingToken.balance > 0
-  );
-
-  for (let i = 0; i < existingTokens.length; i++) {
-    if (existingTokens[i].symbol) {
-      try {
-        const price = await getCurrentUSDPrice(
-          existingTokens[i].symbol?.toLowerCase()
-        );
-        existingTokens[i].usdValue = price;
-      } catch (e) {
-        continue;
-      }
-    }
-  }
-
-  return existingTokens;
-};
-
-export const getExistingTokensOfWallet = async (walletAddress: string) => {
-  const abi = [
-    {
-      constant: true,
-      inputs: [{ name: "_owner", type: "address" }],
-      name: "balanceOf",
-      outputs: [{ name: "balance", type: "uint256" }],
-      type: "function",
-    },
-  ];
-  const tokens = await getERC20Tokens();
-  let existingTokens = [];
-  for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i].address && tokens[i].symbol) {
-      try {
-        const contract = new web3.eth.Contract(abi, tokens[i].address);
-        const tokenBalance = await contract.methods
-          .balanceOf(walletAddress)
-          .call();
-        const formattedBalance = web3.utils.fromWei(tokenBalance, "ether");
-        const existingToken = {
-          name: tokens[i].name,
-          symbol: tokens[i].symbol,
-          contractAddress: tokens[i].address,
-          balance: parseFloat(formattedBalance),
-        };
-        existingTokens.push(existingToken);
-      } catch (e) {
-        continue;
-      }
-    }
-  }
-  return existingTokens;
-}; */
 
 export const getERC20Tokens = async () => {
   try {
