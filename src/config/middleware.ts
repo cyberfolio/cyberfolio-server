@@ -30,7 +30,7 @@ export const authenticateUser = async (
   res: Express.Response,
   next: Express.NextFunction,
 ) => {
-  const jwtToken = req.cookies?.jwt
+  const jwtToken = req.cookies?.token
   if (!jwtToken) {
     return res.status(401).send('Token could not be found')
   }
