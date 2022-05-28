@@ -4,6 +4,7 @@ declare namespace NodeJS {
     PORT: number
     FRONTEND_URL: string
     JWT_SECRET: string
+    JWT_EXPIRY_IN_DAYS: string
     NODE_ENV: string
 
     INFURA_API_URL: string

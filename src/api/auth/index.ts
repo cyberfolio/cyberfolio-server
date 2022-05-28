@@ -56,10 +56,11 @@ router.post('/login/validateSignature', async (req, res, next) => {
 
     // set jwt to the user's browser cookies
     const token = signJwt(user)
+    const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS)
     res.cookie('token', token, {
       secure: process.env.NODE_ENV !== 'development',
       httpOnly: true,
-      maxAge: 168 * 60 * 60 * 1000, // 7 days
+      maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000, // 7 days
     })
     const keyIdentifier = user.keyIdentifier
 
