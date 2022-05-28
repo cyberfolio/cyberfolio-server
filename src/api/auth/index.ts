@@ -53,12 +53,13 @@ router.post('/login/validateSignature', async (req, res, next) => {
     if (!user) {
       throw new Error('User not found')
     }
+
     // set jwt to the user's browser cookies
     const token = signJwt(user)
-    const secure = process.env.NODE_ENV !== 'development'
-    res.cookie('jwt', token, {
-      secure,
+    res.cookie('token', token, {
+      secure: process.env.NODE_ENV !== 'development',
       httpOnly: true,
+      maxAge: 168 * 60 * 60 * 1000, // 7 days
     })
     const keyIdentifier = user.keyIdentifier
 
@@ -79,7 +80,7 @@ router.get('/isAuthenticated', authenticateUser, (req: any, res) => {
 })
 
 router.get('/logout', authenticateUser, (req, res) => {
-  res.clearCookie('jwt')
+  res.clearCookie('token')
   res.status(403).send('')
 })
 

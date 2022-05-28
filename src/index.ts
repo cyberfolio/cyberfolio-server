@@ -25,9 +25,8 @@ const boot = async () => {
   app.use(allowedMethods)
   app.use(
     cors({
-      origin: process.env.FRONTEND_URL,
-      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
       credentials: true,
+      origin: process.env.FRONTEND_URL,
     }),
   )
   app.use(bodyParser.json())

@@ -45,7 +45,7 @@ export const authenticateUser = async (
     }
     next()
   } catch (e) {
-    res.clearCookie('jwt')
+    res.clearCookie('token')
     res.status(401).send(`Unauthenticated`)
   }
 }
