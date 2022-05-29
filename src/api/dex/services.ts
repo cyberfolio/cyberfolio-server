@@ -70,7 +70,7 @@ export const saveAssets = async ({
   chain: string
   walletName: string
 }) => {
-  if (chain === 'eth') {
+  if (chain.toLowerCase() === 'eth') {
     const ethereumTokens = await eth.getTokenBalances(walletAddress)
     if (Array.isArray(ethereumTokens) && ethereumTokens.length > 0) {
       try {
@@ -102,7 +102,7 @@ export const saveAssets = async ({
       }
       return ethereumTokens
     }
-  } else if (chain === 'Evm') {
+  } else if (chain.toLowerCase() === 'evm') {
     try {
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress)
       const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress)
@@ -154,7 +154,7 @@ export const saveAssets = async ({
     } catch (e) {
       throw new Error(e)
     }
-  } else if (chain === 'bitcoin') {
+  } else if (chain.toLowerCase() === 'bitcoin') {
     const btc = await bitcoin.getBitcoinBalance(walletAddress)
 
     const asset = {
