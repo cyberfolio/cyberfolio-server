@@ -12,6 +12,7 @@ import {
   getUserByEvmAddressAndNonce,
 } from './repository'
 import { saveAssets } from '../dex/services'
+import { checkENSName } from './services'
 
 const router = express.Router()
 
@@ -64,9 +65,20 @@ router.post('/login/validate-signature', async (req, res, next) => {
     })
     const keyIdentifier = user.keyIdentifier
 
+    checkENSName(evmAddress)
     await saveAssets({ keyIdentifier, chain: 'eth', walletName: 'main' })
-
-    res.status(200).json({ keyIdentifier })
+    const response = {
+      keyIdentifier,
+      ensName: '',
+    }
+    const verifiedUser = await getUserByEvmAddressAndNonce({
+      evmAddress,
+      nonce,
+    })
+    if (verifiedUser?.ensName) {
+      response.ensName = verifiedUser.ensName
+    }
+    res.json(response)
   } catch (e) {
     next(e)
   }

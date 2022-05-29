@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 interface UserDoc {
   keyIdentifier: string
   nonce: string
+  ensName: string
 }
 
 const userSchema = new mongoose.Schema<UserDoc>({
@@ -15,6 +16,9 @@ const userSchema = new mongoose.Schema<UserDoc>({
     type: String,
     required: true,
     unique: true,
+  },
+  ensName: {
+    type: String,
   },
 })
 
