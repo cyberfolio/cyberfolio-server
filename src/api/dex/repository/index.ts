@@ -90,7 +90,7 @@ export const addAsset = async ({
     const currenyInfo = await getCurrenyInfo(symbol)
     const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await dexAssetModel.findOneAndUpdate(
-      { walletAddress, keyIdentifier, name, symbol, walletName, chain },
+      { walletAddress, keyIdentifier, name, symbol, chain },
       {
         keyIdentifier,
         walletName,

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { formatBalance } from '@src/utils'
-import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import { getCurrencyLogo } from '@providers/coingecko/repository'
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
@@ -25,9 +25,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const price = existingTokens[i]?.quote_rate
           const value = balance * existingTokens[i]?.quote_rate
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase()
-          const logo = await getCryptoCurrencyLogo({
-            symbol,
-          })
+          const logo = await getCurrencyLogo(symbol)
 
           if (price && symbol) {
             response.push({

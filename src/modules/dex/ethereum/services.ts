@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import axios from 'axios'
 
 import { formatBalance } from '@src/utils'
-import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import { getCurrencyLogo } from '@providers/coingecko/repository'
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -78,9 +78,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const name = existingTokens[i].contract_name
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase()
           const contractAddress = existingTokens[i].contract_address
-          const logo = await getCryptoCurrencyLogo({
-            symbol,
-          })
+          const logo = await getCurrencyLogo(symbol)
 
           if (price && symbol) {
             response.push({
