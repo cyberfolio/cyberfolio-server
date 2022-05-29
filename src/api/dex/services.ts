@@ -2,7 +2,7 @@ import * as bitcoin from '@dex/bitcoin/services'
 import * as avalanche from '@dex/avalanche/services'
 import * as eth from '@dex/ethereum/services'
 import * as arbitrum from '@dex/arbitrum/services'
-import * as optimism from '@src/modules/dex/polkadot/optimism/services'
+import * as optimism from '@dex/optimism/services'
 import * as polygon from '@dex/polygon/services'
 import * as smartchain from '@dex/smartchain/services'
 
