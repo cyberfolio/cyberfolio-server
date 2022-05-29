@@ -5,7 +5,7 @@ import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 export const getTokenBalances = async (walletAddress: string) => {
   try {
     const walletInfo = (await axios({
-      url: `${process.env.COVALENT_V1_API_URL}/${process.env.ARBITRUM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
+      url: `${process.env.COVALENT_V1_API_URL}/${process.env.OPTIMISM_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
       method: 'get',
     })) as any
     const existingTokens = walletInfo?.data?.data?.items
@@ -39,7 +39,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              chain: 'optimism',
+              chain: 'arbitrum',
             })
           }
         }

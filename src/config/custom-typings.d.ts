@@ -26,6 +26,7 @@ declare namespace NodeJS {
     POLYGON_CHAIN_ID: number
     ETHEREUM_MAINNET_CHAIN_ID: number
     ARBITRUM_MAINNET_CHAIN_ID: number
+    OPTIMISM_MAINNET_CHAIN_ID: number
 
     SOLANA_ENVIRONMET: string
     SOLANA_RPC_ENDPOINT: string

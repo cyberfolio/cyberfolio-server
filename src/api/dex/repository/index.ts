@@ -72,6 +72,7 @@ export const addAsset = async ({
   value,
   chain,
   contractAddress,
+  walletAddress,
 }: {
   keyIdentifier: string
   walletName: string
@@ -82,13 +83,14 @@ export const addAsset = async ({
   value: number
   chain: string
   contractAddress: string
+  walletAddress: string
 }) => {
   try {
     symbol = symbol.toLowerCase()
     const currenyInfo = await getCurrenyInfo(symbol)
     const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await dexAssetModel.findOneAndUpdate(
-      { keyIdentifier, name, symbol, walletName, chain },
+      { walletAddress, keyIdentifier, name, symbol, walletName, chain },
       {
         keyIdentifier,
         walletName,
@@ -100,6 +102,7 @@ export const addAsset = async ({
         logo,
         chain,
         contractAddress,
+        walletAddress,
       },
       { upsert: true, new: true },
     )

@@ -59,8 +59,18 @@ router.post('/login/validate-signature', async (req, res, next) => {
     }
     const keyIdentifier = user.keyIdentifier
     if (user.firstTimeLogin) {
-      await saveAssets({ keyIdentifier, chain: 'eth', walletName: 'main' })
-      saveAssets({ keyIdentifier, chain: 'Evm', walletName: 'main' })
+      await saveAssets({
+        keyIdentifier,
+        walletAddress: keyIdentifier,
+        chain: 'eth',
+        walletName: 'main',
+      })
+      saveAssets({
+        keyIdentifier,
+        walletAddress: keyIdentifier,
+        chain: 'Evm',
+        walletName: 'main',
+      })
     }
 
     // set jwt to the user's browser cookies

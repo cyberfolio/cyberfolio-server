@@ -2,6 +2,7 @@ import * as bitcoin from '@dex/bitcoin/services'
 import * as avalanche from '@dex/avalanche/services'
 import * as eth from '@dex/ethereum/services'
 import * as arbitrum from '@dex/arbitrum/services'
+import * as optimism from '@src/modules/dex/polkadot/optimism/services'
 import * as polygon from '@dex/polygon/services'
 import * as smartchain from '@dex/smartchain/services'
 
@@ -18,7 +19,7 @@ export const addWallets = async ({
   for (const wallet of wallets) {
     const walletAddress = wallet.address
     const walletName = wallet.name
-    const chain = wallet.chain
+    const chain = wallet.chain.toLowerCase()
     try {
       const doesExists = await repository.getWalletByName({
         keyIdentifier,
@@ -33,7 +34,7 @@ export const addWallets = async ({
         walletName,
         chain,
       })
-      saveAssets({ keyIdentifier, chain, walletName })
+      saveAssets({ keyIdentifier, chain, walletName, walletAddress })
     } catch (e) {
       throw new Error(e.message)
     }
@@ -59,16 +60,18 @@ export const getAssets = async ({
 }
 
 export const saveAssets = async ({
+  walletAddress,
   keyIdentifier,
   chain,
   walletName,
 }: {
+  walletAddress: string
   keyIdentifier: string
   chain: string
   walletName: string
 }) => {
   if (chain === 'eth') {
-    const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
+    const ethereumTokens = await eth.getTokenBalances(walletAddress)
     if (Array.isArray(ethereumTokens) && ethereumTokens.length > 0) {
       try {
         for (let i = 0; i < ethereumTokens.length; i++) {
@@ -90,6 +93,7 @@ export const saveAssets = async ({
               chain: ethereumTokens[i].chain,
               walletName,
               keyIdentifier,
+              walletAddress,
             })
           }
         }
@@ -100,16 +104,19 @@ export const saveAssets = async ({
     }
   } else if (chain === 'Evm') {
     try {
-      const avalancheTokens = await avalanche.getTokenBalances(keyIdentifier)
-      const arbitrumTokens = await arbitrum.getTokenBalances(keyIdentifier)
-      const polygonTokens = await polygon.getTokenBalances(keyIdentifier)
-      const smartChaintokens = await smartchain.getTokenBalances(keyIdentifier)
-      const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
+      const avalancheTokens = await avalanche.getTokenBalances(walletAddress)
+      const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress)
+      const optimismTokens = await optimism.getTokenBalances(walletAddress)
+
+      const polygonTokens = await polygon.getTokenBalances(walletAddress)
+      const smartChaintokens = await smartchain.getTokenBalances(walletAddress)
+      const ethereumTokens = await eth.getTokenBalances(walletAddress)
 
       const allEvmTokens = [
         ...ethereumTokens,
         ...avalancheTokens,
         ...arbitrumTokens,
+        ...optimismTokens,
         ...polygonTokens,
         ...smartChaintokens,
       ]
@@ -135,6 +142,7 @@ export const saveAssets = async ({
                 chain: allEvmTokens[i].chain,
                 walletName,
                 keyIdentifier,
+                walletAddress,
               })
             }
           }
@@ -147,7 +155,8 @@ export const saveAssets = async ({
       throw new Error(e)
     }
   } else if (chain === 'bitcoin') {
-    const btc = await bitcoin.getBitcoinBalance(keyIdentifier)
+    const btc = await bitcoin.getBitcoinBalance(walletAddress)
+
     const asset = {
       keyIdentifier,
       walletName,
@@ -158,7 +167,9 @@ export const saveAssets = async ({
       value: btc.value,
       chain: 'bitcoin',
       contractAddress: '',
+      walletAddress,
     }
+
     try {
       await repository.addAsset(asset)
       return [bitcoin]
