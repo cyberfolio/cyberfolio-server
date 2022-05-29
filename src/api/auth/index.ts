@@ -84,9 +84,15 @@ router.post('/login/validate-signature', async (req, res, next) => {
   }
 })
 
-router.get('/is-authenticated', authenticateUser, (req: any, res) => {
-  if (req?.keyIdentifier) {
-    res.status(200).send({ keyIdentifier: req.keyIdentifier })
+router.get('/is-authenticated', authenticateUser, async (req: any, res) => {
+  if (req.keyIdentifier) {
+    const verifiedUser = await getUserByEvmAddress({
+      evmAddress: req.keyIdentifier,
+    })
+    res.status(200).send({
+      keyIdentifier: req.keyIdentifier,
+      ensName: verifiedUser?.ensName,
+    })
   } else {
     res.status(401).send('Unauthenticated')
   }
