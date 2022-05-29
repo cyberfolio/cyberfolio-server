@@ -8,7 +8,7 @@ export const createUser = async ({
   nonce: string
 }) => {
   try {
-    await userModel.create({ keyIdentifier, nonce })
+    await userModel.create({ keyIdentifier, nonce, firstTimeLogin: true })
   } catch (e) {
     throw new Error(e)
   }
@@ -57,6 +57,25 @@ export const updateNonce = async ({
   try {
     const user = await userModel
       .findOneAndUpdate({ keyIdentifier: evmAddress }, { nonce })
+      .lean()
+      .exec()
+    return user
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+export const updateFirstTimeLogin = async ({
+  evmAddress,
+}: {
+  evmAddress: string
+}) => {
+  try {
+    const user = await userModel
+      .findOneAndUpdate(
+        { keyIdentifier: evmAddress },
+        { firstTimeLogin: false },
+      )
       .lean()
       .exec()
     return user

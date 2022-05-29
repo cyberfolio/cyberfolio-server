@@ -10,6 +10,7 @@ import {
   updateNonce,
   getUserByEvmAddress,
   getUserByEvmAddressAndNonce,
+  updateFirstTimeLogin,
 } from './repository'
 import { saveAssets } from '../dex/services'
 import { checkENSName } from './services'
@@ -23,14 +24,16 @@ router.post('/login/metamask', async (req, res, next) => {
     const nonce = generateNonce()
     const user = await getUserByEvmAddress({ evmAddress })
     if (!user) {
-      const newUser = {
+      await createUser({
         keyIdentifier: evmAddress,
         nonce,
-      }
-      await createUser(newUser)
+      })
     } else {
       await updateNonce({
         nonce,
+        evmAddress,
+      })
+      await updateFirstTimeLogin({
         evmAddress,
       })
     }
@@ -54,6 +57,11 @@ router.post('/login/validate-signature', async (req, res, next) => {
     if (!user) {
       throw new Error('User not found')
     }
+    const keyIdentifier = user.keyIdentifier
+    if (user.firstTimeLogin) {
+      await saveAssets({ keyIdentifier, chain: 'eth', walletName: 'main' })
+      saveAssets({ keyIdentifier, chain: 'Evm', walletName: 'main' })
+    }
 
     // set jwt to the user's browser cookies
     const token = signJwt(user)
@@ -63,13 +71,12 @@ router.post('/login/validate-signature', async (req, res, next) => {
       httpOnly: true,
       maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000,
     })
-    const keyIdentifier = user.keyIdentifier
 
     checkENSName(evmAddress)
-    await saveAssets({ keyIdentifier, chain: 'eth', walletName: 'main' })
     const response = {
       keyIdentifier,
       ensName: '',
+      firstTimeLogin: false,
     }
     const verifiedUser = await getUserByEvmAddressAndNonce({
       evmAddress,
@@ -77,6 +84,9 @@ router.post('/login/validate-signature', async (req, res, next) => {
     })
     if (verifiedUser?.ensName) {
       response.ensName = verifiedUser.ensName
+    }
+    if (verifiedUser?.firstTimeLogin) {
+      response.firstTimeLogin = verifiedUser.firstTimeLogin
     }
     res.json(response)
   } catch (e) {

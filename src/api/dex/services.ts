@@ -100,11 +100,11 @@ export const saveAssets = async ({
     }
   } else if (chain === 'Evm') {
     try {
-      const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
       const avalancheTokens = await avalanche.getTokenBalances(keyIdentifier)
       const arbitrumTokens = await arbitrum.getTokenBalances(keyIdentifier)
       const polygonTokens = await polygon.getTokenBalances(keyIdentifier)
       const smartChaintokens = await smartchain.getTokenBalances(keyIdentifier)
+      const ethereumTokens = await eth.getTokenBalances(keyIdentifier)
 
       const allEvmTokens = [
         ...ethereumTokens,

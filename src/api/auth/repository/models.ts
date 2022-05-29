@@ -3,7 +3,8 @@ import mongoose from 'mongoose'
 interface UserDoc {
   keyIdentifier: string
   nonce: string
-  ensName: string
+  firstTimeLogin: boolean
+  ensName?: string
 }
 
 const userSchema = new mongoose.Schema<UserDoc>({
@@ -19,6 +20,10 @@ const userSchema = new mongoose.Schema<UserDoc>({
   },
   ensName: {
     type: String,
+  },
+  firstTimeLogin: {
+    type: Boolean,
+    required: true,
   },
 })
 
