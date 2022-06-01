@@ -38,6 +38,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               chain: 'avalanche',
+              scan: `https://snowtrace.io/tokenholdings?a=${walletAddress}`,
             })
           }
         }

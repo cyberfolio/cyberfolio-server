@@ -30,6 +30,7 @@ export const getTokenBalances = async (walletAddress: string) => {
         symbol: 'dot',
         balance: formattedFreeBalance,
         chain: 'polkadot',
+        scan: ``,
       },
     ]
   } catch (e) {

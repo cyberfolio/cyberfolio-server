@@ -73,6 +73,7 @@ export const addAsset = async ({
   chain,
   contractAddress,
   walletAddress,
+  scan,
 }: {
   keyIdentifier: string
   walletName: string
@@ -84,6 +85,7 @@ export const addAsset = async ({
   chain: string
   contractAddress: string
   walletAddress: string
+  scan: string
 }) => {
   try {
     symbol = symbol.toLowerCase()
@@ -103,6 +105,7 @@ export const addAsset = async ({
         chain,
         contractAddress,
         walletAddress,
+        scan,
       },
       { upsert: true, new: true },
     )

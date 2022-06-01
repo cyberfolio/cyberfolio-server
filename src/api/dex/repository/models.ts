@@ -27,6 +27,7 @@ export interface DexAsset {
   walletName: string
   contractAddress: string
   walletAddress: string
+  scan: string
 }
 const dexAssetSchema = new mongoose.Schema<DexAsset>({
   keyIdentifier: { type: String, required: true },
@@ -40,6 +41,7 @@ const dexAssetSchema = new mongoose.Schema<DexAsset>({
   walletName: { type: String, required: true },
   walletAddress: { type: String, required: true },
   contractAddress: { type: String },
+  scan: { type: String },
 })
 
 export const dexAssetModel = mongoose.model<DexAsset>(

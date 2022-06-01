@@ -38,6 +38,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               chain: 'smartchain',
+              scan: `https://www.bscscan.com/tokenholdings?a=${walletAddress}`,
             })
           }
         }

@@ -15,11 +15,11 @@
       "node"
     ],
     "paths": {
-      "@src/*": ["src/*"],
-      "@config/*": ["src/config/*"],
       "@providers/*": ["src/modules/providers/*"],
+      "@config/*": ["src/config/*"],
       "@dex/*": ["src/modules/dex/*"],
-      "@cex/*": ["src/modules/cex/*"]
+      "@cex/*": ["src/modules/cex/*"],
+      "@src/*": ["src/*"]
     }
   },
 }

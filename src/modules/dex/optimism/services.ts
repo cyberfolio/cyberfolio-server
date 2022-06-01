@@ -38,6 +38,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               chain: 'arbitrum',
+              scan: `https:/optimistic.etherscan.io/tokenholdings?a=${walletAddress}`,
             })
           }
         }

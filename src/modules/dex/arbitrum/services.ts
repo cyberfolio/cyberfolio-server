@@ -12,6 +12,9 @@ export const getTokenBalances = async (walletAddress: string) => {
     const response = []
     if (existingTokens && Array.isArray(existingTokens)) {
       for (let i = 0; i < existingTokens.length; i++) {
+        if (i === 0) {
+          console.log(existingTokens[i])
+        }
         if (existingTokens[i].balance > 0) {
           const balance = Number(
             parseFloat(
@@ -38,6 +41,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               chain: 'optimism',
+              scan: `https://arbiscan.io/tokenholdings?a=${walletAddress}`,
             })
           }
         }

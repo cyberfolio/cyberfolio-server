@@ -61,10 +61,10 @@
     "prettier": "^2.6.2"
   },
   "_moduleAliases": {
-    "@config": "src/config/",
     "@providers": "src/modules/providers/",
     "@cex": "src/modules/cex/",
     "@dex": "src/modules/dex/",
+    "@config": "src/config/",
     "@src": "src/"
   },
   "engines": {

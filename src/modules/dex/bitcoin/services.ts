@@ -21,6 +21,7 @@ export const getBitcoinBalance = async (walletAddress: string) => {
       logo: 'https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg',
       value,
       chain: 'bitcoin',
+      scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
     }
   } catch (e) {
     console.log(

@@ -166,6 +166,7 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
           balance,
           price,
           chain: 'solana',
+          scan: `https://explorer.solana.com/address/${walletAddress}/tokens`,
         })
       }
     }
