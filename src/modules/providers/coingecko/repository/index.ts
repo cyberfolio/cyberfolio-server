@@ -1,3 +1,4 @@
+import { logError } from '@src/utils'
 import { currencyModel, lastCurrencyUpdateModel } from './models'
 
 export const addOrUpdateCryptoCurrency = async ({
@@ -27,7 +28,12 @@ export const addOrUpdateCryptoCurrency = async ({
         },
       )
     } catch (e) {
-      throw new Error(e)
+      logError({
+        e,
+        func: addOrUpdateCryptoCurrency.name,
+        path: 'src/modules/providers/coingecko/repository/index.ts',
+      })
+      throw e
     }
   }
 }
@@ -37,7 +43,12 @@ export const getCryptoPriceBySymbol = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency?.price ? parseFloat(currency.price.toFixed(2)) : null
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getCryptoPriceBySymbol.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -46,7 +57,12 @@ export const getCurrencyLogo = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency?.logo
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getCurrencyLogo.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -55,7 +71,12 @@ export const getCurrenyInfo = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getCurrenyInfo.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -64,7 +85,12 @@ export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency?.name ? currency.name : ''
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getFullNameOfTheCurrencyBySymbol.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -75,7 +101,12 @@ export const getContractAddressOfTheCurrencyBySymbol = async (
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency?.contractAddress ? currency.contractAddress : ''
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getContractAddressOfTheCurrencyBySymbol.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -85,7 +116,12 @@ export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
       .findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true })
       .lean()
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: setLastCurrencyUpdateDate.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -96,6 +132,11 @@ export const getLastCurrencyUpdateDate = async (): Promise<Date> => {
       .lean()
     return lastCurrencyUpdate?.lastUpdateDate
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getLastCurrencyUpdateDate.name,
+      path: 'src/modules/providers/coingecko/repository/index.ts',
+    })
+    throw e
   }
 }

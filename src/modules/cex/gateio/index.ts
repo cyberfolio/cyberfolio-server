@@ -6,6 +6,8 @@ import {
   getContractAddress,
 } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import axios, { AxiosError } from 'axios'
+import { GateIoError } from '@config/custom-typings'
 
 export const getAssets = async ({
   apiKey,
@@ -60,10 +62,15 @@ export const getAssets = async ({
 
     return response
   } catch (e) {
-    if (e?.response?.data?.code) {
-      throw new Error(e.response.data.code)
+    if (axios.isAxiosError(e)) {
+      const gateIoError = e as AxiosError<GateIoError>
+      if (gateIoError.response?.data?.code) {
+        throw new Error(gateIoError.response.data.code)
+      } else {
+        throw new Error(e.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Connection, clusterApiUrl, PublicKey, Cluster } from '@solana/web3.js'
 import { TokenListProvider } from '@solana/spl-token-registry'
 
-import { intDivide } from '@src/utils'
+import { intDivide, logError } from '@src/utils'
 import { getCurrentUSDPrice } from '@providers/coingecko'
 
 const solanaDecimals = Number(process.env.SOLANA_DECIMALS)
@@ -36,9 +36,11 @@ export const getTokenBalances = async (walletAddress: string) => {
 
     return avaliableTokens
   } catch (e) {
-    console.log(
-      `Error at ${getTokenBalances.name} src/modules/dex/solana/index.ts`,
-    )
+    logError({
+      e,
+      func: getTokenBalances.name,
+      path: 'src/modules/dex/solana/index.ts',
+    })
     throw e
   }
 }
@@ -173,7 +175,11 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
 
     return response
   } catch (e) {
-    console.log(`Error at ${getBalances.name} src/modules/dex/solana/index.ts`)
+    logError({
+      e,
+      func: getBalances.name,
+      path: 'src/modules/dex/solana/index.ts',
+    })
     throw e
   }
 }

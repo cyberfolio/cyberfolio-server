@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { sathoshiToBtcBalance } from '@src/utils'
+import { logError, sathoshiToBtcBalance } from '@src/utils'
 import { getCurrentUSDPrice } from '@providers/coingecko'
 
 export const getBitcoinBalance = async (walletAddress: string) => {
@@ -24,9 +24,11 @@ export const getBitcoinBalance = async (walletAddress: string) => {
       scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
     }
   } catch (e) {
-    console.log(
-      `Error at ${getBitcoinBalance.name} src/modules/dex/bitcoin/services.ts`,
-    )
+    logError({
+      e,
+      func: getBitcoinBalance.name,
+      path: 'src/modules/dex/arbitrum/avalanche.ts',
+    })
     throw e
   }
 }

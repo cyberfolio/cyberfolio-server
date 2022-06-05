@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import axios from 'axios'
 
-import { formatBalance } from '@src/utils'
+import { formatBalance, logError } from '@src/utils'
 import { getCurrencyLogo } from '@providers/coingecko/repository'
 
 const web3 = new Web3(
@@ -20,10 +20,12 @@ export const getEthBalance = async (walletAddress: string) => {
     const balance = await web3.eth.getBalance(walletAddress)
     return web3.utils.fromWei(balance, 'ether')
   } catch (e) {
-    console.log(
-      `Error at ${getEthBalance.name} src/modules/dex/ethereum/services.ts`,
-    )
-    throw new Error(e)
+    logError({
+      e,
+      func: getEthBalance.name,
+      path: 'src/modules/dex/ethereum/services.ts',
+    })
+    throw e
   }
 }
 
@@ -46,10 +48,12 @@ export const getERC20Tokens = async () => {
       return []
     }
   } catch (e) {
-    console.log(
-      `Error at ${getERC20Tokens.name} src/modules/dex/ethereum/services.ts`,
-    )
-    throw new Error(e)
+    logError({
+      e,
+      func: getERC20Tokens.name,
+      path: 'src/modules/dex/ethereum/services.ts',
+    })
+    throw e
   }
 }
 
@@ -99,9 +103,11 @@ export const getTokenBalances = async (walletAddress: string) => {
     }
     return response
   } catch (e) {
-    console.log(
-      `Error at ${getTokenBalances.name} src/modules/dex/ethereum/services.ts ${e}`,
-    )
-    throw new Error(e.message)
+    logError({
+      e,
+      func: getTokenBalances.name,
+      path: 'src/modules/dex/ethereum/services.ts',
+    })
+    throw e
   }
 }

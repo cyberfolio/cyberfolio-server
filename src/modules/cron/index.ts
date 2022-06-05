@@ -1,3 +1,4 @@
+import { logError } from '@src/utils'
 import cron from 'node-cron'
 import { updateCurrencies } from './updateCurrencies'
 
@@ -10,7 +11,19 @@ export const initCronJobs = async () => {
       await updateCurrencies()
       console.log('Cryptoprice update completed at: ' + new Date())
     } catch (e) {
-      console.log('Cryptoprice update failed at, reason: ' + e.message)
+      if (e instanceof Error) {
+        logError({
+          e,
+          path: 'src/modules/cron/index.ts',
+          func: initCronJobs.name,
+        })
+      } else {
+        logError({
+          e: 'unknown error',
+          path: 'src/modules/cron/index.ts',
+          func: initCronJobs.name,
+        })
+      }
     }
   })
 }

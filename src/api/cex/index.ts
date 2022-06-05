@@ -20,7 +20,11 @@ router.post('/add', async (req: any, res: express.Response) => {
     })
     return res.status(200).send({ assets })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 
@@ -32,7 +36,11 @@ router.get('/assets', async (req: any, res: express.Response) => {
     })
     return res.status(200).send({ assets })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 
@@ -46,7 +54,11 @@ router.get('/assets/:cexName', async (req: any, res: express.Response) => {
     })
     return res.status(200).send({ assets })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 

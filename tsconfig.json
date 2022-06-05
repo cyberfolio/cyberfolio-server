@@ -10,7 +10,10 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "baseUrl": ".",
-    "useUnknownInCatchVariables": false, // TypeScript 4.4+ only!
+    "typeRoots": [
+      "./src/config",
+      "./node_modules/@types",
+    ],
     "types": [
       "node"
     ],

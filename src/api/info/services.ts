@@ -1,3 +1,4 @@
+import { onError } from '@src/utils'
 import * as cexRepo from '../cex/services'
 import * as dexRepo from '../dex/repository'
 
@@ -13,13 +14,15 @@ export const getNetWorth = async ({
     }, 0)
 
     const cexAssets = await cexRepo.getAllSpot({ keyIdentifier })
-    const cexTotalValue = cexAssets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value
-    }, 0)
-
+    let cexTotalValue = 0
+    if (cexAssets) {
+      cexTotalValue = cexAssets.reduce(function (acc: any, obj: any) {
+        return acc + obj.value
+      }, 0)
+    }
     return dexTotalValue + cexTotalValue
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -45,6 +48,6 @@ export const getAvailableAccounts = async ({
 
     return [...availableChains, ...availableCexes]
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }

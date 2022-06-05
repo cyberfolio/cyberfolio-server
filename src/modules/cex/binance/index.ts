@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import crypto from 'crypto-js'
 
 import { roundNumber } from '@src/utils'
@@ -8,6 +8,7 @@ import {
   getContractAddress,
 } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import { BinanceError } from '@config/custom-typings'
 
 const API_URL = process.env.BINANCE_API_URL
 
@@ -64,17 +65,22 @@ export const getAssets = async ({
     }
     return response
   } catch (e) {
-    if (e?.response?.data?.code === -1022) {
-      throw new Error('API Secret is invalid')
-    }
-    if (e?.response?.data?.code === -2015) {
-      throw new Error(
-        'API key is invalid or IP restricted or permissions are missing',
-      )
-    } else if (e?.response?.data?.msg) {
-      throw new Error(e.response.data.msg)
+    if (axios.isAxiosError(e)) {
+      const binanceError = e as AxiosError<BinanceError>
+      if (binanceError.response?.data?.code === -1022) {
+        throw new Error('API Secret is invalid')
+      }
+      if (binanceError.response?.data?.code === -2015) {
+        throw new Error(
+          'API key is invalid or IP restricted or permissions are missing',
+        )
+      } else if (binanceError.response?.data?.msg) {
+        throw new Error(binanceError.response.data.msg)
+      } else {
+        throw new Error(e.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }
@@ -104,10 +110,15 @@ export const getFiatDepositAndWithDrawalHistory = async ({
     const data = response.data
     return data
   } catch (e) {
-    if (e?.response?.data?.code) {
-      throw new Error(e.response.data.code)
+    if (axios.isAxiosError(e)) {
+      const binanceError = e as AxiosError<BinanceError>
+      if (binanceError.response?.data?.msg) {
+        throw new Error(binanceError.response.data.msg)
+      } else {
+        throw new Error(e.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }
@@ -137,10 +148,15 @@ export const getFiatPaymentBuyAndSellHistory = async ({
     const data = response.data
     return data
   } catch (e) {
-    if (e?.response?.data?.code) {
-      throw new Error(e.response.data.code)
+    if (axios.isAxiosError(e)) {
+      const binanceError = e as AxiosError<BinanceError>
+      if (binanceError.response?.data?.msg) {
+        throw new Error(binanceError.response.data.msg)
+      } else {
+        throw new Error(e.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }

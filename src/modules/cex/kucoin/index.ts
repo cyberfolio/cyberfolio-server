@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import crypto from 'crypto-js'
 import { roundNumber } from '@src/utils'
 
@@ -8,6 +8,7 @@ import {
   getContractAddress,
 } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import { KucoinError } from '@config/custom-typings'
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string
 const API_URL = process.env.KUCOIN_API_URL
@@ -80,12 +81,17 @@ export const getAssets = async ({
 
     return response
   } catch (e) {
-    if (e.response?.data?.code === '400003') {
-      throw new Error('Api key or secret is not valid.')
-    } else if (e?.response?.data?.code === '400005') {
-      throw new Error('Server error, please contact the admin.')
+    if (axios.isAxiosError(e)) {
+      const gateIoError = e as AxiosError<KucoinError>
+      if (gateIoError.response?.data?.code === '400003') {
+        throw new Error('Api key or secret is not valid.')
+      } else if (gateIoError.response?.data?.code === '400005') {
+        throw new Error('Server error, please contact the admin.')
+      } else {
+        throw new Error(e.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }

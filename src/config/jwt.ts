@@ -1,3 +1,4 @@
+import { onError } from '@src/utils'
 import jwt from 'jsonwebtoken'
 
 const secret = process.env.JWT_SECRET as jwt.Secret
@@ -19,6 +20,6 @@ export const verifyJwtAndReturnUser = ({ jwtToken }: { jwtToken: string }) => {
     const result = jwt.verify(jwtToken, secret)
     return result
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }

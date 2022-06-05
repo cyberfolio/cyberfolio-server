@@ -1,4 +1,5 @@
 import { getCurrenyInfo } from '@providers/coingecko/repository'
+import { logError } from '@src/utils'
 import { walletsModel, dexAssetModel } from './models'
 
 export const addWalletByKeyIdentifier = async ({
@@ -110,7 +111,12 @@ export const addAsset = async ({
       { upsert: true, new: true },
     )
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: addAsset.name,
+      path: 'src/api/dex/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -125,7 +131,12 @@ export const getAssetsByKeyAndChain = async ({
     const assets = await dexAssetModel.find({ keyIdentifier, chain }).lean()
     return assets
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getAssetsByKeyAndChain.name,
+      path: 'src/api/dex/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -138,6 +149,11 @@ export const getAssetsByKey = async ({
     const assets = await dexAssetModel.find({ keyIdentifier }).lean()
     return assets
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: getAssetsByKey.name,
+      path: 'src/api/dex/repository/index.ts',
+    })
+    throw e
   }
 }

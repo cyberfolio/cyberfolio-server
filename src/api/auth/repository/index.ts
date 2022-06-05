@@ -1,3 +1,4 @@
+import { onError } from '@src/utils'
 import { userModel } from './models'
 
 export const createUser = async ({
@@ -10,7 +11,7 @@ export const createUser = async ({
   try {
     await userModel.create({ keyIdentifier, nonce, firstTimeLogin: true })
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -26,7 +27,7 @@ export const getUserByEvmAddress = async ({
       .exec()
     return user
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -43,7 +44,7 @@ export const getUserByEvmAddressAndNonce = async ({
       .lean()
     return user
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -61,7 +62,7 @@ export const updateNonce = async ({
       .exec()
     return user
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -80,6 +81,6 @@ export const updateFirstTimeLogin = async ({
       .exec()
     return user
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }

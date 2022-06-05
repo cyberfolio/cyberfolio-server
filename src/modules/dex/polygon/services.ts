@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { formatBalance } from '@src/utils'
+import { formatBalance, logError } from '@src/utils'
 import { getCurrencyLogo } from '@providers/coingecko/repository'
 
 export const getTokenBalances = async (walletAddress: string) => {
@@ -47,9 +47,11 @@ export const getTokenBalances = async (walletAddress: string) => {
     }
     return response
   } catch (e) {
-    console.log(
-      `Error at ${getTokenBalances.name} src/modules/dex/polygon/services.ts`,
-    )
+    logError({
+      e,
+      func: getTokenBalances.name,
+      path: 'src/modules/dex/polygon/services.ts',
+    })
     throw e
   }
 }

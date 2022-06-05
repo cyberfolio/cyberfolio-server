@@ -1,3 +1,4 @@
+import { logError } from '@src/utils'
 import { cexInfoModel, cexAssetModel } from './models'
 
 export const addCexByKeyIdentifier = async ({
@@ -31,7 +32,12 @@ export const addCexByKeyIdentifier = async ({
       passphrase,
     })
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: addCexByKeyIdentifier.name,
+      path: 'src/api/cex/repository/index.ts',
+    })
+    throw e
   }
 }
 
@@ -129,6 +135,11 @@ export const addCexAsset = async ({
       { upsert: true, new: true },
     )
   } catch (e) {
-    throw new Error(e)
+    logError({
+      e,
+      func: addCexAsset.name,
+      path: 'src/api/cex/repository/index.ts',
+    })
+    throw e
   }
 }

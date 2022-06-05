@@ -10,7 +10,11 @@ router.get('/networth', async (req: any, res: express.Response) => {
     const netWorth = await getNetWorth({ keyIdentifier })
     return res.status(200).send({ netWorth })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 
@@ -20,7 +24,11 @@ router.get('/available-accounts', async (req: any, res: express.Response) => {
     const availableAccounts = await getAvailableAccounts({ keyIdentifier })
     return res.status(200).send({ availableAccounts })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 
@@ -37,7 +45,11 @@ router.get('/ens-name', async (req: any, res: express.Response) => {
       return res.status(200).send('')
     }
   } catch (e) {
-    return res.status(401).send(e.message)
+    if (e instanceof Error) {
+      return res.status(401).send(e.message)
+    } else {
+      return res.status(401).send('Unexpected error')
+    }
   }
 })
 

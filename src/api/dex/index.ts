@@ -10,7 +10,11 @@ router.post('/add', async (req: any, res: express.Response) => {
     await addWallets({ keyIdentifier, wallets })
     return res.status(200).send('success')
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 
@@ -19,12 +23,19 @@ router.get('/assets/:chain', async (req: any, res: express.Response) => {
   const chain = req.params.chain.toLowerCase()
   try {
     const assets = await getAssets({ keyIdentifier, chain })
-    const totalTokenValue = assets.reduce(function (acc: any, obj: any) {
-      return acc + obj.value
-    }, 0)
+    let totalTokenValue = 0
+    if (assets) {
+      totalTokenValue = assets.reduce(function (acc: any, obj: any) {
+        return acc + obj.value
+      }, 0)
+    }
     return res.status(200).send({ assets, totalTokenValue })
   } catch (e) {
-    return res.status(500).send(e.message)
+    if (e instanceof Error) {
+      return res.status(500).send(e.message)
+    } else {
+      return res.status(500).send('Unexpected error')
+    }
   }
 })
 

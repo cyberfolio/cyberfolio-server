@@ -9,7 +9,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "promise", "unicorn", "unused-imports"],
+  "plugins": ["@typescript-eslint", "promise", "unicorn"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"

@@ -1,4 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import { logError } from '@src/utils'
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
@@ -34,9 +35,11 @@ export const getTokenBalances = async (walletAddress: string) => {
       },
     ]
   } catch (e) {
-    console.log(
-      `Error at ${getTokenBalances.name} src/modules/dex/polkadot/services.ts`,
-    )
+    logError({
+      e,
+      func: getTokenBalances.name,
+      path: 'src/modules/dex/polkadot/services.ts',
+    })
     throw e
   }
 }

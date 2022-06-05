@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import crypto from 'crypto-js'
 
 import { roundNumber } from '@src/utils'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
+import { FTXError } from '@config/custom-typings'
 
 const API_URL = process.env.FTX_API_URL
 
@@ -64,18 +65,23 @@ export const getAssets = async ({
     }
     return response
   } catch (e) {
-    if (
-      e?.response?.data?.error === 'Not logged in: Invalid API key' &&
-      e.response?.status === 401
-    ) {
-      throw new Error('Your API Key is invalid')
-    } else if (
-      e?.response?.data?.error === 'Not logged in: Invalid signature' &&
-      e.response?.status === 401
-    ) {
-      throw new Error('Your API Secret is invalid')
+    if (axios.isAxiosError(e)) {
+      const ftxError = e as AxiosError<FTXError>
+      if (
+        ftxError.response?.data?.error === 'Not logged in: Invalid API key' &&
+        ftxError.response?.status === 401
+      ) {
+        throw new Error('Your API Key is invalid')
+      } else if (
+        ftxError.response?.data?.error === 'Not logged in: Invalid signature' &&
+        ftxError.response?.status === 401
+      ) {
+        throw new Error('Your API Secret is invalid')
+      } else {
+        throw new Error(ftxError.message)
+      }
     } else {
-      throw new Error(e.message)
+      throw e
     }
   }
 }

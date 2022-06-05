@@ -4,6 +4,7 @@ import * as gateio from '@cex/gateio'
 import * as ftx from '@cex/ftx'
 
 import * as repository from './repository'
+import { onError } from '@src/utils'
 
 export const checkIfExists = async ({
   keyIdentifier,
@@ -63,7 +64,7 @@ export const addCex = async ({
     })
     return assets
   } catch (e) {
-    throw new Error(e.message)
+    onError(e)
   }
 }
 
@@ -120,12 +121,12 @@ export const saveSpotAssets = async ({
           })
         }
       } catch (e) {
-        throw new Error(e.message)
+        onError(e)
       }
     }
     return spotAssets
   } catch (e) {
-    throw new Error(e.message)
+    onError(e)
   }
 }
 
@@ -150,7 +151,7 @@ export const getSpotAssetsByCexName = async ({
     })
     return assets
   } catch (e) {
-    throw new Error(e.message)
+    onError(e)
   }
 }
 
@@ -165,6 +166,6 @@ export const getAllSpot = async ({
     })
     return assets
   } catch (e) {
-    throw new Error(e.message)
+    onError(e)
   }
 }

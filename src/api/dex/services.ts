@@ -8,6 +8,7 @@ import * as smartchain from '@dex/smartchain/services'
 
 import scamTokens from '@config/scamTokens'
 import * as repository from './repository'
+import { onError } from '@src/utils'
 
 export const addWallets = async ({
   keyIdentifier,
@@ -36,7 +37,7 @@ export const addWallets = async ({
       })
       saveAssets({ keyIdentifier, chain, walletName, walletAddress })
     } catch (e) {
-      throw new Error(e.message)
+      onError(e)
     }
   }
 }
@@ -55,7 +56,7 @@ export const getAssets = async ({
     })
     return assets
   } catch (e) {
-    throw new Error(e)
+    onError(e)
   }
 }
 
@@ -99,7 +100,7 @@ export const saveAssets = async ({
           }
         }
       } catch (e) {
-        throw new Error(e.message)
+        onError(e)
       }
       return ethereumTokens
     }
@@ -149,12 +150,12 @@ export const saveAssets = async ({
             }
           }
         } catch (e) {
-          throw new Error(e.message)
+          onError(e)
         }
       }
       return allEvmTokens
     } catch (e) {
-      throw new Error(e)
+      onError(e)
     }
   } else if (chain.toLowerCase() === 'bitcoin') {
     const btc = await bitcoin.getBitcoinBalance(walletAddress)
@@ -177,7 +178,7 @@ export const saveAssets = async ({
       await repository.addAsset(asset)
       return [bitcoin]
     } catch (e) {
-      throw new Error(e)
+      onError(e)
     }
   }
 }

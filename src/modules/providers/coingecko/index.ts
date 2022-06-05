@@ -1,4 +1,4 @@
-import { sleep } from '@src/utils'
+import { logError, sleep } from '@src/utils'
 import axios from 'axios'
 import {
   addOrUpdateCryptoCurrency,
@@ -30,9 +30,11 @@ export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
       }
     }
   } catch (e) {
-    console.log(
-      `Error at ${addOrUpdateAllCryptoPriceInUSD.name} src/modules/providers/coingecko/index.ts`,
-    )
+    logError({
+      e,
+      func: addOrUpdateAllCryptoPriceInUSD.name,
+      path: 'src/modules/providers/coingecko/index.ts',
+    })
     throw e
   }
 }
