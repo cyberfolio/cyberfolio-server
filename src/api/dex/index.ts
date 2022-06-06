@@ -18,11 +18,11 @@ router.post('/add', async (req: any, res: express.Response) => {
   }
 })
 
-router.get('/assets/:chain', async (req: any, res: express.Response) => {
+router.get('/assets/:platform', async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier
-  const chain = req.params.chain.toLowerCase()
+  const platform = req.params.platform.toLowerCase()
   try {
-    const assets = await getAssets({ keyIdentifier, chain })
+    const assets = await getAssets({ keyIdentifier, platform })
     let totalTokenValue = 0
     if (assets) {
       totalTokenValue = assets.reduce(function (acc: any, obj: any) {

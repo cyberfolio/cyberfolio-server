@@ -36,7 +36,4 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   price: Number,
   value: Number,
 })
-export const cexAssetModel = mongoose.model<CexAsset>(
-  'cex-asset',
-  cexAssetSchema,
-)
+export const cexAssetModel = mongoose.model<CexAsset>('cex-asset', cexAssetSchema)

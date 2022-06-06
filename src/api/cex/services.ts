@@ -5,14 +5,9 @@ import * as ftx from '@cex/ftx'
 
 import * as repository from './repository'
 import { onError } from '@src/utils'
+import { Platform } from '@config/types'
 
-export const checkIfExists = async ({
-  keyIdentifier,
-  cexName,
-}: {
-  keyIdentifier: string
-  cexName: string
-}) => {
+export const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
   const cexInfo = await repository.getCexInfo({
     keyIdentifier,
     cexName,
@@ -22,11 +17,7 @@ export const checkIfExists = async ({
   }
 }
 
-export const getAvailableCexes = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getAvailableCexes = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const cexInfo = await repository.getCexInfosByKey({
     keyIdentifier,
   })
@@ -43,7 +34,7 @@ export const addCex = async ({
   keyIdentifier: string
   apiKey: string
   apiSecret: string
-  cexName: string
+  cexName: Platform
   passphrase: string
 }) => {
   try {
@@ -75,30 +66,29 @@ export const saveSpotAssets = async ({
   passphrase,
   keyIdentifier,
 }: {
-  cexName: string
+  cexName: Platform
   apiKey: string
   apiSecret: string
   passphrase: string
   keyIdentifier: string
 }) => {
   let spotAssets = [] as any
-  cexName = cexName.toLowerCase()
   try {
-    if (cexName === 'binance') {
+    if (cexName === Platform.Binance) {
       spotAssets = await binance.getAssets({ apiKey, apiSecret })
-    } else if (cexName === 'kucoin') {
+    } else if (cexName === Platform.Kucoin) {
       spotAssets = await kucoin.getAssets({
         type: 'main',
         apiKey,
         apiSecret,
         passphrase,
       })
-    } else if (cexName === 'gateio') {
+    } else if (cexName === Platform.Gateio) {
       spotAssets = await gateio.getAssets({
         apiKey,
         apiSecret,
       })
-    } else if (cexName === 'ftx') {
+    } else if (cexName === Platform.FTX) {
       spotAssets = await ftx.getAssets({
         apiKey,
         apiSecret,
@@ -135,7 +125,7 @@ export const getSpotAssetsByCexName = async ({
   cexName,
 }: {
   keyIdentifier: string
-  cexName: string
+  cexName: Platform
 }) => {
   try {
     const cexInfo = await repository.getCexInfo({
@@ -155,11 +145,7 @@ export const getSpotAssetsByCexName = async ({
   }
 }
 
-export const getAllSpot = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getAllSpot = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await repository.fetchAllSpotAssets({
       keyIdentifier,

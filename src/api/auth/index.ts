@@ -5,15 +5,10 @@ import { generateNonce } from '@src/utils'
 import { signJwt } from '@config/jwt'
 import { authenticateUser } from '@config/middleware'
 
-import {
-  createUser,
-  updateNonce,
-  getUserByEvmAddress,
-  getUserByEvmAddressAndNonce,
-  updateFirstTimeLogin,
-} from './repository'
+import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce, updateFirstTimeLogin } from './repository'
 import { saveAssets } from '../dex/services'
 import { checkENSName } from './services'
+import { Platform } from '@config/types'
 
 const router = express.Router()
 
@@ -62,13 +57,14 @@ router.post('/login/validate-signature', async (req, res, next) => {
       await saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        chain: 'eth',
+        platform: Platform.Ethereum,
         walletName: 'main',
       })
+    } else {
       saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        chain: 'Evm',
+        platform: Platform.Ethereum,
         walletName: 'main',
       })
     }

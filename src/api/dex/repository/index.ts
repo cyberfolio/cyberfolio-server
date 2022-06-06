@@ -1,3 +1,4 @@
+import { Platform } from '@config/types'
 import { getCurrenyInfo } from '@providers/coingecko/repository'
 import { logError } from '@src/utils'
 import { walletsModel, dexAssetModel } from './models'
@@ -6,12 +7,12 @@ export const addWalletByKeyIdentifier = async ({
   keyIdentifier,
   walletAddress,
   walletName,
-  chain,
+  platform,
 }: {
   keyIdentifier: string
   walletAddress: string
   walletName: string
-  chain: string
+  platform: Platform
 }) => {
   const wallet = await walletsModel
     .findOne({
@@ -26,40 +27,22 @@ export const addWalletByKeyIdentifier = async ({
     keyIdentifier,
     walletAddress,
     walletName,
-    chain,
+    platform,
   })
 }
 
-export const getWalletsByKey = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const wallets = await walletsModel.find({ keyIdentifier }).lean().exec()
   return wallets
 }
 
-export const getWallet = async ({
-  keyIdentifier,
-  chain,
-}: {
-  keyIdentifier: string
-  chain: string
-}) => {
-  const wallet = await walletsModel.findOne({ keyIdentifier, chain }).lean()
+export const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Platform }) => {
+  const wallet = await walletsModel.findOne({ keyIdentifier, platform }).lean()
   return wallet
 }
 
-export const getWalletByName = async ({
-  keyIdentifier,
-  walletName,
-}: {
-  keyIdentifier: string
-  walletName: string
-}) => {
-  const wallet = await walletsModel
-    .findOne({ keyIdentifier, walletName })
-    .lean()
+export const getWalletByName = async ({ keyIdentifier, walletName }: { keyIdentifier: string; walletName: string }) => {
+  const wallet = await walletsModel.findOne({ keyIdentifier, walletName }).lean()
   return wallet
 }
 
@@ -71,7 +54,7 @@ export const addAsset = async ({
   balance,
   price,
   value,
-  chain,
+  platform,
   contractAddress,
   walletAddress,
   scan,
@@ -83,7 +66,7 @@ export const addAsset = async ({
   balance: number
   price: number
   value: number
-  chain: string
+  platform: Platform
   contractAddress: string
   walletAddress: string
   scan: string
@@ -93,7 +76,7 @@ export const addAsset = async ({
     const currenyInfo = await getCurrenyInfo(symbol)
     const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined
     await dexAssetModel.findOneAndUpdate(
-      { walletAddress, keyIdentifier, name, symbol, chain },
+      { walletAddress, keyIdentifier, name, symbol, platform },
       {
         keyIdentifier,
         walletName,
@@ -103,7 +86,7 @@ export const addAsset = async ({
         price,
         value,
         logo,
-        chain,
+        platform,
         contractAddress,
         walletAddress,
         scan,
@@ -122,13 +105,13 @@ export const addAsset = async ({
 
 export const getAssetsByKeyAndChain = async ({
   keyIdentifier,
-  chain,
+  platform,
 }: {
   keyIdentifier: string
-  chain: string
+  platform: Platform
 }) => {
   try {
-    const assets = await dexAssetModel.find({ keyIdentifier, chain }).lean()
+    const assets = await dexAssetModel.find({ keyIdentifier, platform }).lean()
     return assets
   } catch (e) {
     logError({
@@ -140,11 +123,7 @@ export const getAssetsByKeyAndChain = async ({
   }
 }
 
-export const getAssetsByKey = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await dexAssetModel.find({ keyIdentifier }).lean()
     return assets
@@ -152,6 +131,20 @@ export const getAssetsByKey = async ({
     logError({
       e,
       func: getAssetsByKey.name,
+      path: 'src/api/dex/repository/index.ts',
+    })
+    throw e
+  }
+}
+
+export const getAllAssets = async () => {
+  try {
+    const assets = await dexAssetModel.find({}).lean()
+    return assets
+  } catch (e) {
+    logError({
+      e,
+      func: getAllAssets.name,
       path: 'src/api/dex/repository/index.ts',
     })
     throw e

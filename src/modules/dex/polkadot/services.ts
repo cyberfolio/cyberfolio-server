@@ -1,3 +1,4 @@
+import { Platform } from '@config/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { logError } from '@src/utils'
 
@@ -30,7 +31,7 @@ export const getTokenBalances = async (walletAddress: string) => {
         price: 25,
         symbol: 'dot',
         balance: formattedFreeBalance,
-        chain: 'polkadot',
+        platform: Platform.Polkadot,
         scan: ``,
       },
     ]

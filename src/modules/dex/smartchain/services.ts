@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { formatBalance, logError } from '@src/utils'
 import { getCurrencyLogo } from '@providers/coingecko/repository'
+import { Platform } from '@config/types'
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
@@ -15,10 +16,7 @@ export const getTokenBalances = async (walletAddress: string) => {
         if (existingTokens[i].balance > 0) {
           const balance = Number(
             parseFloat(
-              formatBalance(
-                existingTokens[i].balance,
-                parseInt(existingTokens[i].contract_decimals) as any,
-              ),
+              formatBalance(existingTokens[i].balance, parseInt(existingTokens[i].contract_decimals) as any),
             )?.toFixed(2),
           )
 
@@ -37,7 +35,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              chain: 'smartchain',
+              platform: Platform.SmartChain,
               scan: `https://www.bscscan.com/tokenholdings?a=${walletAddress}`,
             })
           }

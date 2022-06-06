@@ -2,11 +2,7 @@ import { onError } from '@src/utils'
 import * as cexRepo from '../cex/services'
 import * as dexRepo from '../dex/repository'
 
-export const getNetWorth = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier })
     const dexTotalValue = dexAssets.reduce(function (acc: any, obj: any) {
@@ -26,24 +22,20 @@ export const getNetWorth = async ({
   }
 }
 
-export const getAvailableAccounts = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getAvailableAccounts = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const dexAssets = await dexRepo.getWalletsByKey({
       keyIdentifier,
     })
     const availableChains: string[] = []
     dexAssets.map((dexAsset) => {
-      availableChains.push(dexAsset.chain.toLowerCase())
+      availableChains.push(dexAsset.platform)
     })
 
     const cexAssets = await cexRepo.getAvailableCexes({ keyIdentifier })
     const availableCexes: string[] = []
     cexAssets.map((dexAsset) => {
-      availableChains.push(dexAsset.cexName.toLowerCase())
+      availableChains.push(dexAsset.cexName)
     })
 
     return [...availableChains, ...availableCexes]

@@ -3,12 +3,9 @@ import axios from 'axios'
 
 import { formatBalance, logError } from '@src/utils'
 import { getCurrencyLogo } from '@providers/coingecko/repository'
+import { Platform } from '@config/types'
 
-const web3 = new Web3(
-  new Web3.providers.HttpProvider(
-    `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
-  ),
-)
+const web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`))
 const coingeckoERC20TokenListURL = process.env.COINGECKO_ERC20_TOKEN_LIST_URL
 
 export const isValidEthAddress = (address: string) => {
@@ -70,10 +67,7 @@ export const getTokenBalances = async (walletAddress: string) => {
         if (existingTokens[i].balance > 0) {
           const balance = Number(
             parseFloat(
-              formatBalance(
-                existingTokens[i].balance,
-                parseInt(existingTokens[i].contract_decimals) as any,
-              ),
+              formatBalance(existingTokens[i].balance, parseInt(existingTokens[i].contract_decimals) as any),
             )?.toFixed(2),
           )
 
@@ -94,7 +88,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              chain: 'ethereum',
+              platform: Platform.Ethereum,
               scan: `https://etherscan.io/tokenholdings?a=${walletAddress}`,
             })
           }

@@ -1,21 +1,12 @@
 import { ApiClient, SpotApi } from 'gate-api'
 
-import {
-  getCurrentUSDPrice,
-  getFullNameOfTheCurrency,
-  getContractAddress,
-} from '@providers/coingecko'
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 import axios, { AxiosError } from 'axios'
 import { GateIoError } from '@config/custom-typings'
+import { Platform } from '@config/types'
 
-export const getAssets = async ({
-  apiKey,
-  apiSecret,
-}: {
-  apiKey: string
-  apiSecret: string
-}) => {
+export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }) => {
   const client = new ApiClient()
   client.setApiKeySecret(apiKey, apiSecret)
 
@@ -53,7 +44,7 @@ export const getAssets = async ({
               price,
               value,
               logo,
-              cexName: 'gateio',
+              cexName: Platform.Gateio,
             })
           }
         }

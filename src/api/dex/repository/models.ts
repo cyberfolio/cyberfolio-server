@@ -4,20 +4,20 @@ export interface Wallet {
   keyIdentifier: string
   walletAddress: string
   walletName: string
-  chain: string
+  platform: string
 }
 const walletSchema = new mongoose.Schema<Wallet>({
   keyIdentifier: { type: String, required: true },
   walletAddress: { type: String, required: true },
   walletName: { type: String, required: true },
-  chain: { type: String, required: true },
+  platform: { type: String, required: true },
 })
 
 export const walletsModel = mongoose.model<Wallet>('wallet', walletSchema)
 
 export interface DexAsset {
   keyIdentifier: string
-  chain: string
+  platform: string
   name: string
   symbol: string
   logo: string
@@ -31,7 +31,7 @@ export interface DexAsset {
 }
 const dexAssetSchema = new mongoose.Schema<DexAsset>({
   keyIdentifier: { type: String, required: true },
-  chain: { type: String, required: true },
+  platform: { type: String, required: true },
   name: { type: String, required: true },
   symbol: { type: String, required: true },
   logo: { type: String, required: true },
@@ -44,7 +44,4 @@ const dexAssetSchema = new mongoose.Schema<DexAsset>({
   scan: { type: String },
 })
 
-export const dexAssetModel = mongoose.model<DexAsset>(
-  'dex-asset',
-  dexAssetSchema,
-)
+export const dexAssetModel = mongoose.model<DexAsset>('dex-asset', dexAssetSchema)

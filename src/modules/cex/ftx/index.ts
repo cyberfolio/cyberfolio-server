@@ -4,21 +4,14 @@ import crypto from 'crypto-js'
 import { roundNumber } from '@src/utils'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 import { FTXError } from '@config/custom-typings'
+import { Platform } from '@config/types'
 
 const API_URL = process.env.FTX_API_URL
 
-export const getAssets = async ({
-  apiKey,
-  apiSecret,
-}: {
-  apiKey: string
-  apiSecret: string
-}) => {
+export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }) => {
   const timestamp = Date.now()
   const signatureString = `${timestamp}GET/api/wallet/all_balances`
-  const signature = crypto
-    .HmacSHA256(signatureString, apiSecret)
-    .toString(crypto.enc.Hex)
+  const signature = crypto.HmacSHA256(signatureString, apiSecret).toString(crypto.enc.Hex)
   try {
     const allBalances = (await axios({
       url: `${API_URL}/wallet/all_balances`,
@@ -47,8 +40,7 @@ export const getAssets = async ({
           symbol,
         })
         if (symbol === 'usd') {
-          logo =
-            'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Dollar-USD-icon.png'
+          logo = 'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Dollar-USD-icon.png'
         }
         if (value > 1) {
           response.push({
@@ -58,7 +50,7 @@ export const getAssets = async ({
             price,
             value,
             logo,
-            cexName: 'ftx',
+            cexName: Platform.FTX,
           })
         }
       }
@@ -67,10 +59,7 @@ export const getAssets = async ({
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const ftxError = e as AxiosError<FTXError>
-      if (
-        ftxError.response?.data?.error === 'Not logged in: Invalid API key' &&
-        ftxError.response?.status === 401
-      ) {
+      if (ftxError.response?.data?.error === 'Not logged in: Invalid API key' && ftxError.response?.status === 401) {
         throw new Error('Your API Key is invalid')
       } else if (
         ftxError.response?.data?.error === 'Not logged in: Invalid signature' &&

@@ -1,3 +1,4 @@
+import { Platform } from '@config/types'
 import { logError } from '@src/utils'
 import { cexInfoModel, cexAssetModel } from './models'
 
@@ -11,7 +12,7 @@ export const addCexByKeyIdentifier = async ({
   keyIdentifier: string
   apiKey: string
   apiSecret: string
-  cexName: string
+  cexName: Platform
   passphrase: string
 }) => {
   const cex = await cexInfoModel
@@ -41,11 +42,7 @@ export const addCexByKeyIdentifier = async ({
   }
 }
 
-export const getCexInfosByKey = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const cexes = await cexInfoModel
     .find({
       keyIdentifier,
@@ -54,13 +51,7 @@ export const getCexInfosByKey = async ({
   return cexes
 }
 
-export const getCexInfo = async ({
-  keyIdentifier,
-  cexName,
-}: {
-  keyIdentifier: string
-  cexName: string
-}) => {
+export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
@@ -70,27 +61,17 @@ export const getCexInfo = async ({
   return cex
 }
 
-export const fetchSpotAssets = async ({
-  keyIdentifier,
-  cexName,
-}: {
-  keyIdentifier: string
-  cexName: string
-}) => {
+export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
   const assets = await cexAssetModel
     .find({
       keyIdentifier,
-      cexName: cexName?.toLowerCase(),
+      cexName,
     })
     .lean()
   return assets
 }
 
-export const fetchAllSpotAssets = async ({
-  keyIdentifier,
-}: {
-  keyIdentifier: string
-}) => {
+export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const assets = await cexAssetModel
     .find({
       keyIdentifier,
@@ -110,7 +91,7 @@ export const addCexAsset = async ({
   logo,
 }: {
   keyIdentifier: string
-  cexName: string
+  cexName: Platform
   name: string
   symbol: string
   balance: number

@@ -4,24 +4,20 @@ import { TokenListProvider } from '@solana/spl-token-registry'
 
 import { intDivide, logError } from '@src/utils'
 import { getCurrentUSDPrice } from '@providers/coingecko'
+import { Platform } from '@config/types'
 
 const solanaDecimals = Number(process.env.SOLANA_DECIMALS)
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
-    const connection = new Connection(
-      clusterApiUrl(process.env.SOLANA_ENVIRONMET as Cluster),
-      'confirmed',
-    )
+    const connection = new Connection(clusterApiUrl(process.env.SOLANA_ENVIRONMET as Cluster), 'confirmed')
     const base58publicKey = new PublicKey(walletAddress)
 
     const solanaBalance = await connection.getBalance(base58publicKey)
     const formattedSolanaBalance = solanaBalance / solanaDecimals
 
     const tokens = await new TokenListProvider().resolve()
-    const tokenList = tokens
-      .filterByClusterSlug(process.env.SOLANA_ENVIRONMET as Cluster)
-      .getList()
+    const tokenList = tokens.filterByClusterSlug(process.env.SOLANA_ENVIRONMET as Cluster).getList()
 
     const avaliableTokens = []
     const solanaUsdValue = await getCurrentUSDPrice('sol')
@@ -90,17 +86,11 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
         if (
           Array.isArray(solanaResponse.data[data]?.result?.value) &&
           solanaResponse.data[data]?.result?.value?.length > 0 &&
-          solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-            ?.info?.tokenAmount?.amount > 0
+          solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount > 0
         ) {
-          const usdValue = await getCurrentUSDPrice(
-            tokensInfo[data].symbol?.toLowerCase(),
-          )
+          const usdValue = await getCurrentUSDPrice(tokensInfo[data].symbol?.toLowerCase())
           const balance =
-            Number(
-              solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-                ?.info?.tokenAmount?.amount,
-            ) / solanaDecimals
+            Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) / solanaDecimals
           response.push({
             name: tokensInfo[data].name,
             symbol: tokensInfo[data].symbol,
@@ -149,17 +139,11 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
       if (
         Array.isArray(solanaResponse.data[data]?.result?.value) &&
         solanaResponse.data[data]?.result?.value?.length > 0 &&
-        solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info
-          ?.tokenAmount?.amount > 0
+        solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount > 0
       ) {
-        const price = await getCurrentUSDPrice(
-          tokensInfo[data].symbol?.toLowerCase(),
-        )
+        const price = await getCurrentUSDPrice(tokensInfo[data].symbol?.toLowerCase())
         const balance =
-          Number(
-            solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed
-              ?.info?.tokenAmount?.amount,
-          ) / solanaDecimals
+          Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) / solanaDecimals
         response.push({
           name: tokensInfo[data].name,
           symbol: tokensInfo[data].symbol,
@@ -167,7 +151,7 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
           address: tokensInfo[data].address,
           balance,
           price,
-          chain: 'solana',
+          platform: Platform.Solana,
           scan: `https://explorer.solana.com/address/${walletAddress}/tokens`,
         })
       }

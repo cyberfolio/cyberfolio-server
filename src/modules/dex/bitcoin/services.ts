@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import { logError, sathoshiToBtcBalance } from '@src/utils'
 import { getCurrentUSDPrice } from '@providers/coingecko'
+import { Platform } from '@config/types'
 
 export const getBitcoinBalance = async (walletAddress: string) => {
   try {
@@ -20,7 +21,7 @@ export const getBitcoinBalance = async (walletAddress: string) => {
       price,
       logo: 'https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg',
       value,
-      chain: 'bitcoin',
+      platform: Platform.Bitcoin,
       scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
     }
   } catch (e) {

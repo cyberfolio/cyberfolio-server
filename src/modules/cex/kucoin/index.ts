@@ -2,13 +2,10 @@ import axios, { AxiosError } from 'axios'
 import crypto from 'crypto-js'
 import { roundNumber } from '@src/utils'
 
-import {
-  getCurrentUSDPrice,
-  getFullNameOfTheCurrency,
-  getContractAddress,
-} from '@providers/coingecko'
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 import { KucoinError } from '@config/custom-typings'
+import { Platform } from '@config/types'
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string
 const API_URL = process.env.KUCOIN_API_URL
@@ -27,13 +24,9 @@ export const getAssets = async ({
   const timestamp = Date.now().toString()
   const endpoint = `/api/v1/accounts?type=${type}`
   const stringToSign = `${timestamp}GET${endpoint}`
-  const signedString = crypto
-    .HmacSHA256(stringToSign, apiSecret)
-    .toString(crypto.enc.Base64)
+  const signedString = crypto.HmacSHA256(stringToSign, apiSecret).toString(crypto.enc.Base64)
 
-  const encryptedApiVersion = crypto
-    .HmacSHA256(API_VERSION, apiSecret)
-    .toString(crypto.enc.Base64)
+  const encryptedApiVersion = crypto.HmacSHA256(API_VERSION, apiSecret).toString(crypto.enc.Base64)
 
   try {
     const accountInfo = (await axios({
@@ -72,7 +65,7 @@ export const getAssets = async ({
               price,
               value,
               logo,
-              cexName: 'kucoin',
+              cexName: Platform.Kucoin,
             })
           }
         }

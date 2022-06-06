@@ -66,6 +66,7 @@
     "@cex": "src/modules/cex/",
     "@dex": "src/modules/dex/",
     "@config": "src/config/",
+    "@api": "src/api/",
     "@src": "src/"
   },
   "engines": {

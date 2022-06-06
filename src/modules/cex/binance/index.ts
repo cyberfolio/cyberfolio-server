@@ -2,27 +2,16 @@ import axios, { AxiosError } from 'axios'
 import crypto from 'crypto-js'
 
 import { roundNumber } from '@src/utils'
-import {
-  getCurrentUSDPrice,
-  getFullNameOfTheCurrency,
-  getContractAddress,
-} from '@providers/coingecko'
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko'
 import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
 import { BinanceError } from '@config/custom-typings'
+import { Platform } from '@config/types'
 
 const API_URL = process.env.BINANCE_API_URL
 
-export const getAssets = async ({
-  apiKey,
-  apiSecret,
-}: {
-  apiKey: string
-  apiSecret: string
-}) => {
+export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }) => {
   const queryString = `timestamp=${Date.now()}`
-  const signature = crypto
-    .HmacSHA256(queryString, apiSecret)
-    .toString(crypto.enc.Hex)
+  const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex)
   try {
     const accountInfo = (await axios({
       url: `${API_URL}/api/v3/account?${queryString}&signature=${signature}`,
@@ -58,7 +47,7 @@ export const getAssets = async ({
             price,
             value,
             logo,
-            cexName: 'binance',
+            cexName: Platform.Binance,
           })
         }
       }
@@ -71,9 +60,7 @@ export const getAssets = async ({
         throw new Error('API Secret is invalid')
       }
       if (binanceError.response?.data?.code === -2015) {
-        throw new Error(
-          'API key is invalid or IP restricted or permissions are missing',
-        )
+        throw new Error('API key is invalid or IP restricted or permissions are missing')
       } else if (binanceError.response?.data?.msg) {
         throw new Error(binanceError.response.data.msg)
       } else {
@@ -95,9 +82,7 @@ export const getFiatDepositAndWithDrawalHistory = async ({
   apiSecret: string
 }) => {
   const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`
-  const signature = crypto
-    .HmacSHA256(queryString, apiSecret)
-    .toString(crypto.enc.Hex)
+  const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex)
   try {
     const response = await axios({
       url: `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
@@ -133,9 +118,7 @@ export const getFiatPaymentBuyAndSellHistory = async ({
   apiSecret: string
 }) => {
   const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`
-  const signature = crypto
-    .HmacSHA256(queryString, apiSecret)
-    .toString(crypto.enc.Hex)
+  const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex)
   try {
     const response = await axios({
       url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,

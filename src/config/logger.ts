@@ -1,13 +1,14 @@
 import { createLogger, transports, format } from 'winston'
 
 const levels = {
-  error: 0,
-  warn: 1,
-  info: 2,
-  http: 3,
-  verbose: 4,
-  debug: 5,
-  silly: 6,
+  fatal: 0,
+  error: 1,
+  warn: 2,
+  info: 3,
+  http: 4,
+  verbose: 5,
+  debug: 6,
+  silly: 7,
 }
 
 export const logger = createLogger({
