@@ -24,9 +24,7 @@ export const initCronJobs = async () => {
 
   cron.schedule(everyMinuteCronValue, async () => {
     try {
-      logger.info('Deleting scam tokens')
-      const numberOfScamsDeleted = await removeScamTokens()
-      logger.info(`Deleting scam tokens completed, total: ${numberOfScamsDeleted}`)
+      await removeScamTokens()
     } catch (e) {
       if (e instanceof Error) {
         logError({ path: 'src/modules/cron/index.ts', func: initCronJobs.name, e })

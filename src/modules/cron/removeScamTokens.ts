@@ -4,7 +4,6 @@ import scamTokens from '@config/scamTokens'
 import { dexAssetModel } from '@src/api/dex/repository/models'
 
 export const removeScamTokens = async () => {
-  let count = 0
   try {
     const assets = await getAllAssets()
     for (const asset of assets) {
@@ -16,7 +15,6 @@ export const removeScamTokens = async () => {
       if (isScamToken) {
         try {
           await dexAssetModel.deleteOne({ contractAddress: asset.contractAddress })
-          count = count + 1
         } catch (e) {
           logError({
             func: removeScamTokens.name,
@@ -26,7 +24,6 @@ export const removeScamTokens = async () => {
         }
       }
     }
-    return count
   } catch (e) {
     logError({
       func: removeScamTokens.name,
