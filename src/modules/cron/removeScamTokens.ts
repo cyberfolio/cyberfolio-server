@@ -14,7 +14,7 @@ export const removeScamTokens = async () => {
       )
       if (isScamToken) {
         try {
-          await dexAssetModel.deleteOne({ contractAddress: asset.contractAddress })
+          await dexAssetModel.deleteMany({ contractAddress: asset.contractAddress })
         } catch (e) {
           logError({
             func: removeScamTokens.name,
