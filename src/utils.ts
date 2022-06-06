@@ -1,15 +1,14 @@
+/* eslint-disable promise/avoid-new */
+/* eslint-disable promise/param-names */
+
 import Web3 from 'web3'
 import { ethers } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 import { default as axios } from 'axios'
+import { logger } from '@config/logger'
 
-export const web3 = new Web3(
-  new Web3.providers.HttpProvider(
-    `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
-  ),
-)
+export const web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`))
 
-// eslint-disable-next-line promise/param-names
 export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 export const isValid0xAddress = (address: string) => {
@@ -71,20 +70,10 @@ export const onError = (e: unknown) => {
   if (e instanceof Error) {
     throw e
   } else {
-    // eslint-disable-next-line no-console
-    console.log('Unexpected error', e)
+    logger.error('Unexpected error', e)
   }
 }
 
-export const logError = ({
-  path,
-  func,
-  e,
-}: {
-  path: string
-  func: string
-  e: Error | unknown
-}) => {
-  // eslint-disable-next-line no-console
-  console.log(`Error at ${path} ${func} `, e)
+export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown }) => {
+  logger.error(`Error at ${path} ${func} `, e)
 }

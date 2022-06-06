@@ -1,7 +1,9 @@
-const socket = (io: any) => {
-  io.on("connection", () => {
-    console.log("a user connected");
-  });
-};
+import { logger } from '@config/logger'
 
-export default socket;
+const socket = (io: any) => {
+  io.on('connection', () => {
+    logger.info('A user connected')
+  })
+}
+
+export default socket

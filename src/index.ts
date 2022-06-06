@@ -12,14 +12,16 @@ import auth from './api/auth'
 import dex from './api/dex'
 import cex from './api/cex'
 import info from './api/info'
-
 import socket from './socket'
 
-import { init } from './init'
+import { connectToDB, startCronJobs } from './init'
 import { allowedMethods, authenticateUser } from './config/middleware'
+import { logger } from '@config/logger'
 
 const boot = async () => {
-  await init()
+  // init app
+  await connectToDB()
+  await startCronJobs()
 
   const app = express()
   app.use(allowedMethods)
@@ -52,7 +54,7 @@ const boot = async () => {
   // start
   const port = process.env.PORT
   app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`)
+    logger.info(`App listening at http://localhost:${port}`)
   })
 }
 
