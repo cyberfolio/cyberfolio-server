@@ -72,7 +72,6 @@ export const saveAssets = async ({
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress)
       const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress)
       const optimismTokens = await optimism.getTokenBalances(walletAddress)
-
       const polygonTokens = await polygon.getTokenBalances(walletAddress)
       const smartChaintokens = await smartchain.getTokenBalances(walletAddress)
       const ethereumTokens = await eth.getTokenBalances(walletAddress)

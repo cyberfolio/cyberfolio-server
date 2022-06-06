@@ -35,7 +35,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              platform: Platform.Optimism,
+              platform: Platform.Arbitrum,
               scan: `https://arbiscan.io/tokenholdings?a=${walletAddress}`,
             })
           }
