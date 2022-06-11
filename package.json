@@ -9,7 +9,8 @@
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint:check": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "u": "yarn yarn-upgrade-all"
   },
   "author": "Onur Iltan",
   "license": "ISC",
