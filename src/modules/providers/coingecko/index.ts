@@ -8,13 +8,13 @@ import {
   getContractAddressOfTheCurrencyBySymbol,
 } from './repository'
 
-export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
+export const addOrUpdateCryptoCurrencies = async (page: number) => {
   try {
     const response = await axios({
       url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&page=${page}`,
       method: 'get',
     })
-    await sleep(1500)
+    await sleep(5000)
     const cryptoCurrencies = response?.data as any[]
 
     if (cryptoCurrencies && Array.isArray(cryptoCurrencies)) {
@@ -32,7 +32,7 @@ export const addOrUpdateAllCryptoPriceInUSD = async (page: number) => {
   } catch (e) {
     logError({
       e,
-      func: addOrUpdateAllCryptoPriceInUSD.name,
+      func: addOrUpdateCryptoCurrencies.name,
       path: 'src/modules/providers/coingecko/index.ts',
     })
     throw e

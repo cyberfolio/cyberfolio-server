@@ -1,10 +1,10 @@
-import { addOrUpdateAllCryptoPriceInUSD } from '@providers/coingecko'
+import { addOrUpdateCryptoCurrencies } from '@providers/coingecko'
 import { logError } from '@src/utils'
 
 export const updateCurrencies = async () => {
   for (let i = 1; i <= 6000; i++) {
     try {
-      await addOrUpdateAllCryptoPriceInUSD(i)
+      await addOrUpdateCryptoCurrencies(i)
     } catch (e) {
       logError({
         func: updateCurrencies.name,
