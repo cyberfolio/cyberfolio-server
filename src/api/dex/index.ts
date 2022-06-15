@@ -20,7 +20,7 @@ router.post('/add', async (req: any, res: express.Response) => {
 
 router.get('/assets/:platform', async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier
-  const platform = req.params.platform.toLowerCase()
+  const platform = req.params.platform
   try {
     const assets = await getAssets({ keyIdentifier, platform })
     let totalTokenValue = 0

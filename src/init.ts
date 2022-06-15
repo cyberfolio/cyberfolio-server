@@ -2,6 +2,7 @@
 import { logger } from '@config/logger'
 import mongoose from 'mongoose'
 import { initCronJobs } from './modules/cron'
+import migrations from './migrations'
 
 export const connectToDB = async () => {
   try {
@@ -15,8 +16,18 @@ export const connectToDB = async () => {
 
 export const startCronJobs = async () => {
   try {
-    await initCronJobs()
     logger.info('Cron jobs started')
+    await initCronJobs()
+  } catch (e) {
+    logger.error(`Error at src/init.ts ${startCronJobs.name}`)
+    process.exit(1)
+  }
+}
+
+export const runMigrations = async () => {
+  try {
+    logger.info('Migrations started')
+    await migrations()
   } catch (e) {
     logger.error(`Error at src/init.ts ${startCronJobs.name}`)
     process.exit(1)

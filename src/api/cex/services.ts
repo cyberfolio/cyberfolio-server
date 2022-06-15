@@ -74,16 +74,16 @@ export const saveSpotAssets = async ({
 }) => {
   let spotAssets = [] as any
   try {
-    if (cexName === Platform.Binance) {
+    if (cexName === Platform.BINANCE) {
       spotAssets = await binance.getAssets({ apiKey, apiSecret })
-    } else if (cexName === Platform.Kucoin) {
+    } else if (cexName === Platform.KUCOIN) {
       spotAssets = await kucoin.getAssets({
         type: 'main',
         apiKey,
         apiSecret,
         passphrase,
       })
-    } else if (cexName === Platform.Gateio) {
+    } else if (cexName === Platform.GATEIO) {
       spotAssets = await gateio.getAssets({
         apiKey,
         apiSecret,

@@ -31,7 +31,7 @@ export const getTokenBalances = async (walletAddress: string) => {
         price: 25,
         symbol: 'dot',
         balance: formattedFreeBalance,
-        platform: Platform.Polkadot,
+        platform: Platform.POLKADOT,
         scan: ``,
       },
     ]

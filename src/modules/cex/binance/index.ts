@@ -47,7 +47,7 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
             price,
             value,
             logo,
-            cexName: Platform.Binance,
+            cexName: Platform.BINANCE,
           })
         }
       }

@@ -1,10 +1,17 @@
 import mongoose from 'mongoose'
 
+export enum CexName {
+  BINANCE = 'Binance',
+  FTX = 'FTX',
+  GATEIO = 'Gateio',
+  KUCOIN = 'Kucoin',
+}
+
 interface CexInfo {
   keyIdentifier: string
   apiKey: string
   apiSecret: string
-  cexName: string
+  cexName: CexName
   passphrase: string
 }
 const cexInfoSchema = new mongoose.Schema<CexInfo>({
@@ -18,7 +25,7 @@ export const cexInfoModel = mongoose.model<CexInfo>('cex-info', cexInfoSchema)
 
 interface CexAsset {
   keyIdentifier: string
-  cexName: string
+  cexName: CexName
   name: string
   symbol: string
   logo: string

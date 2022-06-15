@@ -5,7 +5,13 @@ import { generateNonce } from '@src/utils'
 import { signJwt } from '@config/jwt'
 import { authenticateUser } from '@config/middleware'
 
-import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce, updateFirstTimeLogin } from './repository'
+import {
+  createUser,
+  updateNonce,
+  getUserByEvmAddress,
+  getUserByEvmAddressAndNonce,
+  updateFirstTimeLogin,
+} from './repository'
 import { saveAssets } from '../dex/services'
 import { checkENSName } from './services'
 import { Platform } from '@config/types'
@@ -57,14 +63,14 @@ router.post('/login/validate-signature', async (req, res, next) => {
       await saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        platform: Platform.Ethereum,
+        platform: Platform.ETHEREUM,
         walletName: 'main',
       })
     } else {
       saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        platform: Platform.Ethereum,
+        platform: Platform.ETHEREUM,
         walletName: 'main',
       })
     }

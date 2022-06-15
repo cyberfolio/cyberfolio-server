@@ -90,7 +90,8 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
         ) {
           const usdValue = await getCurrentUSDPrice(tokensInfo[data].symbol?.toLowerCase())
           const balance =
-            Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) / solanaDecimals
+            Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) /
+            solanaDecimals
           response.push({
             name: tokensInfo[data].name,
             symbol: tokensInfo[data].symbol,
@@ -143,7 +144,8 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
       ) {
         const price = await getCurrentUSDPrice(tokensInfo[data].symbol?.toLowerCase())
         const balance =
-          Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) / solanaDecimals
+          Number(solanaResponse.data[data]?.result?.value[0]?.account?.data?.parsed?.info?.tokenAmount?.amount) /
+          solanaDecimals
         response.push({
           name: tokensInfo[data].name,
           symbol: tokensInfo[data].symbol,
@@ -151,7 +153,7 @@ const getBalances = async (walletAddress: string, tokens: Array<any>) => {
           address: tokensInfo[data].address,
           balance,
           price,
-          platform: Platform.Solana,
+          platform: Platform.SOLANA,
           scan: `https://explorer.solana.com/address/${walletAddress}/tokens`,
         })
       }

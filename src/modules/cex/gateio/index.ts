@@ -44,7 +44,7 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
               price,
               value,
               logo,
-              cexName: Platform.Gateio,
+              cexName: Platform.GATEIO,
             })
           }
         }

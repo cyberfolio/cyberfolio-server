@@ -67,7 +67,7 @@ export const saveAssets = async ({
   platform: Platform
   walletName: string
 }) => {
-  if (platform === Platform.Ethereum) {
+  if (platform === Platform.ETHEREUM) {
     try {
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress)
       const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress)
@@ -128,7 +128,7 @@ export const saveAssets = async ({
     } catch (e) {
       onError(e)
     }
-  } else if (platform === Platform.Bitcoin) {
+  } else if (platform === Platform.BITCOIN) {
     const btc = await bitcoin.getBitcoinBalance(walletAddress)
 
     const asset = {
@@ -140,7 +140,7 @@ export const saveAssets = async ({
       price: btc.price,
       value: btc.value,
       scan: btc.scan,
-      platform: Platform.Bitcoin,
+      platform: Platform.BITCOIN,
       contractAddress: '',
       walletAddress,
     }

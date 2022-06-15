@@ -65,7 +65,7 @@ export const getAssets = async ({
               price,
               value,
               logo,
-              cexName: Platform.Kucoin,
+              cexName: Platform.KUCOIN,
             })
           }
         }

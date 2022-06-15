@@ -36,7 +36,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              platform: Platform.Polygon,
+              platform: Platform.POLYGON,
               scan: `https:/polygonscan.com/tokenholdings?a=${walletAddress}`,
             })
           }

@@ -14,7 +14,7 @@ import cex from './api/cex'
 import info from './api/info'
 import socket from './socket'
 
-import { connectToDB, startCronJobs } from './init'
+import { connectToDB, startCronJobs, runMigrations } from './init'
 import { allowedMethods, authenticateUser } from './config/middleware'
 import { logger } from '@config/logger'
 
@@ -22,6 +22,7 @@ const boot = async () => {
   // init app
   await connectToDB()
   await startCronJobs()
+  await runMigrations()
 
   const app = express()
   app.use(allowedMethods)
@@ -34,7 +35,7 @@ const boot = async () => {
   app.use(bodyParser.json())
   app.use(cookieParser())
 
-  app.get('/', (req, res) => {
+  app.get('/', (_, res) => {
     res.send('Hello World!')
   })
 

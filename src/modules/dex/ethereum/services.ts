@@ -88,7 +88,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              platform: Platform.Ethereum,
+              platform: Platform.ETHEREUM,
               scan: `https://etherscan.io/tokenholdings?a=${walletAddress}`,
             })
           }

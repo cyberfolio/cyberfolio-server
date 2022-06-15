@@ -35,7 +35,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               balance,
               price,
               value,
-              platform: Platform.Optimism,
+              platform: Platform.OPTIMISM,
               scan: `https:/optimistic.etherscan.io/tokenholdings?a=${walletAddress}`,
             })
           }

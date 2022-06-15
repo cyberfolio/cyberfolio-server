@@ -1,10 +1,22 @@
 import mongoose from 'mongoose'
 
+export enum Platform {
+  BITCOIN = 'Bitcoin',
+  ETHEREUM = 'Ethereum',
+  BSC = 'SmartChain',
+  AVALANCHE = 'Avalanche',
+  SOLANA = 'Solana',
+  POLKADOT = 'Polkadot',
+  POLYGON = 'Polygon',
+  ARBITRUM = 'Arbitrum',
+  OPTIMISM = 'Optimism',
+}
+
 export interface Wallet {
   keyIdentifier: string
   walletAddress: string
   walletName: string
-  platform: string
+  platform: Platform
 }
 const walletSchema = new mongoose.Schema<Wallet>({
   keyIdentifier: { type: String, required: true },
@@ -17,7 +29,7 @@ export const walletsModel = mongoose.model<Wallet>('wallet', walletSchema)
 
 export interface DexAsset {
   keyIdentifier: string
-  platform: string
+  platform: Platform
   name: string
   symbol: string
   logo: string
