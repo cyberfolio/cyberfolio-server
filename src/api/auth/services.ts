@@ -1,19 +1,19 @@
-import { getFilePath, logError } from '@src/utils'
-import { ethers } from 'ethers'
-import { userModel } from './repository/models'
+import { getFilePath, logError } from "@src/utils";
+import { ethers } from "ethers";
+import { userModel } from "./repository/models";
 
-const path = getFilePath(__filename)
+const path = getFilePath(__filename);
 
 export const checkENSName = async (keyIdentifier: string) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
-    )
-    const ensName = await provider.lookupAddress(keyIdentifier)
+    );
+    const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
-      await userModel.findOneAndUpdate({ keyIdentifier }, { ensName })
+      await userModel.findOneAndUpdate({ keyIdentifier }, { ensName });
     }
   } catch (e) {
-    logError({ path, func: checkENSName.name, e })
+    logError({ path, func: checkENSName.name, e });
   }
-}
+};

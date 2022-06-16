@@ -1,18 +1,18 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 export enum CexName {
-  BINANCE = 'Binance',
-  FTX = 'FTX',
-  GATEIO = 'Gateio',
-  KUCOIN = 'Kucoin',
+  BINANCE = "Binance",
+  FTX = "FTX",
+  GATEIO = "Gateio",
+  KUCOIN = "Kucoin",
 }
 
 interface CexInfo {
-  keyIdentifier: string
-  apiKey: string
-  apiSecret: string
-  cexName: CexName
-  passphrase: string
+  keyIdentifier: string;
+  apiKey: string;
+  apiSecret: string;
+  cexName: CexName;
+  passphrase: string;
 }
 const cexInfoSchema = new mongoose.Schema<CexInfo>({
   keyIdentifier: String,
@@ -20,18 +20,18 @@ const cexInfoSchema = new mongoose.Schema<CexInfo>({
   apiSecret: String,
   cexName: String,
   passphrase: String,
-})
-export const cexInfoModel = mongoose.model<CexInfo>('cex-info', cexInfoSchema)
+});
+export const cexInfoModel = mongoose.model<CexInfo>("cex-info", cexInfoSchema);
 
 interface CexAsset {
-  keyIdentifier: string
-  cexName: CexName
-  name: string
-  symbol: string
-  logo: string
-  balance: number
-  price: number
-  value: number
+  keyIdentifier: string;
+  cexName: CexName;
+  name: string;
+  symbol: string;
+  logo: string;
+  balance: number;
+  price: number;
+  value: number;
 }
 const cexAssetSchema = new mongoose.Schema<CexAsset>({
   keyIdentifier: String,
@@ -42,5 +42,5 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   balance: Number,
   price: Number,
   value: Number,
-})
-export const cexAssetModel = mongoose.model<CexAsset>('cex-asset', cexAssetSchema)
+});
+export const cexAssetModel = mongoose.model<CexAsset>("cex-asset", cexAssetSchema);

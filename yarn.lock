@@ -1170,6 +1170,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/module-alias@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@types/module-alias@npm:2.0.1"
+  checksum: c6d6d30605833b03465c39760df42616fd24e4f532a29bb77954220885feb21eb2d84dd38eed68b0c18997e6930fdc5914d2dc6fd7cc5d110a42068d2204e11e
+  languageName: node
+  linkType: hard
+
 "@types/node-cron@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/node-cron@npm:3.0.1"
@@ -2779,6 +2786,7 @@ __metadata:
     "@types/eslint": ^8.4.1
     "@types/express": ^4.17.13
     "@types/jsonwebtoken": ^8.5.8
+    "@types/module-alias": ^2.0.1
     "@types/node": ^17.0.35
     "@types/node-cron": ^3.0.1
     "@types/nodemon": ^1.19.1

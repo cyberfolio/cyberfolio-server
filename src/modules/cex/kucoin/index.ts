@@ -1,14 +1,14 @@
-import axios, { AxiosError } from 'axios'
-import crypto from 'crypto-js'
-import { roundNumber } from '@src/utils'
+import axios, { AxiosError } from "axios";
+import crypto from "crypto-js";
+import { roundNumber } from "@src/utils";
 
-import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko'
-import { getCryptoCurrencyLogo } from '@providers/coinmarketcap'
-import { KucoinError } from '@config/custom-typings'
-import { Platform } from '@config/types'
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
+import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
+import { KucoinError } from "@config/custom-typings";
+import { Platform } from "@config/types";
 
-const API_VERSION = process.env.KUCOIN_API_VERSION as string
-const API_URL = process.env.KUCOIN_API_URL
+const API_VERSION = process.env.KUCOIN_API_VERSION as string;
+const API_URL = process.env.KUCOIN_API_URL;
 
 export const getAssets = async ({
   type,
@@ -16,75 +16,75 @@ export const getAssets = async ({
   apiSecret,
   passphrase,
 }: {
-  type: string
-  apiKey: string
-  apiSecret: string
-  passphrase: string
+  type: string;
+  apiKey: string;
+  apiSecret: string;
+  passphrase: string;
 }) => {
-  const timestamp = Date.now().toString()
-  const endpoint = `/api/v1/accounts?type=${type}`
-  const stringToSign = `${timestamp}GET${endpoint}`
-  const signedString = crypto.HmacSHA256(stringToSign, apiSecret).toString(crypto.enc.Base64)
+  const timestamp = Date.now().toString();
+  const endpoint = `/api/v1/accounts?type=${type}`;
+  const stringToSign = `${timestamp}GET${endpoint}`;
+  const signedString = crypto.HmacSHA256(stringToSign, apiSecret).toString(crypto.enc.Base64);
 
-  const encryptedApiVersion = crypto.HmacSHA256(API_VERSION, apiSecret).toString(crypto.enc.Base64)
+  const encryptedApiVersion = crypto.HmacSHA256(API_VERSION, apiSecret).toString(crypto.enc.Base64);
 
   try {
     const accountInfo = (await axios({
       url: `${API_URL}${endpoint}`,
-      method: 'GET',
+      method: "GET",
       headers: {
-        'KC-API-KEY': apiKey,
-        'KC-API-SIGN': signedString,
-        'KC-API-TIMESTAMP': timestamp,
-        'KC-API-PASSPHRASE': passphrase,
-        'KC-API-KEY-VERSION': encryptedApiVersion,
+        "KC-API-KEY": apiKey,
+        "KC-API-SIGN": signedString,
+        "KC-API-TIMESTAMP": timestamp,
+        "KC-API-PASSPHRASE": passphrase,
+        "KC-API-KEY-VERSION": encryptedApiVersion,
       },
-    })) as any
+    })) as any;
 
-    const data = accountInfo?.data?.data
-    const response = []
+    const data = accountInfo?.data?.data;
+    const response = [];
     if (data && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
-        const balance = roundNumber(data[i].holds)
+        const balance = roundNumber(data[i].holds);
         if (balance > 0) {
-          const symbol = data[i].currency?.toLowerCase()
-          const price = await getCurrentUSDPrice(symbol)
-          const name = await getFullNameOfTheCurrency(symbol)
-          const contractAddress = await getContractAddress(symbol)
-          const value = roundNumber(balance * price)
+          const symbol = data[i].currency?.toLowerCase();
+          const price = await getCurrentUSDPrice(symbol);
+          const name = await getFullNameOfTheCurrency(symbol);
+          const contractAddress = await getContractAddress(symbol);
+          const value = roundNumber(balance * price);
           const logo = await getCryptoCurrencyLogo({
             symbol,
-          })
+          });
           if (value > 1) {
             response.push({
               name,
               symbol,
-              type: 'cryptocurrency',
+              type: "cryptocurrency",
               contractAddress,
               balance,
               price,
               value,
               logo,
               cexName: Platform.KUCOIN,
-            })
+            });
           }
         }
       }
     }
 
-    return response
+    return response;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const gateIoError = e as AxiosError<KucoinError>
-      if (gateIoError.response?.data?.code === '400003') {
-        throw new Error('Api key or secret is not valid.')
-      } else if (gateIoError.response?.data?.code === '400005') {
-        throw new Error('Server error, please contact the admin.')
+      const gateIoError = e as AxiosError<KucoinError>;
+      if (gateIoError.response?.data?.code === "400003") {
+        throw new Error("Api key or secret is not valid.");
+      } else if (gateIoError.response?.data?.code === "400005") {
+        throw new Error("Server error, please contact the admin.");
       } else {
-        throw new Error(e.message)
+        throw new Error(e.message);
       }
     } else {
-      throw e
+      throw e;
     }
   }
-}
+};

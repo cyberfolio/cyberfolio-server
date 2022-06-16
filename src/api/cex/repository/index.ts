@@ -1,8 +1,8 @@
-import { Platform } from '@config/types'
-import { getFilePath, logError } from '@src/utils'
-import { cexInfoModel, cexAssetModel } from './models'
+import { Platform } from "@config/types";
+import { getFilePath, logError } from "@src/utils";
+import { cexInfoModel, cexAssetModel } from "./models";
 
-const path = getFilePath(__filename)
+const path = getFilePath(__filename);
 
 export const addCexByKeyIdentifier = async ({
   keyIdentifier,
@@ -11,20 +11,20 @@ export const addCexByKeyIdentifier = async ({
   cexName,
   passphrase,
 }: {
-  keyIdentifier: string
-  apiKey: string
-  apiSecret: string
-  cexName: Platform
-  passphrase: string
+  keyIdentifier: string;
+  apiKey: string;
+  apiSecret: string;
+  cexName: Platform;
+  passphrase: string;
 }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
       cexName,
     })
-    .lean()
+    .lean();
   if (cex) {
-    return
+    return;
   }
   try {
     await cexInfoModel.create({
@@ -33,25 +33,25 @@ export const addCexByKeyIdentifier = async ({
       apiSecret,
       cexName,
       passphrase,
-    })
+    });
   } catch (e) {
     logError({
       e,
       func: addCexByKeyIdentifier.name,
       path,
-    })
-    throw e
+    });
+    throw e;
   }
-}
+};
 
 export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const cexes = await cexInfoModel
     .find({
       keyIdentifier,
     })
-    .lean()
-  return cexes
-}
+    .lean();
+  return cexes;
+};
 
 export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
   const cex = await cexInfoModel
@@ -59,9 +59,9 @@ export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: st
       keyIdentifier,
       cexName,
     })
-    .lean()
-  return cex
-}
+    .lean();
+  return cex;
+};
 
 export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
   const assets = await cexAssetModel
@@ -69,18 +69,18 @@ export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifie
       keyIdentifier,
       cexName,
     })
-    .lean()
-  return assets
-}
+    .lean();
+  return assets;
+};
 
 export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const assets = await cexAssetModel
     .find({
       keyIdentifier,
     })
-    .lean()
-  return assets
-}
+    .lean();
+  return assets;
+};
 
 export const addCexAsset = async ({
   keyIdentifier,
@@ -92,16 +92,16 @@ export const addCexAsset = async ({
   value,
   logo,
 }: {
-  keyIdentifier: string
-  cexName: Platform
-  name: string
-  symbol: string
-  balance: number
-  price: number
-  value: number
-  logo: string | undefined
+  keyIdentifier: string;
+  cexName: Platform;
+  name: string;
+  symbol: string;
+  balance: number;
+  price: number;
+  value: number;
+  logo: string | undefined;
 }) => {
-  symbol = symbol.toLowerCase()
+  symbol = symbol.toLowerCase();
   try {
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
@@ -116,13 +116,13 @@ export const addCexAsset = async ({
         logo,
       },
       { upsert: true, new: true },
-    )
+    );
   } catch (e) {
     logError({
       e,
       func: addCexAsset.name,
       path,
-    })
-    throw e
+    });
+    throw e;
   }
-}
+};

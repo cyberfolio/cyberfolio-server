@@ -1,86 +1,49 @@
-import { onError } from '@src/utils'
-import { userModel } from './models'
+import { onError } from "@src/utils";
+import { userModel } from "./models";
 
-export const createUser = async ({
-  keyIdentifier,
-  nonce,
-}: {
-  keyIdentifier: string
-  nonce: string
-}) => {
+export const createUser = async ({ keyIdentifier, nonce }: { keyIdentifier: string; nonce: string }) => {
   try {
-    await userModel.create({ keyIdentifier, nonce, firstTimeLogin: true })
+    await userModel.create({ keyIdentifier, nonce, firstTimeLogin: true });
   } catch (e) {
-    onError(e)
+    onError(e);
   }
-}
+};
 
-export const getUserByEvmAddress = async ({
-  evmAddress,
-}: {
-  evmAddress: string
-}) => {
+export const getUserByEvmAddress = async ({ evmAddress }: { evmAddress: string }) => {
   try {
-    const user = await userModel
-      .findOne({ keyIdentifier: evmAddress })
-      .lean()
-      .exec()
-    return user
+    const user = await userModel.findOne({ keyIdentifier: evmAddress }).lean().exec();
+    return user;
   } catch (e) {
-    onError(e)
+    onError(e);
   }
-}
+};
 
-export const getUserByEvmAddressAndNonce = async ({
-  evmAddress,
-  nonce,
-}: {
-  evmAddress: string
-  nonce: string
-}) => {
+export const getUserByEvmAddressAndNonce = async ({ evmAddress, nonce }: { evmAddress: string; nonce: string }) => {
   try {
-    const user = await userModel
-      .findOne({ keyIdentifier: evmAddress, nonce })
-      .lean()
-    return user
+    const user = await userModel.findOne({ keyIdentifier: evmAddress, nonce }).lean();
+    return user;
   } catch (e) {
-    onError(e)
+    onError(e);
   }
-}
+};
 
-export const updateNonce = async ({
-  evmAddress,
-  nonce,
-}: {
-  evmAddress: string
-  nonce: string
-}) => {
+export const updateNonce = async ({ evmAddress, nonce }: { evmAddress: string; nonce: string }) => {
+  try {
+    const user = await userModel.findOneAndUpdate({ keyIdentifier: evmAddress }, { nonce }).lean().exec();
+    return user;
+  } catch (e) {
+    onError(e);
+  }
+};
+
+export const updateFirstTimeLogin = async ({ evmAddress }: { evmAddress: string }) => {
   try {
     const user = await userModel
-      .findOneAndUpdate({ keyIdentifier: evmAddress }, { nonce })
+      .findOneAndUpdate({ keyIdentifier: evmAddress }, { firstTimeLogin: false })
       .lean()
-      .exec()
-    return user
+      .exec();
+    return user;
   } catch (e) {
-    onError(e)
+    onError(e);
   }
-}
-
-export const updateFirstTimeLogin = async ({
-  evmAddress,
-}: {
-  evmAddress: string
-}) => {
-  try {
-    const user = await userModel
-      .findOneAndUpdate(
-        { keyIdentifier: evmAddress },
-        { firstTimeLogin: false },
-      )
-      .lean()
-      .exec()
-    return user
-  } catch (e) {
-    onError(e)
-  }
-}
+};

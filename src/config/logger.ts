@@ -1,4 +1,4 @@
-import { createLogger, transports, format } from 'winston'
+import { createLogger, transports, format } from "winston";
 
 const levels = {
   fatal: 0,
@@ -9,7 +9,7 @@ const levels = {
   verbose: 5,
   debug: 6,
   silly: 7,
-}
+};
 
 export const logger = createLogger({
   levels,
@@ -18,7 +18,7 @@ export const logger = createLogger({
     format.colorize(),
     format.timestamp(),
     format.printf(({ timestamp, level, message, metadata }) => {
-      return `[${timestamp}] ${level}: ${message}. ${metadata ? JSON.stringify(metadata) : ''}`
+      return `[${timestamp}] ${level}: ${message}. ${metadata ? JSON.stringify(metadata) : ""}`;
     }),
   ),
-})
+});

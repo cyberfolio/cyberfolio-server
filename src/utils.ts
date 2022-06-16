@@ -1,86 +1,86 @@
 /* eslint-disable promise/avoid-new */
 /* eslint-disable promise/param-names */
 
-import Web3 from 'web3'
-import { ethers } from 'ethers'
-import { v4 as uuidv4 } from 'uuid'
-import { default as axios } from 'axios'
-import { logger } from '@config/logger'
+import Web3 from "web3";
+import { ethers } from "ethers";
+import { v4 as uuidv4 } from "uuid";
+import { default as axios } from "axios";
+import { logger } from "@config/logger";
 
 export const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
-)
+);
 
-export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
+export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const isValid0xAddress = (address: string) => {
-  return web3.utils.isAddress(address)
-}
+  return web3.utils.isAddress(address);
+};
 
 export const formatBalance = (balance: string, decimals: string) => {
-  return ethers.utils.formatUnits(balance, parseInt(decimals))
-}
+  return ethers.utils.formatUnits(balance, parseInt(decimals));
+};
 
 export const sathoshiToBtcBalance = (satoshi: number) => {
-  return satoshi * 0.00000001
-}
+  return satoshi * 0.00000001;
+};
 
 export const toBase64 = (string: string) => {
-  return Buffer.from(string).toString('base64')
-}
+  return Buffer.from(string).toString("base64");
+};
 
 export const intDivide = (numerator: number, denominator: number) => {
-  return parseInt((numerator / denominator).toString().split('.')[0])
-}
+  return parseInt((numerator / denominator).toString().split(".")[0]);
+};
 
 export const generateNonce = () => {
-  return `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`
-}
+  return `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`;
+};
 
 export const deleteMongoVersionAndId = (object: any) => {
-  const clone = JSON.parse(JSON.stringify(object))
+  const clone = JSON.parse(JSON.stringify(object));
   if (clone) {
     Object.keys(clone).forEach(function (key) {
-      key.indexOf('_') == 0 && delete clone[key]
-    })
-    return clone
+      key.indexOf("_") == 0 && delete clone[key];
+    });
+    return clone;
   }
-  return null
-}
+  return null;
+};
 
 export const doesImageExists = async (url: string) => {
   try {
     await axios({
       url,
-      method: 'get',
-    })
-    return true
+      method: "get",
+    });
+    return true;
   } catch (e) {
-    return false
+    return false;
   }
-}
+};
 
 export const capitalizeFirstLetter = (string: string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 export const roundNumber = (num: number) => {
-  return Math.round((num + Number.EPSILON) * 100) / 100
-}
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
 
 export const onError = (e: unknown) => {
   if (e instanceof Error) {
-    throw e
+    throw e;
   } else {
-    logger.error('Unexpected error', e)
+    logger.error("Unexpected error", e);
   }
-}
+};
 
 export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown }) => {
-  logger.error(`Error at ${path} ${func} `, e)
-}
+  logger.error(`Error at ${path} ${func} `, e);
+};
 
 export const getFilePath = (path: string) => {
-  const fileName = path.substring(path.indexOf('src'))
-  return fileName
-}
+  const fileName = path.substring(path.indexOf("src"));
+  return fileName;
+};

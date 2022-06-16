@@ -1,48 +1,48 @@
-import { Platform } from '@config/types'
-import { ApiPromise, WsProvider } from '@polkadot/api'
-import { getFilePath, logError } from '@src/utils'
+import { Platform } from "@config/types";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { getFilePath, logError } from "@src/utils";
 
-const path = getFilePath(__filename)
+const path = getFilePath(__filename);
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
-    const wsProvider = new WsProvider(`${process.env.POLKADOT_WEBSOCKET_URL}`)
+    const wsProvider = new WsProvider(`${process.env.POLKADOT_WEBSOCKET_URL}`);
     const api = await ApiPromise.create({
       provider: wsProvider,
       typesAlias: {
         assets: {
-          Balance: 'u64',
+          Balance: "u64",
         },
       },
       types: {
         AssetDetails: {
-          supply: 'Balance',
+          supply: "Balance",
         },
       },
-    })
-    const decimals = Number(process.env.POLKADOT_DECIMALS)
+    });
+    const decimals = Number(process.env.POLKADOT_DECIMALS);
 
-    const { data: balance } = await api.query.system.account(walletAddress)
-    const free = Number(balance.free)
+    const { data: balance } = await api.query.system.account(walletAddress);
+    const free = Number(balance.free);
 
-    const formattedFreeBalance = free / decimals
+    const formattedFreeBalance = free / decimals;
     // const formattedReservedBalance = balance.reserved / decimals;
     return [
       {
-        name: 'Polkadot',
+        name: "Polkadot",
         price: 25,
-        symbol: 'dot',
+        symbol: "dot",
         balance: formattedFreeBalance,
         platform: Platform.POLKADOT,
         scan: ``,
       },
-    ]
+    ];
   } catch (e) {
     logError({
       e,
       func: getTokenBalances.name,
       path,
-    })
-    throw e
+    });
+    throw e;
   }
-}
+};
