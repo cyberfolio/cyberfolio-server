@@ -1,11 +1,16 @@
 import { getFilePath, logError } from "@src/utils";
 import migratePlatfromName from "./1_migratePlatfromName";
+import { migrationModel } from "./repository/models";
 
 const path = getFilePath(__filename);
 
 const Index = async () => {
   try {
-    await migratePlatfromName();
+    const migration = await migrationModel.findOne({});
+    if (!migration) {
+      await migrationModel.create({ number: 0 });
+    }
+    await migratePlatfromName(1);
   } catch (e) {
     logError({
       e,
