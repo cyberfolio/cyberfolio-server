@@ -80,10 +80,6 @@ export const logError = ({ path, func, e }: { path: string; func: string; e: Err
   logger.error(`Error at ${path} ${func} `, e)
 }
 
-export const getFileName = (path: string) => {
-  const relativePath = path.substring(path.indexOf('src') + 1)
-  return relativePath
-}
 export const getFilePath = (path: string) => {
   const fileName = path.substring(path.indexOf('src'))
   return fileName
