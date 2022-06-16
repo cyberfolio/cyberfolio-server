@@ -8,8 +8,8 @@
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
-    "lint:check": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix .",
+    "lint": "eslint --cache \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --cache --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "u": "yarn yarn-upgrade-all"
   },
   "author": "Onur Iltan",
@@ -61,6 +61,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unicorn": "^42.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.1",
     "prettier": "^2.7.1"
   },
   "_moduleAliases": {
@@ -70,6 +72,14 @@
     "@config": "src/config/",
     "@api": "src/api/",
     "@src": "src/"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts}": "yarn run lint:fix"
   },
   "engines": {
     "node": "16.15.0",
