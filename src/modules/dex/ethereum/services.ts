@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import axios from 'axios'
 
-import { formatBalance, logError } from '@src/utils'
+import { formatBalance, getFilePath, logError } from '@src/utils'
 import { getCurrencyLogo } from '@providers/coingecko/repository'
 import { Platform } from '@config/types'
 
@@ -12,6 +12,8 @@ export const isValidEthAddress = (address: string) => {
   return web3.utils.isAddress(address)
 }
 
+const path = getFilePath(__filename)
+
 export const getEthBalance = async (walletAddress: string) => {
   try {
     const balance = await web3.eth.getBalance(walletAddress)
@@ -20,7 +22,7 @@ export const getEthBalance = async (walletAddress: string) => {
     logError({
       e,
       func: getEthBalance.name,
-      path: 'src/modules/dex/ethereum/services.ts',
+      path,
     })
     throw e
   }
@@ -48,7 +50,7 @@ export const getERC20Tokens = async () => {
     logError({
       e,
       func: getERC20Tokens.name,
-      path: 'src/modules/dex/ethereum/services.ts',
+      path,
     })
     throw e
   }
@@ -100,7 +102,7 @@ export const getTokenBalances = async (walletAddress: string) => {
     logError({
       e,
       func: getTokenBalances.name,
-      path: 'src/modules/dex/ethereum/services.ts',
+      path,
     })
     throw e
   }

@@ -1,7 +1,9 @@
 import { Platform } from '@config/types'
 import { getCurrenyInfo } from '@providers/coingecko/repository'
-import { logError } from '@src/utils'
+import { getFilePath, logError } from '@src/utils'
 import { walletsModel, dexAssetModel } from './models'
+
+const path = getFilePath(__filename)
 
 export const addWalletByKeyIdentifier = async ({
   keyIdentifier,
@@ -97,7 +99,7 @@ export const addAsset = async ({
     logError({
       e,
       func: addAsset.name,
-      path: 'src/api/dex/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -117,7 +119,7 @@ export const getAssetsByKeyAndChain = async ({
     logError({
       e,
       func: getAssetsByKeyAndChain.name,
-      path: 'src/api/dex/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -131,7 +133,7 @@ export const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string 
     logError({
       e,
       func: getAssetsByKey.name,
-      path: 'src/api/dex/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -145,7 +147,7 @@ export const getAllAssets = async () => {
     logError({
       e,
       func: getAllAssets.name,
-      path: 'src/api/dex/repository/index.ts',
+      path,
     })
     throw e
   }

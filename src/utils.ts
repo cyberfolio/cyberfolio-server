@@ -7,7 +7,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { default as axios } from 'axios'
 import { logger } from '@config/logger'
 
-export const web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`))
+export const web3 = new Web3(
+  new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
+)
 
 export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
@@ -76,4 +78,13 @@ export const onError = (e: unknown) => {
 
 export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown }) => {
   logger.error(`Error at ${path} ${func} `, e)
+}
+
+export const getFileName = (path: string) => {
+  const relativePath = path.substring(path.indexOf('src') + 1)
+  return relativePath
+}
+export const getFilePath = (path: string) => {
+  const fileName = path.substring(path.indexOf('src'))
+  return fileName
 }

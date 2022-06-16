@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-import { logError, sathoshiToBtcBalance } from '@src/utils'
+import { getFilePath, logError, sathoshiToBtcBalance } from '@src/utils'
 import { getCurrentUSDPrice } from '@providers/coingecko'
 import { Platform } from '@config/types'
+
+const path = getFilePath(__filename)
 
 export const getBitcoinBalance = async (walletAddress: string) => {
   try {
@@ -28,7 +30,7 @@ export const getBitcoinBalance = async (walletAddress: string) => {
     logError({
       e,
       func: getBitcoinBalance.name,
-      path: 'src/modules/dex/arbitrum/avalanche.ts',
+      path,
     })
     throw e
   }

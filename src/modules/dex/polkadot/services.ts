@@ -1,6 +1,8 @@
 import { Platform } from '@config/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { logError } from '@src/utils'
+import { getFilePath, logError } from '@src/utils'
+
+const path = getFilePath(__filename)
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
@@ -39,7 +41,7 @@ export const getTokenBalances = async (walletAddress: string) => {
     logError({
       e,
       func: getTokenBalances.name,
-      path: 'src/modules/dex/polkadot/services.ts',
+      path,
     })
     throw e
   }

@@ -1,7 +1,9 @@
 import { cexAssetModel } from '@api/cex/repository/models'
 import { dexAssetModel } from '@api/dex/repository/models'
 import { Platform } from '@config/types'
-import { logError } from '@src/utils'
+import { getFilePath, logError } from '@src/utils'
+
+const path = getFilePath(__filename)
 
 const Index = async () => {
   try {
@@ -22,7 +24,7 @@ const Index = async () => {
     logError({
       e,
       func: Index.name,
-      path: 'src/migrations/1_migratePlatfromName.ts',
+      path,
     })
   }
 }

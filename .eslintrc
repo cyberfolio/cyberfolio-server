@@ -7,9 +7,15 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint", "promise", "unicorn"],
+  "plugins": ["@typescript-eslint", "promise", "unicorn", "prettier"],
+  "ignorePatterns": [
+    "node_modules",
+    "build",
+    "dist",
+    ".yarn"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"

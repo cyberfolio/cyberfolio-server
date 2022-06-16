@@ -1,6 +1,8 @@
 import { Platform } from '@config/types'
-import { logError } from '@src/utils'
+import { getFilePath, logError } from '@src/utils'
 import { cexInfoModel, cexAssetModel } from './models'
+
+const path = getFilePath(__filename)
 
 export const addCexByKeyIdentifier = async ({
   keyIdentifier,
@@ -36,7 +38,7 @@ export const addCexByKeyIdentifier = async ({
     logError({
       e,
       func: addCexByKeyIdentifier.name,
-      path: 'src/api/cex/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -119,7 +121,7 @@ export const addCexAsset = async ({
     logError({
       e,
       func: addCexAsset.name,
-      path: 'src/api/cex/repository/index.ts',
+      path,
     })
     throw e
   }

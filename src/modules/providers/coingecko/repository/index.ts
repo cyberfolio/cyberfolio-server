@@ -1,5 +1,7 @@
-import { logError } from '@src/utils'
+import { getFilePath, logError } from '@src/utils'
 import { currencyModel, lastCurrencyUpdateModel } from './models'
+
+const path = getFilePath(__filename)
 
 export const addOrUpdateCryptoCurrency = async ({
   name,
@@ -31,7 +33,7 @@ export const addOrUpdateCryptoCurrency = async ({
       logError({
         e,
         func: addOrUpdateCryptoCurrency.name,
-        path: 'src/modules/providers/coingecko/repository/index.ts',
+        path,
       })
       throw e
     }
@@ -46,7 +48,7 @@ export const getCryptoPriceBySymbol = async (symbol: string) => {
     logError({
       e,
       func: getCryptoPriceBySymbol.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -60,7 +62,7 @@ export const getCurrencyLogo = async (symbol: string) => {
     logError({
       e,
       func: getCurrencyLogo.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -74,7 +76,7 @@ export const getCurrenyInfo = async (symbol: string) => {
     logError({
       e,
       func: getCurrenyInfo.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -88,15 +90,13 @@ export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
     logError({
       e,
       func: getFullNameOfTheCurrencyBySymbol.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
 }
 
-export const getContractAddressOfTheCurrencyBySymbol = async (
-  symbol: string,
-) => {
+export const getContractAddressOfTheCurrencyBySymbol = async (symbol: string) => {
   try {
     const currency = await currencyModel.findOne({ symbol }).lean()
     return currency?.contractAddress ? currency.contractAddress : ''
@@ -104,7 +104,7 @@ export const getContractAddressOfTheCurrencyBySymbol = async (
     logError({
       e,
       func: getContractAddressOfTheCurrencyBySymbol.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -112,14 +112,12 @@ export const getContractAddressOfTheCurrencyBySymbol = async (
 
 export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
   try {
-    await lastCurrencyUpdateModel
-      .findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true })
-      .lean()
+    await lastCurrencyUpdateModel.findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true }).lean()
   } catch (e) {
     logError({
       e,
       func: setLastCurrencyUpdateDate.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }
@@ -127,15 +125,13 @@ export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
 
 export const getLastCurrencyUpdateDate = async (): Promise<Date> => {
   try {
-    const lastCurrencyUpdate = await lastCurrencyUpdateModel
-      .findOne({ id: 1 })
-      .lean()
+    const lastCurrencyUpdate = await lastCurrencyUpdateModel.findOne({ id: 1 }).lean()
     return lastCurrencyUpdate?.lastUpdateDate
   } catch (e) {
     logError({
       e,
       func: getLastCurrencyUpdateDate.name,
-      path: 'src/modules/providers/coingecko/repository/index.ts',
+      path,
     })
     throw e
   }

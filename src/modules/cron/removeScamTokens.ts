@@ -1,7 +1,9 @@
-import { logError } from '@src/utils'
+import { logError, getFilePath } from '@src/utils'
 import { getAllAssets } from '@src/api/dex/repository'
 import scamTokens from '@config/scamTokens'
 import { dexAssetModel } from '@src/api/dex/repository/models'
+
+const path = getFilePath(__filename)
 
 export const removeScamTokens = async () => {
   try {
@@ -18,7 +20,7 @@ export const removeScamTokens = async () => {
         } catch (e) {
           logError({
             func: removeScamTokens.name,
-            path: 'src/modules/cron/removeScamTokens.ts',
+            path,
             e,
           })
         }
@@ -27,7 +29,7 @@ export const removeScamTokens = async () => {
   } catch (e) {
     logError({
       func: removeScamTokens.name,
-      path: 'src/modules/cron/removeScamTokens.ts',
+      path,
       e,
     })
     throw e

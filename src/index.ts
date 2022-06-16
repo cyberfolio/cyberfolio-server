@@ -19,7 +19,8 @@ import { allowedMethods, authenticateUser } from './config/middleware'
 import { logger } from '@config/logger'
 
 const boot = async () => {
-  // init app
+  // To get the directory name
+
   await connectToDB()
   await startCronJobs()
   await runMigrations()

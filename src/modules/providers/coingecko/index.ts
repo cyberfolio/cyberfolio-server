@@ -1,5 +1,6 @@
-import { logError, sleep } from '@src/utils'
 import axios from 'axios'
+
+import { getFilePath, logError, sleep } from '@src/utils'
 import {
   addOrUpdateCryptoCurrency,
   getCryptoPriceBySymbol,
@@ -7,6 +8,8 @@ import {
   getFullNameOfTheCurrencyBySymbol,
   getContractAddressOfTheCurrencyBySymbol,
 } from './repository'
+
+const path = getFilePath(__filename)
 
 export const addOrUpdateCryptoCurrencies = async (page: number) => {
   try {
@@ -33,7 +36,7 @@ export const addOrUpdateCryptoCurrencies = async (page: number) => {
     logError({
       e,
       func: addOrUpdateCryptoCurrencies.name,
-      path: 'src/modules/providers/coingecko/index.ts',
+      path,
     })
     throw e
   }
