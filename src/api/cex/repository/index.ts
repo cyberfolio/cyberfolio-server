@@ -1,5 +1,5 @@
 import { Platform } from "@config/types";
-import { getFilePath, logError } from "@src/utils";
+import { getFilePath, logError, removeMongoFields } from "@src/utils";
 import { cexInfoModel, cexAssetModel } from "./models";
 
 const path = getFilePath(__filename);
@@ -45,11 +45,15 @@ export const addCexByKeyIdentifier = async ({
 };
 
 export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
-  const cexes = await cexInfoModel
+  let cexes = await cexInfoModel
     .find({
       keyIdentifier,
     })
     .lean();
+  cexes = cexes.map((cex) => {
+    return removeMongoFields(cex);
+  });
+
   return cexes;
 };
 
@@ -60,25 +64,31 @@ export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: st
       cexName,
     })
     .lean();
-  return cex;
+  return removeMongoFields(cex);
 };
 
 export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
-  const assets = await cexAssetModel
+  let assets = await cexAssetModel
     .find({
       keyIdentifier,
       cexName,
     })
     .lean();
+  assets = assets.map((asset) => {
+    return removeMongoFields(asset);
+  });
   return assets;
 };
 
 export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
-  const assets = await cexAssetModel
+  let assets = await cexAssetModel
     .find({
       keyIdentifier,
     })
     .lean();
+  assets = assets.map((asset) => {
+    return removeMongoFields(asset);
+  });
   return assets;
 };
 

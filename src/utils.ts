@@ -1,6 +1,5 @@
 /* eslint-disable promise/avoid-new */
 /* eslint-disable promise/param-names */
-
 import Web3 from "web3";
 import { ethers } from "ethers";
 import { v4 as uuidv4 } from "uuid";
@@ -83,4 +82,10 @@ export const logError = ({ path, func, e }: { path: string; func: string; e: Err
 export const getFilePath = (path: string) => {
   const fileName = path.substring(path.indexOf("src"));
   return fileName;
+};
+
+export const removeMongoFields = (object: any) => {
+  delete object._id;
+  delete object.__v;
+  return object;
 };
