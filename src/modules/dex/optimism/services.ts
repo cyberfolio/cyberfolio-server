@@ -1,7 +1,8 @@
 import axios from "axios";
-import { formatBalance, getFilePath, logError } from "@src/utils";
+import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
 import { getCurrencyLogo } from "@providers/coingecko/repository";
 import { Platform } from "@config/types";
+import { EvmWithChain } from "@src/modules/common";
 
 const path = getFilePath(__filename);
 
@@ -15,6 +16,9 @@ export const getTokenBalances = async (walletAddress: string) => {
     const response = [];
     if (existingTokens && Array.isArray(existingTokens)) {
       for (let i = 0; i < existingTokens.length; i++) {
+        const contractAddress = existingTokens[i].contract_address.toLowerCase();
+        const chainId = EvmWithChain[Platform.OPTIMISM].chainId;
+        const isScam = await isScamToken(contractAddress, chainId);
         if (existingTokens[i].balance > 0) {
           const balance = Number(
             parseFloat(
@@ -27,7 +31,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
 
-          if (price && symbol) {
+          if (price && symbol && !isScam) {
             response.push({
               name: existingTokens[i].contract_name,
               symbol,

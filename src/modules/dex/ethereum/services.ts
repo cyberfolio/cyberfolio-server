@@ -1,9 +1,10 @@
 import Web3 from "web3";
 import axios from "axios";
 
-import { formatBalance, getFilePath, logError } from "@src/utils";
+import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
 import { getCurrencyLogo } from "@providers/coingecko/repository";
 import { Platform } from "@config/types";
+import { EvmWithChain } from "@src/modules/common";
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
@@ -68,6 +69,10 @@ export const getTokenBalances = async (walletAddress: string) => {
     const response = [];
     if (existingTokens && Array.isArray(existingTokens)) {
       for (let i = 0; i < existingTokens.length; i++) {
+        const contractAddress = existingTokens[i].contract_address.toLowerCase();
+        const chainId = EvmWithChain[Platform.ETHEREUM].chainId;
+        const isScam = await isScamToken(contractAddress, chainId);
+
         if (existingTokens[i].balance > 0) {
           const balance = Number(
             parseFloat(
@@ -79,14 +84,13 @@ export const getTokenBalances = async (walletAddress: string) => {
           const value = balance * existingTokens[i].quote_rate;
           const name = existingTokens[i].contract_name;
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
-          const contractAddress = existingTokens[i].contract_address;
           const logo = await getCurrencyLogo(symbol);
 
-          if (price && symbol) {
+          if (price && symbol && !isScam) {
             response.push({
               name,
               symbol,
-              contractAddress,
+              contractAddress: existingTokens[i].contract_address,
               type: existingTokens[i].type,
               logo,
               balance,

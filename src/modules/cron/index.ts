@@ -2,7 +2,7 @@ import cron from "node-cron";
 
 import { logger } from "@config/logger";
 import { getFilePath, logError } from "@src/utils";
-import { removeScamTokens } from "./removeScamTokens";
+import { removeScamTokens } from "./scam-tokens/remove";
 import { updateCurrencies } from "./updateCurrencies";
 
 const ever2HourCronValue = "0 0 */2 * * *";
