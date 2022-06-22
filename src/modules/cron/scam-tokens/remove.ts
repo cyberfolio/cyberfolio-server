@@ -27,10 +27,17 @@ export const removeScamTokens = async () => {
     const scamTokens = scam.data?.tokens;
     if (Array.isArray(scam.data?.tokens)) {
       scamTokens.forEach(async ({ address, chainId }) => {
-        await scamTokenModel.create({
-          address,
-          chainId,
-        });
+        await scamTokenModel.findOneAndUpdate(
+          {
+            address,
+            chainId,
+          },
+          {
+            address,
+            chainId,
+          },
+          { upsert: true },
+        );
       });
     }
     for (const asset of assets) {
