@@ -24,7 +24,7 @@ export const removeScamTokens = async () => {
     const scam = await axios.get<ScamTokenResponse>(
       "https://raw.githubusercontent.com/dappradar/tokens-blacklist/main/all-tokens.json",
     );
-    const scamTokens = scam.data?.tokens;
+    const scamTokens = scam?.data?.tokens;
     if (Array.isArray(scam.data?.tokens)) {
       scamTokens.forEach(async ({ address, chainId }) => {
         await scamTokenModel.findOneAndUpdate(
