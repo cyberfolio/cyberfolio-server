@@ -28,7 +28,6 @@ export const initCronJobs = async () => {
   cron.schedule(everyMinuteCronValue, async () => {
     try {
       await removeScamTokens();
-      logger.info("Scam Token removal complete");
     } catch (e) {
       if (e instanceof Error) {
         logError({ path, func: initCronJobs.name, e });
