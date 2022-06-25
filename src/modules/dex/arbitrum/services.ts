@@ -34,7 +34,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const contractAddress = existingTokens[i].contract_address;
           let scan = "";
           if (contractAddress) {
-            scan = `https://arbiscan.io/address/${contractAddress}?a=${walletAddress}`;
+            scan = `https://arbiscan.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
             scan = `https://arbiscan.io/tokenholdings?a=${walletAddress}`;
           }

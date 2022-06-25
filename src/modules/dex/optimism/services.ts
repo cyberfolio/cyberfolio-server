@@ -32,7 +32,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
           if (contractAddress) {
-            scan = `https://optimistic.etherscan.io/address/${contractAddress}?a=${walletAddress}`;
+            scan = `https://optimistic.etherscan.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
             scan = `https:/optimistic.etherscan.io/tokenholdings?a=${walletAddress}`;
           }

@@ -32,7 +32,7 @@ export const getTokenBalances = async (walletAddress: string) => {
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
           if (contractAddress) {
-            scan = `https://snowtrace.io/address/${contractAddress}?a=${walletAddress}`;
+            scan = `https://snowtrace.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
             scan = `https://snowtrace.io/tokenholdings?a=${walletAddress}`;
           }
@@ -41,7 +41,7 @@ export const getTokenBalances = async (walletAddress: string) => {
             response.push({
               name: existingTokens[i].contract_name,
               symbol,
-              contractAddress: existingTokens[i].contract_address,
+              contractAddress,
               type: existingTokens[i].type,
               logo,
               balance,
