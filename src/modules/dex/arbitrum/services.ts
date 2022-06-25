@@ -31,6 +31,13 @@ export const getTokenBalances = async (walletAddress: string) => {
           const value = balance * existingTokens[i]?.quote_rate;
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
+          const contractAddress = existingTokens[i].contract_address;
+          let scan = "";
+          if (contractAddress) {
+            scan = `https://arbiscan.io/address/${contractAddress}?a=${walletAddress}`;
+          } else {
+            scan = `https://arbiscan.io/tokenholdings?a=${walletAddress}`;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
@@ -43,7 +50,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               platform: Platform.ARBITRUM,
-              scan: `https://arbiscan.io/tokenholdings?a=${walletAddress}`,
+              scan,
             });
           }
         }

@@ -31,19 +31,25 @@ export const getTokenBalances = async (walletAddress: string) => {
           const value = balance * price;
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
+          let scan = "";
+          if (contractAddress) {
+            scan = `https://polygonscan.com/token/${contractAddress}?a=${walletAddress}`;
+          } else {
+            scan = `https://polygonscan.com/tokenholdings?a=${walletAddress}`;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
               name: existingTokens[i].contract_name,
               symbol,
-              contractAddress: existingTokens[i].contract_address,
+              contractAddress,
               type: existingTokens[i].type,
               logo,
               balance,
               price,
               value,
               platform: Platform.POLYGON,
-              scan: `https:/polygonscan.com/tokenholdings?a=${walletAddress}`,
+              scan,
             });
           }
         }

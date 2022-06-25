@@ -30,19 +30,25 @@ export const getTokenBalances = async (walletAddress: string) => {
           const value = balance * existingTokens[i]?.quote_rate;
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
+          let scan = "";
+          if (contractAddress) {
+            scan = `https://bscscan.com/token/${contractAddress}?a=${walletAddress}`;
+          } else {
+            scan = `https://bscscan.com/tokenholdings?a=${walletAddress}`;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
               name: existingTokens[i].contract_name,
               symbol,
-              contractAddress: existingTokens[i].contract_address,
+              contractAddress,
               type: existingTokens[i].type,
               logo,
               balance,
               price,
               value,
               platform: Platform.BSC,
-              scan: `https://www.bscscan.com/tokenholdings?a=${walletAddress}`,
+              scan,
             });
           }
         }

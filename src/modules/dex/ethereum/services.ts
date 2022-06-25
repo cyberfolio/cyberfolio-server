@@ -85,19 +85,25 @@ export const getTokenBalances = async (walletAddress: string) => {
           const name = existingTokens[i].contract_name;
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
+          let scan = "";
+          if (contractAddress) {
+            scan = `https://etherscan.io/token/${contractAddress}?a=${walletAddress}`;
+          } else {
+            scan = `https://etherscan.io/tokenholdings?a=${walletAddress}`;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
               name,
               symbol,
-              contractAddress: existingTokens[i].contract_address,
+              contractAddress,
               type: existingTokens[i].type,
               logo,
               balance,
               price,
               value,
               platform: Platform.ETHEREUM,
-              scan: `https://etherscan.io/tokenholdings?a=${walletAddress}`,
+              scan,
             });
           }
         }

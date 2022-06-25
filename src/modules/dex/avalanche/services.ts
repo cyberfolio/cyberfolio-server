@@ -30,6 +30,12 @@ export const getTokenBalances = async (walletAddress: string) => {
           const price = existingTokens[i]?.quote_rate;
           const value = balance * existingTokens[i]?.quote_rate;
           const logo = await getCurrencyLogo(symbol);
+          let scan = "";
+          if (contractAddress) {
+            scan = `https://snowtrace.io/address/${contractAddress}?a=${walletAddress}`;
+          } else {
+            scan = `https://snowtrace.io/tokenholdings?a=${walletAddress}`;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
@@ -42,7 +48,7 @@ export const getTokenBalances = async (walletAddress: string) => {
               price,
               value,
               platform: Platform.AVALANCHE,
-              scan: `https://snowtrace.io/tokenholdings?a=${walletAddress}`,
+              scan,
             });
           }
         }
