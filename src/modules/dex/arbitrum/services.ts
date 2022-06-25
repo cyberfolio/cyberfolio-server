@@ -33,10 +33,10 @@ export const getTokenBalances = async (walletAddress: string) => {
           const logo = await getCurrencyLogo(symbol);
           const contractAddress = existingTokens[i].contract_address;
           let scan = "";
-          if (contractAddress) {
+          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `https://arbiscan.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
-            scan = `https://arbiscan.io/tokenholdings?a=${walletAddress}`;
+            scan = `https://arbiscan.io/address/${walletAddress}`;
           }
 
           if (price && symbol && !isScam) {

@@ -86,10 +86,10 @@ export const getTokenBalances = async (walletAddress: string) => {
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
-          if (contractAddress) {
+          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `https://etherscan.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
-            scan = `https://etherscan.io/tokenholdings?a=${walletAddress}`;
+            scan = `https://etherscan.io/address/${walletAddress}`;
           }
 
           if (price && symbol && !isScam) {

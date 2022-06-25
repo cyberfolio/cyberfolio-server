@@ -31,10 +31,10 @@ export const getTokenBalances = async (walletAddress: string) => {
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
-          if (contractAddress) {
+          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `https://optimistic.etherscan.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
-            scan = `https:/optimistic.etherscan.io/tokenholdings?a=${walletAddress}`;
+            scan = `https:/optimistic.etherscan.io/address/${walletAddress}`;
           }
 
           if (price && symbol && !isScam) {

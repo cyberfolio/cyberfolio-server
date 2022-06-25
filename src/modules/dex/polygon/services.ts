@@ -32,10 +32,10 @@ export const getTokenBalances = async (walletAddress: string) => {
           const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
-          if (contractAddress) {
+          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `https://polygonscan.com/token/${contractAddress}?a=${walletAddress}`;
           } else {
-            scan = `https://polygonscan.com/tokenholdings?a=${walletAddress}`;
+            scan = `https://polygonscan.com/address/${walletAddress}`;
           }
 
           if (price && symbol && !isScam) {

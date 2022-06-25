@@ -31,10 +31,10 @@ export const getTokenBalances = async (walletAddress: string) => {
           const value = balance * existingTokens[i]?.quote_rate;
           const logo = await getCurrencyLogo(symbol);
           let scan = "";
-          if (contractAddress) {
+          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `https://snowtrace.io/token/${contractAddress}?a=${walletAddress}`;
           } else {
-            scan = `https://snowtrace.io/tokenholdings?a=${walletAddress}`;
+            scan = `https://snowtrace.io/address/${walletAddress}`;
           }
 
           if (price && symbol && !isScam) {
