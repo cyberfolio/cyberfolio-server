@@ -48,20 +48,3 @@ declare namespace NodeJS {
     env: ProcessEnv;
   }
 }
-
-export type BinanceError = {
-  code?: number;
-  msg?: string;
-};
-
-export type FTXError = {
-  error?: string;
-};
-
-export type GateIoError = {
-  code?: string;
-};
-
-export type KucoinError = {
-  code?: string;
-};

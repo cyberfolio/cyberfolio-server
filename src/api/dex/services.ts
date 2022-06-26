@@ -80,7 +80,6 @@ export const saveAssets = async ({
         name: any;
         symbol: any;
         contractAddress: any;
-        type: any;
         logo: any;
         balance: number;
         price: any;

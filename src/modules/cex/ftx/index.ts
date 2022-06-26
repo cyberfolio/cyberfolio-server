@@ -3,8 +3,7 @@ import crypto from "crypto-js";
 
 import { roundNumber } from "@src/utils";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { FTXError } from "@config/custom-typings";
-import { Platform } from "@config/types";
+import { Platform, FTXError } from "@config/types";
 
 const API_URL = process.env.FTX_API_URL;
 

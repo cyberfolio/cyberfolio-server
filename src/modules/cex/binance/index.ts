@@ -4,7 +4,7 @@ import crypto from "crypto-js";
 import { roundNumber } from "@src/utils";
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { BinanceError } from "@config/custom-typings";
+import { BinanceError } from "@config/types";
 import { Platform } from "@config/types";
 
 const API_URL = process.env.BINANCE_API_URL;

@@ -4,8 +4,7 @@ import { roundNumber } from "@src/utils";
 
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { KucoinError } from "@config/custom-typings";
-import { Platform } from "@config/types";
+import { Platform, KucoinError } from "@config/types";
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
 const API_URL = process.env.KUCOIN_API_URL;

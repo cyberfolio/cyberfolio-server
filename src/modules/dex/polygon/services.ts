@@ -1,8 +1,7 @@
 import axios from "axios";
-import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
-import { getCurrencyLogo } from "@providers/coingecko/repository";
-import { Platform } from "@config/types";
-import { EvmWithChain } from "@src/modules/common";
+import { getFilePath, logError } from "@src/utils";
+import { Platform, ScanURL } from "@config/types";
+import evmAssetsResponse from "@dex/common/evmAssetsResponse";
 
 const path = getFilePath(__filename);
 
@@ -13,48 +12,8 @@ export const getTokenBalances = async (walletAddress: string) => {
       method: "get",
     })) as any;
 
-    const existingTokens = walletInfo?.data?.data?.items;
-    const response = [];
-    if (existingTokens && Array.isArray(existingTokens)) {
-      for (let i = 0; i < existingTokens.length; i++) {
-        const contractAddress = existingTokens[i].contract_address.toLowerCase();
-        const chainId = EvmWithChain[Platform.POLYGON].chainId;
-        const isScam = await isScamToken(contractAddress, chainId);
-        if (existingTokens[i].balance > 0) {
-          const balance = Number(
-            parseFloat(
-              formatBalance(existingTokens[i].balance, parseInt(existingTokens[i].contract_decimals) as any),
-            )?.toFixed(2),
-          );
-
-          const price = existingTokens[i]?.quote_rate;
-          const value = balance * price;
-          const symbol = existingTokens[i].contract_ticker_symbol?.toLowerCase();
-          const logo = await getCurrencyLogo(symbol);
-          let scan = "";
-          if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-            scan = `https://polygonscan.com/token/${contractAddress}?a=${walletAddress}`;
-          } else {
-            scan = `https://polygonscan.com/address/${walletAddress}`;
-          }
-
-          if (price && symbol && !isScam) {
-            response.push({
-              name: existingTokens[i].contract_name,
-              symbol,
-              contractAddress,
-              type: existingTokens[i].type,
-              logo,
-              balance,
-              price,
-              value,
-              platform: Platform.POLYGON,
-              scan,
-            });
-          }
-        }
-      }
-    }
+    const assets = walletInfo?.data?.data?.items;
+    const response = await evmAssetsResponse(walletAddress, ScanURL.POLYGON, assets, Platform.POLYGON);
     return response;
   } catch (e) {
     logError({

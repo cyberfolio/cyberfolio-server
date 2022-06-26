@@ -19,3 +19,29 @@ export enum Platform {
   GATEIO = "Gateio",
   KUCOIN = "Kucoin",
 }
+
+export type BinanceError = {
+  code?: number;
+  msg?: string;
+};
+
+export type FTXError = {
+  error?: string;
+};
+
+export type GateIoError = {
+  code?: string;
+};
+
+export type KucoinError = {
+  code?: string;
+};
+
+export enum ScanURL {
+  ETHEREUM = "https://etherscan.io",
+  BSC = "https://bscscan.com",
+  AVALANCHE = "https://snowtrace.io",
+  POLYGON = "https://polygonscan.com",
+  ARBITRUM = "https://arbiscan.io",
+  OPTIMISM = "https://optimistic.etherscan.io",
+}
