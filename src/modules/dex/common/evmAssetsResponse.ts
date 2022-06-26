@@ -31,6 +31,9 @@ const evmAssetsResponse = async (walletAddress: string, scanURL: ScanURL, assets
           } else {
             scan = `${scanURL}/address/${walletAddress}`;
           }
+          if (symbol.toLowerCase() === "uni-v2" || price > 200000) {
+            continue;
+          }
 
           if (price && symbol && !isScam) {
             response.push({
