@@ -15,7 +15,6 @@ export const connectToDB = async () => {
 
 export const startCronJobs = async () => {
   try {
-    logger.info("Cron jobs started");
     await initCronJobs();
   } catch (e) {
     logger.error(`Error at src/init.ts ${startCronJobs.name}`);
@@ -25,7 +24,6 @@ export const startCronJobs = async () => {
 
 export const runMigrations = async () => {
   try {
-    logger.info("Migrations started");
     await migrations();
   } catch (e) {
     logger.error(`Error at src/init.ts ${startCronJobs.name}`);

@@ -29,11 +29,15 @@ export const removeScamTokens = async () => {
       scamTokens.forEach(async ({ address, chainId }) => {
         await scamTokenModel.findOneAndUpdate(
           {
-            address,
-            chainId,
+            $or: [{ address: address.toLowerCase() }, { address }],
+            $and: [
+              {
+                chainId,
+              },
+            ],
           },
           {
-            address,
+            address: address.toLowerCase(),
             chainId,
           },
           { upsert: true },

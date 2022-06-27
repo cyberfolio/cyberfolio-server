@@ -16,12 +16,17 @@ const evmAssetsResponse = async (
   if (assets && Array.isArray(assets)) {
     for (let i = 0; i < assets.length; i++) {
       try {
-        const contractAddress = assets[i].contract_address.toLowerCase();
+        const contractAddress = assets[i].contract_address?.toLowerCase();
         const chainId = EvmWithChain[platform].chainId;
         const isScam = await isScamToken(contractAddress, chainId);
 
         if (parseInt(assets[i].balance) > 0) {
-          const balance = Number(parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals))?.toFixed(2));
+          let balance = 0;
+          if (contractAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+            balance = parseInt(assets[i].balance);
+          } else {
+            balance = parseInt(parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals))?.toFixed(2));
+          }
 
           const name = assets[i].contract_name;
           const price = assets[i].quote_rate;
@@ -31,14 +36,13 @@ const evmAssetsResponse = async (
           const value = balance * price;
           const symbol = assets[i].contract_ticker_symbol?.toLowerCase();
           const logo = symbol ? await getCurrencyLogo(symbol) : null;
-          const contractAddress = assets[i].contract_address;
           let scan = "";
           if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
             scan = `${scanURL}/token/${contractAddress}?a=${walletAddress}`;
           } else {
             scan = `${scanURL}/address/${walletAddress}`;
           }
-          if (symbol?.toLowerCase() === "uni-v2" || price > 200000) {
+          if (symbol?.toLowerCase() === "uni-v2" || price > 200000 || balance === 0) {
             continue;
           }
 
