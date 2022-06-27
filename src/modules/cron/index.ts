@@ -4,7 +4,7 @@ import { logger } from "@config/logger";
 import { getFilePath, logError } from "@src/utils";
 import { removeScamTokens } from "./scam-tokens/remove";
 import dexAssetsUpdate from "./dex-assets-update/";
-import { updateCurrencies } from "./updateCurrencies";
+import { updateCurrencies } from "./update-currencies";
 
 const ever2HourCronValue = "0 0 */2 * * *";
 const everHourCronValue = "0 0 */1 * * *";

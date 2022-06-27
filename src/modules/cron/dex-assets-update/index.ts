@@ -50,6 +50,7 @@ const updateEvmAssets = async () => {
           );
         }
       }
+      await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
     }
   } catch (e) {
     logError({

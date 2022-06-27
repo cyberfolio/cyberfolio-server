@@ -5,6 +5,7 @@ interface UserDoc {
   nonce: string;
   firstTimeLogin: boolean;
   ensName?: string;
+  lastAssetUpdate?: string;
 }
 
 const userSchema = new mongoose.Schema<UserDoc>({
@@ -25,13 +26,9 @@ const userSchema = new mongoose.Schema<UserDoc>({
     type: Boolean,
     required: true,
   },
-});
-
-userSchema.set("toJSON", {
-  virtuals: true,
-  transform: (_, ret) => {
-    delete ret.__v;
-    delete ret._id;
+  lastAssetUpdate: {
+    type: Date,
+    required: false,
   },
 });
 

@@ -106,6 +106,7 @@ router.post("/login/validate-signature", async (req, res, next) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/is-authenticated", authenticateUser, async (req: any, res) => {
   if (req.keyIdentifier) {
     const verifiedUser = await getUserByEvmAddress({
@@ -114,6 +115,7 @@ router.get("/is-authenticated", authenticateUser, async (req: any, res) => {
     res.status(200).send({
       keyIdentifier: req.keyIdentifier,
       ensName: verifiedUser?.ensName,
+      lastAssetUpdate: verifiedUser?.lastAssetUpdate,
     });
   } else {
     res.status(401).send("Unauthenticated");

@@ -10,6 +10,7 @@ import scamTokens from "@config/scamTokens";
 import * as repository from "./repository";
 import { onError } from "@src/utils";
 import { Platform } from "@config/types";
+import { userModel } from "@api/auth/repository/models";
 
 export const addWallets = async ({
   keyIdentifier,
@@ -141,4 +142,5 @@ export const saveAssets = async ({
       onError(e);
     }
   }
+  await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
 };
