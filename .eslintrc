@@ -42,7 +42,7 @@
     "promise/valid-params": "warn",
     "no-use-before-define": ["error", { "variables": false }],
     "no-unsafe-optional-chaining": "error",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unused-vars": "error"
   }
 }

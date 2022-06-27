@@ -6,12 +6,11 @@ import { Platform } from "@config/types";
 
 const path = getFilePath(__filename);
 
-export const getBitcoinBalance = async (walletAddress: string) => {
+const getBalance = async (walletAddress: string) => {
   try {
-    const { data } = (await axios({
-      url: `${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`,
-      method: "get",
-    })) as any;
+    const { data } = await axios.get<number>(
+      `${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`,
+    );
     const balance = sathoshiToBtcBalance(data);
     const price = await getCurrentUSDPrice("btc");
     const value = balance * price;
@@ -29,9 +28,15 @@ export const getBitcoinBalance = async (walletAddress: string) => {
   } catch (e) {
     logError({
       e,
-      func: getBitcoinBalance.name,
+      func: getBalance.name,
       path,
     });
     throw e;
   }
 };
+
+const bitcoin = {
+  getBalance,
+};
+
+export default bitcoin;

@@ -1,10 +1,10 @@
-import * as bitcoin from "@dex/bitcoin/services";
-import * as avalanche from "@dex/avalanche/services";
-import * as eth from "@dex/ethereum/services";
-import * as arbitrum from "@dex/arbitrum/services";
-import * as optimism from "@dex/optimism/services";
-import * as polygon from "@dex/polygon/services";
-import * as smartchain from "@dex/smartchain/services";
+import bitcoin from "@dex/bitcoin";
+import avalanche from "@dex/avalanche";
+import ethereum from "@dex/ethereum";
+import arbitrum from "@dex/arbitrum";
+import optimism from "@dex/optimism";
+import polygon from "@dex/polygon";
+import smartchain from "@dex/smartchain";
 
 import scamTokens from "@config/scamTokens";
 import * as repository from "./repository";
@@ -74,19 +74,9 @@ export const saveAssets = async ({
       const optimismTokens = await optimism.getTokenBalances(walletAddress);
       const polygonTokens = await polygon.getTokenBalances(walletAddress);
       const smartChaintokens = await smartchain.getTokenBalances(walletAddress);
-      const ethereumTokens = await eth.getTokenBalances(walletAddress);
+      const ethereumTokens = await ethereum.getTokenBalances(walletAddress);
 
-      const allEvmTokens: {
-        name: any;
-        symbol: any;
-        contractAddress: any;
-        logo: any;
-        balance: number;
-        price: any;
-        value: number;
-        platform: Platform;
-        scan: string;
-      }[] = [
+      const allEvmTokens = [
         ...ethereumTokens,
         ...avalancheTokens,
         ...arbitrumTokens,
@@ -128,7 +118,7 @@ export const saveAssets = async ({
       onError(e);
     }
   } else if (platform === Platform.BITCOIN) {
-    const btc = await bitcoin.getBitcoinBalance(walletAddress);
+    const btc = await bitcoin.getBalance(walletAddress);
 
     const asset = {
       keyIdentifier,

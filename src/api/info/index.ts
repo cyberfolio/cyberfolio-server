@@ -4,6 +4,7 @@ const router = express.Router();
 import { getNetWorth, getAvailableAccounts } from "./services";
 import { ethers } from "ethers";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/networth", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {
@@ -18,6 +19,7 @@ router.get("/networth", async (req: any, res: express.Response) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/available-accounts", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {
@@ -32,6 +34,7 @@ router.get("/available-accounts", async (req: any, res: express.Response) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/ens-name", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {

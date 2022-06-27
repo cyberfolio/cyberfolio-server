@@ -3,6 +3,7 @@ const router = express.Router();
 
 import { addCex, getAllSpot, getSpotAssetsByCexName } from "./services";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.post("/add", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   const apiKey = req.body?.apiKey;
@@ -28,6 +29,7 @@ router.post("/add", async (req: any, res: express.Response) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/assets", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {
@@ -44,6 +46,7 @@ router.get("/assets", async (req: any, res: express.Response) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 router.get("/assets/:cexName", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   const cexName = req.params?.cexName;

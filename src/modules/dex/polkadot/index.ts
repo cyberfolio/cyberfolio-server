@@ -4,7 +4,7 @@ import { getFilePath, logError } from "@src/utils";
 
 const path = getFilePath(__filename);
 
-export const getTokenBalances = async (walletAddress: string) => {
+const getTokenBalances = async (walletAddress: string) => {
   try {
     const wsProvider = new WsProvider(`${process.env.POLKADOT_WEBSOCKET_URL}`);
     const api = await ApiPromise.create({
@@ -46,3 +46,9 @@ export const getTokenBalances = async (walletAddress: string) => {
     throw e;
   }
 };
+
+const polkadot = {
+  getTokenBalances,
+};
+
+export default polkadot;

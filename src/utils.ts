@@ -37,17 +37,6 @@ export const generateNonce = () => {
   return `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`;
 };
 
-export const deleteMongoVersionAndId = (object: any) => {
-  const clone = JSON.parse(JSON.stringify(object));
-  if (clone) {
-    Object.keys(clone).forEach(function (key) {
-      key.indexOf("_") == 0 && delete clone[key];
-    });
-    return clone;
-  }
-  return null;
-};
-
 export const doesImageExists = async (url: string) => {
   try {
     await axios({
@@ -85,6 +74,7 @@ export const getFilePath = (path: string) => {
   return fileName;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeMongoFields = (object: any) => {
   delete object._id;
   delete object.__v;

@@ -11,7 +11,6 @@ declare namespace NodeJS {
     INFURA_PROJECT_ID: string;
 
     COINGECKO_V3_API_URL: string;
-    COINGECKO_ERC20_TOKEN_LIST_URL: string;
 
     COINMARKETCAP_API_KEY: string;
     COINMARKETCAP_API_URL: string;
