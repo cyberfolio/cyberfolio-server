@@ -1,11 +1,13 @@
 import { userModel } from "@api/auth/repository/models";
 import { dexAssetModel } from "@api/dex/repository/models";
+
 import arbitrum from "@dex/arbitrum";
 import avalanche from "@dex/avalanche";
 import ethereum from "@dex/ethereum";
 import optimism from "@dex/optimism";
 import polygon from "@dex/polygon";
 import smartchain from "@dex/smartchain";
+
 import { logError, getFilePath, sleep } from "@src/utils";
 
 const path = getFilePath(__filename);
@@ -30,14 +32,10 @@ const updateEvmAssets = async () => {
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
       for (const evmAsset of evmAssets) {
-        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol.toLowerCase());
+        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol);
         if (!existingAssetSymbols.includes(evmAsset.symbol)) {
           await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: evmAsset.symbol });
-        }
-      }
-      for (const evmAsset of evmAssets) {
-        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol);
-        if (existingAssetSymbols.includes(evmAsset.symbol)) {
+        } else {
           await dexAssetModel.findOneAndUpdate(
             { keyIdentifier: walletAddress, symbol: evmAsset.symbol },
             {
