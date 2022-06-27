@@ -68,6 +68,7 @@
   },
   "_moduleAliases": {
     "@providers": "src/modules/providers/",
+    "@constants": "src/constants/",
     "@cex": "src/modules/cex/",
     "@dex": "src/modules/dex/",
     "@config": "src/config/",

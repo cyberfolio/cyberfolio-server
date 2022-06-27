@@ -30,7 +30,7 @@ const updateEvmAssets = async () => {
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
       for (const evmAsset of evmAssets) {
-        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol);
+        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol.toLowerCase());
         if (!existingAssetSymbols.includes(evmAsset.symbol)) {
           await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: evmAsset.symbol });
         }

@@ -1,7 +1,7 @@
 import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
 import { getCurrencyLogo } from "@providers/coingecko/repository";
 import { Platform, ScanURL } from "@config/types";
-import { EvmWithChain } from "@src/modules/common";
+import { EvmWithChain } from "@constants/index";
 import { CovalentTokenBalanceItems } from "./types";
 
 const path = getFilePath(__filename);

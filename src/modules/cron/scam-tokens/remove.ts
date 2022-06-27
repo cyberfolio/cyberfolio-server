@@ -2,7 +2,7 @@ import { logError, getFilePath } from "@src/utils";
 import { getAllAssets } from "@src/api/dex/repository";
 import { dexAssetModel } from "@src/api/dex/repository/models";
 import axios from "axios";
-import { EvmWithChain } from "../../common";
+import { EvmWithChain } from "@constants/index";
 import { scamTokenModel } from "./model";
 
 const path = getFilePath(__filename);
