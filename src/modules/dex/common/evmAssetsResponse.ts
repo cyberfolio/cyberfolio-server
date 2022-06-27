@@ -23,7 +23,7 @@ const evmAssetsResponse = async (
         if (parseInt(assets[i].balance) > 0) {
           let balance = 0;
           if (contractAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-            balance = parseInt(assets[i].balance);
+            balance = parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals));
           } else {
             balance = parseInt(parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals))?.toFixed(2));
           }
