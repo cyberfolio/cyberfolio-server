@@ -21,11 +21,11 @@ const evmAssetsResponse = async (
         const isScam = await isScamToken(contractAddress, chainId);
 
         if (parseInt(assets[i].balance) > 0) {
-          let balance = 0;
+          let balance = Number(formatBalance(assets[i].balance, assets[i].contract_decimals));
           if (contractAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-            balance = parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals));
+            balance = parseFloat(balance.toFixed(5));
           } else {
-            balance = parseInt(parseFloat(formatBalance(assets[i].balance, assets[i].contract_decimals))?.toFixed(2));
+            balance = parseFloat(balance.toFixed(3));
           }
 
           const name = assets[i].contract_name;
