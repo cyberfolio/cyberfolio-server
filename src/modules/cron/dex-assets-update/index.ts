@@ -31,23 +31,29 @@ const updateEvmAssets = async () => {
 
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
-      for (const evmAsset of evmAssets) {
-        const existingAssetSymbols = assets.map((evmAsset) => evmAsset.symbol);
-        if (!existingAssetSymbols.includes(evmAsset.symbol)) {
-          await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: evmAsset.symbol });
-        } else {
-          await dexAssetModel.findOneAndUpdate(
-            { keyIdentifier: walletAddress, symbol: evmAsset.symbol },
-            {
-              balance: evmAsset.balance,
-              price: evmAsset.price,
-              value: evmAsset.value,
-              scan: evmAsset.scan,
-              contractAddress: evmAsset.contractAddress,
-            },
-          );
-        }
+      // Remove assets that are not owned anymore
+      const existingAssetSymbols = evmAssets.map((evmAsset) => evmAsset.symbol);
+      const oldSymbols = assets.map((evmAsset) => evmAsset.symbol);
+      const symbolsThatAreNotOwnedAnymore = oldSymbols.filter((x) => existingAssetSymbols.indexOf(x) === -1);
+      for (const symbol of symbolsThatAreNotOwnedAnymore) {
+        await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol });
       }
+
+      // Update assets that is owned at this time
+      for (const evmAsset of evmAssets) {
+        await dexAssetModel.findOneAndUpdate(
+          { keyIdentifier: walletAddress, symbol: evmAsset.symbol },
+          {
+            balance: evmAsset.balance,
+            price: evmAsset.price,
+            value: evmAsset.value,
+            scan: evmAsset.scan,
+            contractAddress: evmAsset.contractAddress,
+          },
+        );
+      }
+
+      // update last asset update date
       await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
     }
   } catch (e) {

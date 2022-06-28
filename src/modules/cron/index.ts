@@ -27,7 +27,7 @@ export const initCronJobs = async () => {
     }
   });
 
-  cron.schedule(everyMinuteCronValue, async () => {
+  cron.schedule(everHourCronValue, async () => {
     try {
       logger.info("Running updateEvmAssets");
       await dexAssetsUpdate.updateEvmAssets();
