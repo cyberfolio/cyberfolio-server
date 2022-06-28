@@ -1,5 +1,6 @@
 import { userModel } from "@api/auth/repository/models";
 import { dexAssetModel } from "@api/dex/repository/models";
+import { Platform } from "@config/types";
 
 import arbitrum from "@dex/arbitrum";
 import avalanche from "@dex/avalanche";
@@ -11,6 +12,23 @@ import smartchain from "@dex/smartchain";
 import { logError, getFilePath, sleep } from "@src/utils";
 
 const path = getFilePath(__filename);
+
+function getDifference(
+  array1: {
+    symbol: string;
+    platform: Platform;
+  }[],
+  array2: {
+    symbol: string;
+    platform: Platform;
+  }[],
+) {
+  return array1.filter((object1) => {
+    return !array2.some((object2) => {
+      return object1.symbol === object2.symbol && object1.platform === object2.platform;
+    });
+  });
+}
 
 const updateEvmAssets = async () => {
   try {
@@ -32,15 +50,20 @@ const updateEvmAssets = async () => {
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
       // Remove assets that are not owned anymore
-      const existingAssetSymbols = evmAssets.map((evmAsset) => ({
+      const existingAssets = evmAssets.map((evmAsset) => ({
         symbol: evmAsset.symbol,
         platform: evmAsset.platform,
       }));
-      const oldSymbols = assets.map((evmAsset) => ({
+      const oldAssets = assets.map((evmAsset) => ({
         symbol: evmAsset.symbol,
         platform: evmAsset.platform,
       }));
-      const assetsThatAreNotOwnedAnymore = oldSymbols.filter((x) => existingAssetSymbols.indexOf(x) === -1);
+
+      const assetsThatAreNotOwnedAnymore = [
+        ...getDifference(oldAssets, existingAssets),
+        ...getDifference(existingAssets, oldAssets),
+      ];
+
       for (const asset of assetsThatAreNotOwnedAnymore) {
         await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, platform: asset.platform });
       }
