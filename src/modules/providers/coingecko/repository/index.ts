@@ -123,7 +123,7 @@ export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
   }
 };
 
-export const getLastCurrencyUpdateDate = async (): Promise<Date> => {
+export const getLastCurrencyUpdateDate = async () => {
   try {
     const lastCurrencyUpdate = await lastCurrencyUpdateModel.findOne({ id: 1 }).lean();
     return lastCurrencyUpdate?.lastUpdateDate;

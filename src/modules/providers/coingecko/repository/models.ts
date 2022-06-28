@@ -9,8 +9,16 @@ const currencySchema = new mongoose.Schema({
 });
 export const currencyModel = mongoose.model("currency", currencySchema);
 
-const lastCurrencyUpdateSchema = new mongoose.Schema({
+interface LastCurrencyUpdateDoc {
+  id: number;
+  lastUpdateDate: Date;
+}
+
+const lastCurrencyUpdateSchema = new mongoose.Schema<LastCurrencyUpdateDoc>({
   id: Number,
   lastUpdateDate: Date,
 });
-export const lastCurrencyUpdateModel = mongoose.model("last-currency-update", lastCurrencyUpdateSchema);
+export const lastCurrencyUpdateModel = mongoose.model<LastCurrencyUpdateDoc>(
+  "last-currency-update",
+  lastCurrencyUpdateSchema,
+);
