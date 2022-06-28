@@ -9,7 +9,6 @@ import polygon from "@dex/polygon";
 import smartchain from "@dex/smartchain";
 
 import { logError, getFilePath, sleep } from "@src/utils";
-import { platform } from "os";
 
 const path = getFilePath(__filename);
 
