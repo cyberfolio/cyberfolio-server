@@ -9,6 +9,7 @@ import polygon from "@dex/polygon";
 import smartchain from "@dex/smartchain";
 
 import { logError, getFilePath, sleep } from "@src/utils";
+import { platform } from "os";
 
 const path = getFilePath(__filename);
 
@@ -32,17 +33,23 @@ const updateEvmAssets = async () => {
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
       // Remove assets that are not owned anymore
-      const existingAssetSymbols = evmAssets.map((evmAsset) => evmAsset.symbol);
-      const oldSymbols = assets.map((evmAsset) => evmAsset.symbol);
-      const symbolsThatAreNotOwnedAnymore = oldSymbols.filter((x) => existingAssetSymbols.indexOf(x) === -1);
-      for (const symbol of symbolsThatAreNotOwnedAnymore) {
-        await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol });
+      const existingAssetSymbols = evmAssets.map((evmAsset) => ({
+        symbol: evmAsset.symbol,
+        platform: evmAsset.platform,
+      }));
+      const oldSymbols = assets.map((evmAsset) => ({
+        symbol: evmAsset.symbol,
+        platform: evmAsset.platform,
+      }));
+      const assetsThatAreNotOwnedAnymore = oldSymbols.filter((x) => existingAssetSymbols.indexOf(x) === -1);
+      for (const asset of assetsThatAreNotOwnedAnymore) {
+        await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, platform: asset.platform });
       }
 
       // Update assets that is owned at this time
       for (const evmAsset of evmAssets) {
         await dexAssetModel.findOneAndUpdate(
-          { keyIdentifier: walletAddress, symbol: evmAsset.symbol },
+          { keyIdentifier: walletAddress, symbol: evmAsset.symbol, platform: evmAsset.platform },
           {
             balance: evmAsset.balance,
             price: evmAsset.price,
