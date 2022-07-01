@@ -107,7 +107,7 @@ router.post("/login/validate-signature", async (req, res, next) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/is-authenticated", authenticateUser, async (req: any, res) => {
+router.get("/get-user-info", authenticateUser, async (req: any, res) => {
   if (req.keyIdentifier) {
     const verifiedUser = await getUserByEvmAddress({
       evmAddress: req.keyIdentifier,
