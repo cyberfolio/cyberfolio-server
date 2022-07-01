@@ -8,8 +8,9 @@ import { ethers } from "ethers";
 router.get("/networth", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {
-    const netWorth = await getNetWorth({ keyIdentifier });
-    return res.status(200).send({ netWorth });
+    let netWorth = await getNetWorth({ keyIdentifier });
+    netWorth = netWorth.toString();
+    return res.status(200).send(netWorth);
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
@@ -24,7 +25,7 @@ router.get("/available-accounts", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
   try {
     const availableAccounts = await getAvailableAccounts({ keyIdentifier });
-    return res.status(200).send({ availableAccounts });
+    return res.status(200).send(availableAccounts);
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
@@ -43,7 +44,7 @@ router.get("/ens-name", async (req: any, res: express.Response) => {
     );
     const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
-      return res.status(200).send({ ensName });
+      return res.status(200).send(ensName);
     } else {
       return res.status(200).send("");
     }

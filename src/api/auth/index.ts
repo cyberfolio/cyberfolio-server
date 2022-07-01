@@ -38,7 +38,7 @@ router.post("/login/metamask", async (req, res, next) => {
         evmAddress,
       });
     }
-    res.status(200).json({ nonce });
+    res.status(200).send(nonce);
   } catch (e) {
     next(e);
   }
