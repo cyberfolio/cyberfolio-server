@@ -1,6 +1,6 @@
 import { userModel } from "@api/auth/repository/models";
 import { dexAssetModel } from "@api/dex/repository/models";
-import { Platform } from "@config/types";
+import { Chain } from "@config/types";
 
 import arbitrum from "@dex/arbitrum";
 import avalanche from "@dex/avalanche";
@@ -16,16 +16,16 @@ const path = getFilePath(__filename);
 function getDifference(
   array1: {
     symbol: string;
-    platform: Platform;
+    chain: Chain;
   }[],
   array2: {
     symbol: string;
-    platform: Platform;
+    chain: Chain;
   }[],
 ) {
   return array1.filter((object1) => {
     return !array2.some((object2) => {
-      return object1.symbol === object2.symbol && object1.platform === object2.platform;
+      return object1.symbol === object2.symbol && object1.chain === object2.chain;
     });
   });
 }
@@ -52,11 +52,11 @@ const updateEvmAssets = async () => {
       // Remove assets that are not owned anymore
       const existingAssets = evmAssets.map((evmAsset) => ({
         symbol: evmAsset.symbol,
-        platform: evmAsset.platform,
+        chain: evmAsset.chain,
       }));
       const oldAssets = assets.map((evmAsset) => ({
         symbol: evmAsset.symbol,
-        platform: evmAsset.platform,
+        chain: evmAsset.chain,
       }));
 
       const assetsThatAreNotOwnedAnymore = [
@@ -65,13 +65,13 @@ const updateEvmAssets = async () => {
       ];
 
       for (const asset of assetsThatAreNotOwnedAnymore) {
-        await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, platform: asset.platform });
+        await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, chain: asset.chain });
       }
 
       // Update assets that is owned at this time
       for (const evmAsset of evmAssets) {
         await dexAssetModel.findOneAndUpdate(
-          { keyIdentifier: walletAddress, symbol: evmAsset.symbol, platform: evmAsset.platform },
+          { keyIdentifier: walletAddress, symbol: evmAsset.symbol, platform: evmAsset.chain },
           {
             balance: evmAsset.balance,
             price: evmAsset.price,

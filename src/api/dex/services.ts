@@ -9,7 +9,7 @@ import smartchain from "@dex/smartchain";
 import scamTokens from "@config/scamTokens";
 import * as repository from "./repository";
 import { onError } from "@src/utils";
-import { Platform } from "@config/types";
+import { Chain } from "@config/types";
 import { userModel } from "@api/auth/repository/models";
 
 export const addWallets = async ({
@@ -17,12 +17,12 @@ export const addWallets = async ({
   wallets,
 }: {
   keyIdentifier: string;
-  wallets: [{ address: string; name: string; platform: Platform }];
+  wallets: [{ address: string; name: string; chain: Chain }];
 }) => {
   for (const wallet of wallets) {
     const walletAddress = wallet.address;
     const walletName = wallet.name;
-    const platform = wallet.platform;
+    const chain = wallet.chain;
     try {
       const doesExists = await repository.getWalletByName({
         keyIdentifier,
@@ -35,22 +35,21 @@ export const addWallets = async ({
         keyIdentifier,
         walletAddress,
         walletName,
-        platform,
+        chain,
       });
-      saveAssets({ keyIdentifier, platform, walletName, walletAddress });
+      saveAssets({ keyIdentifier, chain, walletName, walletAddress });
     } catch (e) {
       onError(e);
     }
   }
 };
 
-export const getAssets = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Platform }) => {
+export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
-      platform,
+      chain,
     });
-
     return assets;
   } catch (e) {
     onError(e);
@@ -60,15 +59,15 @@ export const getAssets = async ({ keyIdentifier, platform }: { keyIdentifier: st
 export const saveAssets = async ({
   walletAddress,
   keyIdentifier,
-  platform,
+  chain,
   walletName,
 }: {
   walletAddress: string;
   keyIdentifier: string;
-  platform: Platform;
+  chain: Chain;
   walletName: string;
 }) => {
-  if (platform === Platform.ETHEREUM) {
+  if (chain === Chain.ETHEREUM) {
     try {
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress);
       const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress);
@@ -92,7 +91,7 @@ export const saveAssets = async ({
             const isScamToken = scamTokens.find(
               (scamToken) =>
                 scamToken.contractAddress.toLowerCase() === allEvmTokens[i].contractAddress.toLowerCase() &&
-                scamToken.platform === allEvmTokens[i].platform,
+                scamToken.chain === allEvmTokens[i].chain,
             );
             if (!isScamToken && allEvmTokens[i].value >= 1) {
               await repository.addAsset({
@@ -102,7 +101,7 @@ export const saveAssets = async ({
                 contractAddress: allEvmTokens[i].contractAddress,
                 price: allEvmTokens[i].price,
                 value: allEvmTokens[i].value,
-                platform: allEvmTokens[i].platform,
+                chain: allEvmTokens[i].chain,
                 scan: allEvmTokens[i].scan,
                 walletName,
                 keyIdentifier,
@@ -118,7 +117,7 @@ export const saveAssets = async ({
     } catch (e) {
       onError(e);
     }
-  } else if (platform === Platform.BITCOIN) {
+  } else if (chain === Chain.BITCOIN) {
     const btc = await bitcoin.getBalance(walletAddress);
 
     const asset = {
@@ -130,7 +129,7 @@ export const saveAssets = async ({
       price: btc.price,
       value: btc.value,
       scan: btc.scan,
-      platform: Platform.BITCOIN,
+      chain: Chain.BITCOIN,
       contractAddress: "",
       walletAddress,
     };

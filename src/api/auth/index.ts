@@ -14,7 +14,7 @@ import {
 } from "./repository";
 import { saveAssets } from "../dex/services";
 import { checkENSName } from "./services";
-import { Platform } from "@config/types";
+import { Chain } from "@config/types";
 
 const router = express.Router();
 
@@ -63,14 +63,14 @@ router.post("/login/validate-signature", async (req, res, next) => {
       await saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        platform: Platform.ETHEREUM,
+        chain: Chain.ETHEREUM,
         walletName: "main",
       });
     } else {
       saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        platform: Platform.ETHEREUM,
+        chain: Chain.ETHEREUM,
         walletName: "main",
       });
     }

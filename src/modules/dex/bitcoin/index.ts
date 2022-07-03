@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { getFilePath, logError, sathoshiToBtcBalance } from "@src/utils";
 import { getCurrentUSDPrice } from "@providers/coingecko";
-import { Platform } from "@config/types";
+import { Chain } from "@config/types";
 
 const path = getFilePath(__filename);
 
@@ -22,7 +22,7 @@ const getBalance = async (walletAddress: string) => {
       price,
       logo: "https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg",
       value,
-      platform: Platform.BITCOIN,
+      chain: Chain.BITCOIN,
       scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
     };
   } catch (e) {

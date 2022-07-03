@@ -20,11 +20,11 @@ router.post("/add", async (req: any, res: express.Response) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/assets/:platform", async (req: any, res: express.Response) => {
+router.get("/assets/:chain", async (req: any, res: express.Response) => {
   const keyIdentifier = req.keyIdentifier;
-  const platform = req.params.platform;
+  const chain = req.params.chain;
   try {
-    const assets = await getAssets({ keyIdentifier, platform });
+    const assets = await getAssets({ keyIdentifier, chain });
     let totalTokenValue = 0;
     if (assets) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

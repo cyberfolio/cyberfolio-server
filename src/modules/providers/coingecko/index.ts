@@ -18,6 +18,7 @@ export const addOrUpdateCryptoCurrencies = async (page: number) => {
       method: "get",
     });
     await sleep(5000);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cryptoCurrencies = response?.data as any[];
 
     if (cryptoCurrencies && Array.isArray(cryptoCurrencies)) {

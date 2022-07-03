@@ -48,7 +48,7 @@ export const removeScamTokens = async () => {
       const isScamToken = scamTokens.find(
         (scamToken) =>
           scamToken.address.toLowerCase() === asset.contractAddress.toLowerCase() &&
-          scamToken.chainId === EvmWithChain[asset.platform].chainId,
+          scamToken.chainId === EvmWithChain[asset.chain].chainId,
       );
       if (isScamToken) {
         try {

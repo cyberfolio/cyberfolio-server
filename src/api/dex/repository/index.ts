@@ -1,4 +1,4 @@
-import { Platform } from "@config/types";
+import { Chain } from "@config/types";
 import { getCurrenyInfo } from "@providers/coingecko/repository";
 import { getFilePath, logError, removeMongoFields } from "@src/utils";
 import { walletsModel, dexAssetModel } from "./models";
@@ -9,12 +9,12 @@ export const addWalletByKeyIdentifier = async ({
   keyIdentifier,
   walletAddress,
   walletName,
-  platform,
+  chain,
 }: {
   keyIdentifier: string;
   walletAddress: string;
   walletName: string;
-  platform: Platform;
+  chain: Chain;
 }) => {
   const wallet = await walletsModel
     .findOne({
@@ -29,7 +29,7 @@ export const addWalletByKeyIdentifier = async ({
     keyIdentifier,
     walletAddress,
     walletName,
-    platform,
+    chain,
   });
 };
 
@@ -41,7 +41,7 @@ export const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string
   return wallets;
 };
 
-export const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Platform }) => {
+export const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Chain }) => {
   const wallet = await walletsModel.findOne({ keyIdentifier, platform }).lean();
   return removeMongoFields(wallet);
 };
@@ -59,7 +59,7 @@ export const addAsset = async ({
   balance,
   price,
   value,
-  platform,
+  chain,
   contractAddress,
   walletAddress,
   scan,
@@ -71,7 +71,7 @@ export const addAsset = async ({
   balance: number;
   price: number;
   value: number;
-  platform: Platform;
+  chain: Chain;
   contractAddress: string;
   walletAddress: string;
   scan: string;
@@ -81,7 +81,7 @@ export const addAsset = async ({
     const currenyInfo = await getCurrenyInfo(symbol);
     const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined;
     await dexAssetModel.findOneAndUpdate(
-      { walletAddress, keyIdentifier, name, symbol, platform },
+      { walletAddress, keyIdentifier, name, symbol, chain },
       {
         keyIdentifier,
         walletName,
@@ -91,7 +91,7 @@ export const addAsset = async ({
         price,
         value,
         logo,
-        platform,
+        chain,
         contractAddress,
         walletAddress,
         scan,
@@ -108,15 +108,9 @@ export const addAsset = async ({
   }
 };
 
-export const getAssetsByKeyAndChain = async ({
-  keyIdentifier,
-  platform,
-}: {
-  keyIdentifier: string;
-  platform: Platform;
-}) => {
+export const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
-    let assets = await dexAssetModel.find({ keyIdentifier, platform }).lean();
+    let assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
     assets = assets.map((asset) => {
       return removeMongoFields(asset);
     });

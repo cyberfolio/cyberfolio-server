@@ -76,6 +76,7 @@ export const getFilePath = (path: string) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeMongoFields = (object: any) => {
+  if (!object) return object;
   delete object._id;
   delete object.__v;
   return object;
