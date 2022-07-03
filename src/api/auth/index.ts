@@ -88,7 +88,7 @@ router.post("/login/validate-signature", async (req, res, next) => {
     const response = {
       keyIdentifier,
       ensName: "",
-      firstTimeLogin: false,
+      lastAssetUpdate: "",
     };
     const verifiedUser = await getUserByEvmAddressAndNonce({
       evmAddress,
@@ -97,9 +97,10 @@ router.post("/login/validate-signature", async (req, res, next) => {
     if (verifiedUser?.ensName) {
       response.ensName = verifiedUser.ensName;
     }
-    if (verifiedUser?.firstTimeLogin) {
-      response.firstTimeLogin = verifiedUser.firstTimeLogin;
+    if (verifiedUser?.lastAssetUpdate) {
+      response.lastAssetUpdate = verifiedUser.lastAssetUpdate;
     }
+
     res.json(response);
   } catch (e) {
     next(e);
