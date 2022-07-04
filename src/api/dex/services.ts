@@ -11,33 +11,35 @@ import * as repository from "./repository";
 import { onError } from "@src/utils";
 import { Chain } from "@config/types";
 import { userModel } from "@api/auth/repository/models";
+import { AddWalletBody } from ".";
 
-export const addWallets = async ({
-  keyIdentifier,
-  wallets,
-}: {
-  keyIdentifier: string;
-  wallets: [{ address: string; name: string; chain: Chain }];
-}) => {
+export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
   for (const wallet of wallets) {
     const walletAddress = wallet.address;
     const walletName = wallet.name;
     const chain = wallet.chain;
     try {
-      const doesExists = await repository.getWalletByName({
+      // Validation
+      const existingWallets = await repository.getWallets({
         keyIdentifier,
-        walletName,
       });
-      if (doesExists) {
+      const walletNames = existingWallets.map((existingWallet) => existingWallet.walletName);
+      const walletAddresses = existingWallets.map((existingWallet) => existingWallet.walletAddress);
+      if (walletNames.includes(walletName)) {
         throw new Error(`You already have a wallet named ${walletName}`);
       }
+      if (walletAddresses.includes(walletAddress)) {
+        throw new Error(`You already have this wallet`);
+      }
+
+      // Execution
       await repository.addWalletByKeyIdentifier({
         keyIdentifier,
         walletAddress,
         walletName,
         chain,
       });
-      saveAssets({ keyIdentifier, chain, walletName, walletAddress });
+      await saveAssets({ keyIdentifier, chain, walletName, walletAddress });
     } catch (e) {
       onError(e);
     }
@@ -49,6 +51,17 @@ export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: strin
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
       chain,
+    });
+    return assets;
+  } catch (e) {
+    onError(e);
+  }
+};
+
+export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+  try {
+    const assets = await repository.getAssetsByKey({
+      keyIdentifier,
     });
     return assets;
   } catch (e) {
@@ -142,4 +155,11 @@ export const saveAssets = async ({
     }
   }
   await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
+};
+
+export default {
+  addWallets,
+  getAssets,
+  getAllAssets,
+  saveAssets,
 };

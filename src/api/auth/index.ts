@@ -50,12 +50,14 @@ router.post("/login/validate-signature", async (req: express.Request, res: expre
       throw new Error("User not found");
     }
     const keyIdentifier = user.keyIdentifier;
-    await saveAssets({
-      keyIdentifier,
-      walletAddress: keyIdentifier,
-      chain: Chain.ETHEREUM,
-      walletName: "main",
-    });
+    if (!user.lastAssetUpdate) {
+      await saveAssets({
+        keyIdentifier,
+        walletAddress: keyIdentifier,
+        chain: Chain.ETHEREUM,
+        walletName: "main",
+      });
+    }
 
     // set jwt to the user's browser cookies
     const token = jwtConfig.signJwt(user.keyIdentifier);

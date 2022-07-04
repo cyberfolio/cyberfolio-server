@@ -46,6 +46,11 @@ export const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: st
   return removeMongoFields(wallet);
 };
 
+export const getWallets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+  const wallets = await walletsModel.find({ keyIdentifier }).lean();
+  return wallets;
+};
+
 export const getWalletByName = async ({ keyIdentifier, walletName }: { keyIdentifier: string; walletName: string }) => {
   const wallet = await walletsModel.findOne({ keyIdentifier, walletName }).lean();
   return removeMongoFields(wallet);
