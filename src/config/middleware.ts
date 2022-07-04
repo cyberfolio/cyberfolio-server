@@ -1,7 +1,8 @@
 import Express from "express";
 
 import { getUserByEvmAddress } from "../api/auth/repository";
-import { verifyJwtAndReturnUser } from "./jwt";
+import jwt from "./jwt";
+import { AuthenticatedRequest } from "./types";
 
 export const allowedMethods = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
   // NOTE: Exclude TRACE and TRACK methods to avoid XST attacks.
@@ -12,19 +13,26 @@ export const allowedMethods = (req: Express.Request, res: Express.Response, next
   next();
 };
 
-export const authenticateUser = async (req: any, res: Express.Response, next: Express.NextFunction) => {
+export const authenticateUser = async (
+  req: AuthenticatedRequest,
+  res: Express.Response,
+  next: Express.NextFunction,
+) => {
   const jwtToken = req.cookies?.token;
   if (!jwtToken) {
     return res.status(401).send("Token could not be found");
   }
   try {
-    const user = verifyJwtAndReturnUser({ jwtToken }) as any;
-    req.keyIdentifier = user.keyIdentifier;
+    const jwtPayload = jwt.verifyJwtAndReturnUserEvmAddress({ jwtToken });
+    if (typeof jwtPayload?.evmAddress !== "string") {
+      return res.status(500).send("Unexpected error occured");
+    }
     const userInDb = await getUserByEvmAddress({
-      evmAddress: user?.keyIdentifier,
+      evmAddress: jwtPayload.evmAddress,
     });
+    req.user = userInDb;
     if (!userInDb) {
-      throw new Error("User not found");
+      return res.status(401).send("User not found");
     }
     next();
   } catch (e) {

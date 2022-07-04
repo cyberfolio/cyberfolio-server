@@ -1,14 +1,16 @@
+import { Document } from "mongodb";
 import mongoose from "mongoose";
 
-interface UserDoc {
+export interface User {
   keyIdentifier: string;
   nonce: string;
-  firstTimeLogin: boolean;
   ensName?: string;
   lastAssetUpdate?: string;
 }
 
-const userSchema = new mongoose.Schema<UserDoc>({
+export interface UserDoc extends User, Document {}
+
+const userSchema = new mongoose.Schema<User>({
   keyIdentifier: {
     type: String,
     required: true,
@@ -22,14 +24,10 @@ const userSchema = new mongoose.Schema<UserDoc>({
   ensName: {
     type: String,
   },
-  firstTimeLogin: {
-    type: Boolean,
-    required: true,
-  },
   lastAssetUpdate: {
     type: Date,
     required: false,
   },
 });
 
-export const userModel = mongoose.model<UserDoc>("user", userSchema);
+export const userModel = mongoose.model<User>("user", userSchema);

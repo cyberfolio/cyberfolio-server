@@ -3,10 +3,14 @@ const router = express.Router();
 
 import { getNetWorth, getAvailableAccounts } from "./services";
 import { ethers } from "ethers";
+import { AuthenticatedRequest } from "@config/types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/networth", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/networth", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
+
   try {
     let netWorth = await getNetWorth({ keyIdentifier });
     netWorth = netWorth.toString();
@@ -20,9 +24,12 @@ router.get("/networth", async (req: any, res: express.Response) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/available-accounts", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/available-accounts", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
+
   try {
     const availableAccounts = await getAvailableAccounts({ keyIdentifier });
     return res.status(200).send(availableAccounts);
@@ -35,9 +42,12 @@ router.get("/available-accounts", async (req: any, res: express.Response) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/ens-name", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/ens-name", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
+
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,

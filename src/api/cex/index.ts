@@ -1,15 +1,19 @@
+import { AuthenticatedRequest, Platform } from "@config/types";
+import { isEnumOf } from "@src/utils";
 import express from "express";
 const router = express.Router();
 
 import { addCex, getAllSpot, getSpotAssetsByCexName } from "./services";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.post("/add", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.post("/add", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
   const apiKey = req.body?.apiKey;
   const apiSecret = req.body?.apiSecret;
   const cexName = req.body?.cexName?.toLowerCase();
   const passphrase = req.body?.passphrase;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
 
   try {
     const assets = await addCex({
@@ -29,9 +33,12 @@ router.post("/add", async (req: any, res: express.Response) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/assets", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/assets", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
+
   try {
     const assets = await getAllSpot({
       keyIdentifier,
@@ -46,10 +53,16 @@ router.get("/assets", async (req: any, res: express.Response) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/assets/:cexName", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/assets/:cexName", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
   const cexName = req.params?.cexName;
+  if (!keyIdentifier || !cexName) {
+    return res.status(400).send("Validation error");
+  }
+  if (!isEnumOf(Platform, cexName)) {
+    return res.status(400).send("Invalid cex name");
+  }
+
   try {
     const assets = await getSpotAssetsByCexName({
       keyIdentifier,

@@ -1,12 +1,13 @@
 import { onError } from "@src/utils";
 import jwt from "jsonwebtoken";
+import { JwtTokenInterface } from "./types";
 
 const secret = process.env.JWT_SECRET as jwt.Secret;
 const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
 
-export const signJwt = (user: any) => {
-  if (user && process.env.JWT_SECRET) {
-    const token = jwt.sign(user, secret, {
+const signJwt = (evmAddress: string) => {
+  if (evmAddress && process.env.JWT_SECRET) {
+    const token = jwt.sign({ evmAddress }, secret, {
       expiresIn: `${jwtExpiryInDays}d`,
     });
     return token;
@@ -15,11 +16,16 @@ export const signJwt = (user: any) => {
   }
 };
 
-export const verifyJwtAndReturnUser = ({ jwtToken }: { jwtToken: string }) => {
+const verifyJwtAndReturnUserEvmAddress = ({ jwtToken }: { jwtToken: string }) => {
   try {
-    const result = jwt.verify(jwtToken, secret);
+    const result = jwt.verify(jwtToken, secret) as JwtTokenInterface;
     return result;
   } catch (e) {
     onError(e);
   }
+};
+
+export default {
+  signJwt,
+  verifyJwtAndReturnUserEvmAddress,
 };

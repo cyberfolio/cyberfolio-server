@@ -1,5 +1,5 @@
 import { Chain } from "@config/types";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface Wallet {
   keyIdentifier: string;
@@ -30,6 +30,8 @@ export interface DexAsset {
   walletAddress: string;
   scan: string;
 }
+export interface DexAssetDoc extends DexAsset, Document {}
+
 const dexAssetSchema = new mongoose.Schema<DexAsset>({
   keyIdentifier: { type: String, required: true },
   chain: { type: String, required: true },

@@ -86,3 +86,8 @@ export const isScamToken = async (address: string, chainId: string) => {
   const isScamToken = await scamTokenModel.findOne({ address, chainId });
   return Boolean(isScamToken);
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isEnumOf<T>(object: T, possibleValue: any): possibleValue is T[keyof T] {
+  return Object.values(object).includes(possibleValue);
+}

@@ -2,23 +2,17 @@ import express from "express";
 import { ethers } from "ethers";
 
 import { generateNonce } from "@src/utils";
-import { signJwt } from "@config/jwt";
+import jwtConfig from "@config/jwt";
 import { authenticateUser } from "@config/middleware";
 
-import {
-  createUser,
-  updateNonce,
-  getUserByEvmAddress,
-  getUserByEvmAddressAndNonce,
-  updateFirstTimeLogin,
-} from "./repository";
+import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from "./repository";
 import { saveAssets } from "../dex/services";
 import { checkENSName } from "./services";
-import { Chain } from "@config/types";
+import { AuthenticatedRequest, Chain } from "@config/types";
 
 const router = express.Router();
 
-router.post("/login/metamask", async (req, res, next) => {
+router.post("/login/metamask", async (req: express.Request, res: express.Response, next) => {
   let evmAddress = req.body?.evmAddress as string;
   evmAddress = evmAddress.toLowerCase();
   try {
@@ -34,9 +28,6 @@ router.post("/login/metamask", async (req, res, next) => {
         nonce,
         evmAddress,
       });
-      await updateFirstTimeLogin({
-        evmAddress,
-      });
     }
     res.status(200).send(nonce);
   } catch (e) {
@@ -44,7 +35,7 @@ router.post("/login/metamask", async (req, res, next) => {
   }
 });
 
-router.post("/login/validate-signature", async (req, res, next) => {
+router.post("/login/validate-signature", async (req: express.Request, res: express.Response, next) => {
   let evmAddress = req.body.evmAddress;
   const signature = req.body.signature;
   const nonce = req.body.nonce;
@@ -59,24 +50,15 @@ router.post("/login/validate-signature", async (req, res, next) => {
       throw new Error("User not found");
     }
     const keyIdentifier = user.keyIdentifier;
-    if (user.firstTimeLogin) {
-      await saveAssets({
-        keyIdentifier,
-        walletAddress: keyIdentifier,
-        chain: Chain.ETHEREUM,
-        walletName: "main",
-      });
-    } else {
-      saveAssets({
-        keyIdentifier,
-        walletAddress: keyIdentifier,
-        chain: Chain.ETHEREUM,
-        walletName: "main",
-      });
-    }
+    await saveAssets({
+      keyIdentifier,
+      walletAddress: keyIdentifier,
+      chain: Chain.ETHEREUM,
+      walletName: "main",
+    });
 
     // set jwt to the user's browser cookies
-    const token = signJwt(user);
+    const token = jwtConfig.signJwt(user.keyIdentifier);
     const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
     res.cookie("token", token, {
       secure: process.env.NODE_ENV !== "development",
@@ -84,39 +66,34 @@ router.post("/login/validate-signature", async (req, res, next) => {
       maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000,
     });
 
-    checkENSName(evmAddress);
+    const ensName = await checkENSName(evmAddress);
     const response = {
       keyIdentifier,
-      ensName: "",
+      ensName,
       lastAssetUpdate: "",
     };
     const verifiedUser = await getUserByEvmAddressAndNonce({
       evmAddress,
       nonce,
     });
-    if (verifiedUser?.ensName) {
-      response.ensName = verifiedUser.ensName;
-    }
+
     if (verifiedUser?.lastAssetUpdate) {
       response.lastAssetUpdate = verifiedUser.lastAssetUpdate;
+    } else {
+      response.lastAssetUpdate = new Date().toString();
     }
-
     res.json(response);
   } catch (e) {
     next(e);
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/get-user-info", authenticateUser, async (req: any, res) => {
-  if (req.keyIdentifier) {
-    const verifiedUser = await getUserByEvmAddress({
-      evmAddress: req.keyIdentifier,
-    });
+router.get("/get-user-info", authenticateUser, async (req: AuthenticatedRequest, res: express.Response) => {
+  if (req.user) {
     res.status(200).send({
-      keyIdentifier: req.keyIdentifier,
-      ensName: verifiedUser?.ensName,
-      lastAssetUpdate: verifiedUser?.lastAssetUpdate,
+      keyIdentifier: req.user.keyIdentifier,
+      ensName: req.user.ensName,
+      lastAssetUpdate: req.user.lastAssetUpdate,
     });
   } else {
     res.status(401).send("Unauthenticated");

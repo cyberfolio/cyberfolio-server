@@ -13,6 +13,7 @@ export const checkENSName = async (keyIdentifier: string) => {
     if (ensName) {
       await userModel.findOneAndUpdate({ keyIdentifier }, { ensName });
     }
+    return ensName;
   } catch (e) {
     logError({ path, func: checkENSName.name, e });
   }

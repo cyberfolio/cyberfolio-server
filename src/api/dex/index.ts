@@ -1,12 +1,16 @@
+import { AuthenticatedRequest, Chain } from "@config/types";
+import { isEnumOf } from "@src/utils";
 import express from "express";
 const router = express.Router();
 
 import { addWallets, getAssets } from "./services";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.post("/add", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.post("/add", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
   const wallets = req.body?.wallets;
+  if (!keyIdentifier) {
+    return res.status(400).send("Validation error");
+  }
   try {
     await addWallets({ keyIdentifier, wallets });
     return res.status(200).send("success");
@@ -19,16 +23,18 @@ router.post("/add", async (req: any, res: express.Response) => {
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get("/assets/:chain", async (req: any, res: express.Response) => {
-  const keyIdentifier = req.keyIdentifier;
+router.get("/assets/:chain", async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
   const chain = req.params.chain;
+  if (!keyIdentifier || !isEnumOf(Chain, chain)) {
+    return res.status(400).send("Validation error");
+  }
+
   try {
     const assets = await getAssets({ keyIdentifier, chain });
     let totalTokenValue = 0;
     if (assets) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      totalTokenValue = assets.reduce(function (acc: any, obj: any) {
+      totalTokenValue = assets.reduce(function (acc, obj) {
         return acc + obj.value;
       }, 0);
     }

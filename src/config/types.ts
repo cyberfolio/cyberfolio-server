@@ -1,7 +1,8 @@
 import { Request } from "express";
+import { UserDoc } from "@api/auth/repository/models";
 
 export interface AuthenticatedRequest extends Request {
-  keyIdentifier: string;
+  user?: UserDoc | null;
 }
 
 export enum Chain {
@@ -56,4 +57,8 @@ export enum ScanURL {
   POLYGON = "https://polygonscan.com",
   ARBITRUM = "https://arbiscan.io",
   OPTIMISM = "https://optimistic.etherscan.io",
+}
+
+export interface JwtTokenInterface {
+  evmAddress?: string | undefined;
 }
