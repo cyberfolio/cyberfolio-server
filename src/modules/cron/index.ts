@@ -5,6 +5,7 @@ import { getFilePath, logError } from "@src/utils";
 import { removeScamTokens } from "./scam-tokens/remove";
 import dexAssetsUpdate from "./dex-assets-update/";
 import { updateCurrencies } from "./update-currencies";
+import cexAssetsUpdate from "./cex-assets-update";
 
 const ever2HourCronValue = "0 0 */2 * * *";
 const everHourCronValue = "0 0 */1 * * *";
@@ -29,9 +30,21 @@ export const initCronJobs = async () => {
 
   cron.schedule(everHourCronValue, async () => {
     try {
-      logger.info("Running updateEvmAssets");
+      logger.info(`Running ${dexAssetsUpdate.updateEvmAssets.name}`);
       await dexAssetsUpdate.updateEvmAssets();
-      logger.info("updateEvmAssets completed");
+    } catch (e) {
+      if (e instanceof Error) {
+        logError({ path, func: initCronJobs.name, e });
+      } else {
+        logError({ e: "unknown error", path, func: initCronJobs.name });
+      }
+    }
+  });
+
+  cron.schedule(everHourCronValue, async () => {
+    try {
+      logger.info(`Running ${cexAssetsUpdate.updateCexAssets.name}`);
+      await cexAssetsUpdate.updateCexAssets();
     } catch (e) {
       if (e instanceof Error) {
         logError({ path, func: initCronJobs.name, e });

@@ -33,6 +33,23 @@ export enum Platform {
   KUCOIN = "Kucoin",
 }
 
+export enum CexName {
+  BINANCE = "Binance",
+  FTX = "FTX",
+  GATEIO = "Gateio",
+  KUCOIN = "Kucoin",
+}
+export interface CexAssetResponse {
+  cexName: CexName;
+  name: string;
+  symbol: string;
+  contractAddress: string;
+  logo?: string;
+  balance: number;
+  price: number;
+  value: number;
+}
+
 export type BinanceError = {
   code?: number;
   msg?: string;

@@ -3,11 +3,11 @@ import crypto from "crypto-js";
 
 import { roundNumber } from "@src/utils";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { Platform, FTXError } from "@config/types";
+import { FTXError, CexName, CexAssetResponse } from "@config/types";
 
 const API_URL = process.env.FTX_API_URL;
 
-export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }) => {
+const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
   const timestamp = Date.now();
   const signatureString = `${timestamp}GET/api/wallet/all_balances`;
   const signature = crypto.HmacSHA256(signatureString, apiSecret).toString(crypto.enc.Hex);
@@ -46,10 +46,11 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
             name,
             symbol,
             balance,
+            contractAddress: "",
             price,
             value,
             logo,
-            cexName: Platform.FTX,
+            cexName: CexName.FTX,
           });
         }
       }
@@ -72,4 +73,8 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
       throw e;
     }
   }
+};
+
+export default {
+  getAssets,
 };

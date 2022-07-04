@@ -4,12 +4,11 @@ import crypto from "crypto-js";
 import { roundNumber } from "@src/utils";
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { BinanceError } from "@config/types";
-import { Platform } from "@config/types";
+import { BinanceError, CexAssetResponse, CexName } from "@config/types";
 
 const API_URL = process.env.BINANCE_API_URL;
 
-export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }) => {
+const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
   const queryString = `timestamp=${Date.now()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
@@ -26,7 +25,7 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
       }
     });
 
-    const response = [];
+    const response: CexAssetResponse[] = [];
     if (Array.isArray(balances) && balances.length > 0) {
       for (let i = 0; i < balances.length; i++) {
         const symbol = balances[i].asset?.toLowerCase();
@@ -41,13 +40,12 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
           response.push({
             name,
             symbol,
-            type: "cryptocurrency",
             contractAddress,
             balance: parseFloat(balances[i].free),
             price,
             value,
             logo,
-            cexName: Platform.BINANCE,
+            cexName: CexName.BINANCE,
           });
         }
       }
@@ -72,7 +70,7 @@ export const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecr
   }
 };
 
-export const getFiatDepositAndWithDrawalHistory = async ({
+const getFiatDepositAndWithDrawalHistory = async ({
   transactionType,
   apiKey,
   apiSecret,
@@ -108,7 +106,7 @@ export const getFiatDepositAndWithDrawalHistory = async ({
   }
 };
 
-export const getFiatPaymentBuyAndSellHistory = async ({
+const getFiatPaymentBuyAndSellHistory = async ({
   transactionType,
   apiKey,
   apiSecret,
@@ -142,4 +140,10 @@ export const getFiatPaymentBuyAndSellHistory = async ({
       throw e;
     }
   }
+};
+
+export default {
+  getAssets,
+  getFiatDepositAndWithDrawalHistory,
+  getFiatPaymentBuyAndSellHistory,
 };

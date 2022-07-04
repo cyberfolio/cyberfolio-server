@@ -4,12 +4,12 @@ import { roundNumber } from "@src/utils";
 
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
-import { Platform, KucoinError } from "@config/types";
+import { KucoinError, CexAssetResponse, CexName } from "@config/types";
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
 const API_URL = process.env.KUCOIN_API_URL;
 
-export const getAssets = async ({
+const getAssets = async ({
   type,
   apiKey,
   apiSecret,
@@ -19,7 +19,7 @@ export const getAssets = async ({
   apiKey: string;
   apiSecret: string;
   passphrase: string;
-}) => {
+}): Promise<CexAssetResponse[]> => {
   const timestamp = Date.now().toString();
   const endpoint = `/api/v1/accounts?type=${type}`;
   const stringToSign = `${timestamp}GET${endpoint}`;
@@ -41,7 +41,7 @@ export const getAssets = async ({
     })) as any;
 
     const data = accountInfo?.data?.data;
-    const response = [];
+    const response: CexAssetResponse[] = [];
     if (data && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
         const balance = roundNumber(data[i].holds);
@@ -58,13 +58,12 @@ export const getAssets = async ({
             response.push({
               name,
               symbol,
-              type: "cryptocurrency",
               contractAddress,
               balance,
               price,
               value,
               logo,
-              cexName: Platform.KUCOIN,
+              cexName: CexName.KUCOIN,
             });
           }
         }
@@ -86,4 +85,8 @@ export const getAssets = async ({
       throw e;
     }
   }
+};
+
+export default {
+  getAssets,
 };

@@ -1,7 +1,7 @@
-import * as binance from "@cex//binance";
-import * as kucoin from "@cex/kucoin";
-import * as gateio from "@cex/gateio";
-import * as ftx from "@cex/ftx";
+import Binance from "@cex//binance";
+import Kucoin from "@cex/kucoin";
+import GateIO from "@cex/gateio";
+import Ftx from "@cex/ftx";
 
 import * as repository from "./repository";
 import { onError } from "@src/utils";
@@ -75,21 +75,21 @@ export const saveSpotAssets = async ({
   let spotAssets = [] as any;
   try {
     if (cexName === Platform.BINANCE) {
-      spotAssets = await binance.getAssets({ apiKey, apiSecret });
+      spotAssets = await Binance.getAssets({ apiKey, apiSecret });
     } else if (cexName === Platform.KUCOIN) {
-      spotAssets = await kucoin.getAssets({
+      spotAssets = await Kucoin.getAssets({
         type: "main",
         apiKey,
         apiSecret,
         passphrase,
       });
     } else if (cexName === Platform.GATEIO) {
-      spotAssets = await gateio.getAssets({
+      spotAssets = await GateIO.getAssets({
         apiKey,
         apiSecret,
       });
     } else if (cexName === Platform.FTX) {
-      spotAssets = await ftx.getAssets({
+      spotAssets = await Ftx.getAssets({
         apiKey,
         apiSecret,
       });
