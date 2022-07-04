@@ -1,4 +1,4 @@
-import { AuthenticatedRequest, Platform } from "@config/types";
+import { AuthenticatedRequest, CexName } from "@config/types";
 import { isEnumOf } from "@src/utils";
 import express from "express";
 const router = express.Router();
@@ -7,23 +7,23 @@ import { addCex, getAllSpot, getSpotAssetsByCexName } from "./services";
 
 router.post("/add", async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
-  const apiKey = req.body?.apiKey;
-  const apiSecret = req.body?.apiSecret;
-  const cexName = req.body?.cexName?.toLowerCase();
-  const passphrase = req.body?.passphrase;
+  const apiKey = req.body.apiKey;
+  const apiSecret = req.body.apiSecret;
+  const cexName = req.body.cexName;
+  const passphrase = req.body.passphrase;
   if (!keyIdentifier) {
     return res.status(400).send("Validation error");
   }
 
   try {
-    const assets = await addCex({
+    await addCex({
       keyIdentifier,
       apiKey,
       apiSecret,
       cexName,
       passphrase,
     });
-    return res.status(200).send({ assets });
+    return res.status(200).send();
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
@@ -59,7 +59,7 @@ router.get("/assets/:cexName", async (req: AuthenticatedRequest, res: express.Re
   if (!keyIdentifier || !cexName) {
     return res.status(400).send("Validation error");
   }
-  if (!isEnumOf(Platform, cexName)) {
+  if (!isEnumOf(CexName, cexName)) {
     return res.status(400).send("Invalid cex name");
   }
 

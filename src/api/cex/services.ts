@@ -5,9 +5,9 @@ import Ftx from "@cex/ftx";
 
 import * as repository from "./repository";
 import { onError } from "@src/utils";
-import { Platform } from "@config/types";
+import { CexAssetResponse, CexName } from "@config/types";
 
-export const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
+export const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cexInfo = await repository.getCexInfo({
     keyIdentifier,
     cexName,
@@ -34,12 +34,12 @@ export const addCex = async ({
   keyIdentifier: string;
   apiKey: string;
   apiSecret: string;
-  cexName: Platform;
+  cexName: CexName;
   passphrase: string;
 }) => {
   try {
     await checkIfExists({ keyIdentifier, cexName });
-    const assets = await saveSpotAssets({
+    await saveSpotAssets({
       cexName,
       apiKey,
       apiSecret,
@@ -53,7 +53,6 @@ export const addCex = async ({
       cexName,
       passphrase,
     });
-    return assets;
   } catch (e) {
     onError(e);
   }
@@ -66,29 +65,29 @@ export const saveSpotAssets = async ({
   passphrase,
   keyIdentifier,
 }: {
-  cexName: Platform;
+  cexName: CexName;
   apiKey: string;
   apiSecret: string;
   passphrase: string;
   keyIdentifier: string;
 }) => {
-  let spotAssets = [] as any;
+  let spotAssets: CexAssetResponse[] = [];
   try {
-    if (cexName === Platform.BINANCE) {
+    if (cexName === CexName.BINANCE) {
       spotAssets = await Binance.getAssets({ apiKey, apiSecret });
-    } else if (cexName === Platform.KUCOIN) {
+    } else if (cexName === CexName.KUCOIN) {
       spotAssets = await Kucoin.getAssets({
         type: "main",
         apiKey,
         apiSecret,
         passphrase,
       });
-    } else if (cexName === Platform.GATEIO) {
+    } else if (cexName === CexName.GATEIO) {
       spotAssets = await GateIO.getAssets({
         apiKey,
         apiSecret,
       });
-    } else if (cexName === Platform.FTX) {
+    } else if (cexName === CexName.FTX) {
       spotAssets = await Ftx.getAssets({
         apiKey,
         apiSecret,
@@ -125,7 +124,7 @@ export const getSpotAssetsByCexName = async ({
   cexName,
 }: {
   keyIdentifier: string;
-  cexName: Platform;
+  cexName: CexName;
 }) => {
   try {
     const cexInfo = await repository.getCexInfo({

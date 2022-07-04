@@ -1,4 +1,4 @@
-import { Platform } from "@config/types";
+import { CexName } from "@config/types";
 import { getFilePath, logError, removeMongoFields } from "@src/utils";
 import { cexInfoModel, cexAssetModel } from "./models";
 
@@ -14,7 +14,7 @@ export const addCexByKeyIdentifier = async ({
   keyIdentifier: string;
   apiKey: string;
   apiSecret: string;
-  cexName: Platform;
+  cexName: CexName;
   passphrase: string;
 }) => {
   const cex = await cexInfoModel
@@ -57,7 +57,7 @@ export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: strin
   return cexes;
 };
 
-export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
+export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
@@ -67,7 +67,7 @@ export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: st
   return removeMongoFields(cex);
 };
 
-export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: Platform }) => {
+export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   let assets = await cexAssetModel
     .find({
       keyIdentifier,
@@ -103,7 +103,7 @@ export const addCexAsset = async ({
   logo,
 }: {
   keyIdentifier: string;
-  cexName: Platform;
+  cexName: CexName;
   name: string;
   symbol: string;
   balance: number;
@@ -116,10 +116,6 @@ export const addCexAsset = async ({
     await cexAssetModel.findOneAndUpdate(
       { keyIdentifier, cexName, name, symbol },
       {
-        keyIdentifier,
-        cexName,
-        name,
-        symbol,
         balance,
         price,
         value,

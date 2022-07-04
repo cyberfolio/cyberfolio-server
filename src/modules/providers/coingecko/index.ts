@@ -49,7 +49,8 @@ export const getCurrentUSDPrice = async (symbol: string) => {
 };
 
 export const getFullNameOfTheCurrency = async (symbol: string) => {
-  return String(getFullNameOfTheCurrencyBySymbol(symbol));
+  const fullName = await getFullNameOfTheCurrencyBySymbol(symbol);
+  return String(fullName);
 };
 
 export const getLastCurrencyUpdate = async () => {
