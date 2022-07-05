@@ -38,7 +38,7 @@ const updateCexAssets = async () => {
         cexName: cexAsset.cexName,
       }));
 
-      const newAssets: CexAssetResponse[] = [];
+      const currentAssets: CexAssetResponse[] = [];
       const availableCexes = await cexInfoModel.find({ keyIdentifier: walletAddress }).lean();
       for (const availableCex of availableCexes) {
         if (availableCex.cexName === CexName.BINANCE) {
@@ -46,7 +46,7 @@ const updateCexAssets = async () => {
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
-          newAssets.concat(...assets);
+          currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.KUCOIN) {
           const assets = await Kucoin.getAssets({
@@ -55,25 +55,25 @@ const updateCexAssets = async () => {
             type: "main",
             passphrase: availableCex.passphrase,
           });
-          newAssets.concat(...assets);
+          currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.GATEIO) {
           const assets = await Gateio.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
-          newAssets.concat(...assets);
+          currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.FTX) {
           const assets = await FTX.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
-          newAssets.concat(...assets);
+          currentAssets.push(...assets);
         }
         sleep(2000);
       }
-      const existingAssets = newAssets.map((cexAsset) => ({
+      const existingAssets = currentAssets.map((cexAsset) => ({
         symbol: cexAsset.symbol,
         cexName: cexAsset.cexName,
       }));
@@ -84,19 +84,18 @@ const updateCexAssets = async () => {
       ];
 
       for (const asset of assetsThatAreNotOwnedAnymore) {
-        console.log(asset);
-        // await cexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, cexName: asset.cexName });
+        await cexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, cexName: asset.cexName });
       }
 
       // Update assets that is owned at this time
-      for (const newAsset of newAssets) {
+      for (const currentAsset of currentAssets) {
         await cexAssetModel.findOneAndUpdate(
-          { keyIdentifier: walletAddress, symbol: newAsset.symbol, cexName: newAsset.cexName },
+          { keyIdentifier: walletAddress, symbol: currentAsset.symbol, cexName: currentAsset.cexName },
           {
-            balance: newAsset.balance,
-            price: newAsset.price,
-            value: newAsset.value,
-            contractAddress: newAsset.contractAddress,
+            balance: currentAsset.balance,
+            price: currentAsset.price,
+            value: currentAsset.value,
+            contractAddress: currentAsset.contractAddress,
           },
         );
       }
