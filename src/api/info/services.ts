@@ -1,3 +1,4 @@
+import { CexName, Chain } from "@config/types";
 import { onError } from "@src/utils";
 import * as cexRepo from "../cex/services";
 import * as dexRepo from "../dex/repository";
@@ -29,15 +30,15 @@ export const getAvailableAccounts = async ({ keyIdentifier }: { keyIdentifier: s
     const dexAssets = await dexRepo.getWalletsByKey({
       keyIdentifier,
     });
-    const availableChains: string[] = [];
+    const availableChains: Chain[] = [];
     dexAssets.map((dexAsset) => {
       availableChains.push(dexAsset.chain);
     });
 
     const cexAssets = await cexRepo.getAvailableCexes({ keyIdentifier });
-    const availableCexes: string[] = [];
+    const availableCexes: CexName[] = [];
     cexAssets.map((dexAsset) => {
-      availableChains.push(dexAsset.cexName);
+      availableCexes.push(dexAsset.cexName);
     });
 
     return {
