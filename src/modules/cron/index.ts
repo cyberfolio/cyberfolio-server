@@ -40,7 +40,7 @@ export const initCronJobs = async () => {
     }
   });
 
-  cron.schedule(everyMinuteCronValue, async () => {
+  cron.schedule(everHourCronValue, async () => {
     try {
       await cexAssetsUpdate.updateCexAssets();
     } catch (e) {
