@@ -30,7 +30,6 @@ export const initCronJobs = async () => {
 
   cron.schedule(everHourCronValue, async () => {
     try {
-      logger.info(`Running ${dexAssetsUpdate.updateEvmAssets.name}`);
       await dexAssetsUpdate.updateEvmAssets();
     } catch (e) {
       if (e instanceof Error) {
@@ -43,7 +42,6 @@ export const initCronJobs = async () => {
 
   cron.schedule(everHourCronValue, async () => {
     try {
-      logger.info(`Running ${cexAssetsUpdate.updateCexAssets.name}`);
       await cexAssetsUpdate.updateCexAssets();
     } catch (e) {
       if (e instanceof Error) {

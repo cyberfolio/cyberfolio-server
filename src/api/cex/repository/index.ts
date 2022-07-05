@@ -101,6 +101,7 @@ export const addCexAsset = async ({
   price,
   value,
   logo,
+  accountName,
 }: {
   keyIdentifier: string;
   cexName: CexName;
@@ -110,6 +111,7 @@ export const addCexAsset = async ({
   price: number;
   value: number;
   logo: string | undefined;
+  accountName: string;
 }) => {
   symbol = symbol.toLowerCase();
   try {
@@ -120,6 +122,7 @@ export const addCexAsset = async ({
         price,
         value,
         logo,
+        accountName,
       },
       { upsert: true, new: true },
     );

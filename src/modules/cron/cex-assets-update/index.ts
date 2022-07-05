@@ -84,7 +84,8 @@ const updateCexAssets = async () => {
       ];
 
       for (const asset of assetsThatAreNotOwnedAnymore) {
-        await cexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, cexName: asset.cexName });
+        console.log(asset);
+        // await cexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, cexName: asset.cexName });
       }
 
       // Update assets that is owned at this time

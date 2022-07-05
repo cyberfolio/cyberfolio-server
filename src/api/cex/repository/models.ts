@@ -26,6 +26,7 @@ export interface CexAsset {
   balance: number;
   price: number;
   value: number;
+  accountName: string;
 }
 const cexAssetSchema = new mongoose.Schema<CexAsset>({
   keyIdentifier: String,
@@ -36,5 +37,6 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   balance: Number,
   price: Number,
   value: Number,
+  accountName: String,
 });
 export const cexAssetModel = mongoose.model<CexAsset>("cex-asset", cexAssetSchema);

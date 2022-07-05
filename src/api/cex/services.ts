@@ -97,16 +97,17 @@ export const saveSpotAssets = async ({
     }
     if (Array.isArray(spotAssets) && spotAssets.length > 0) {
       try {
-        for (let i = 0; i < spotAssets.length; i++) {
+        for (const spotAsset of spotAssets) {
           await repository.addCexAsset({
-            name: spotAssets[i].name,
-            symbol: spotAssets[i].symbol?.toLowerCase(),
-            balance: spotAssets[i].balance,
-            price: spotAssets[i].price,
-            value: spotAssets[i].value,
-            cexName: spotAssets[i].cexName,
-            logo: spotAssets[i].logo,
             keyIdentifier,
+            name: spotAsset.name,
+            symbol: spotAsset.symbol?.toLowerCase(),
+            balance: spotAsset.balance,
+            price: spotAsset.price,
+            value: spotAsset.value,
+            cexName: spotAsset.cexName,
+            logo: spotAsset.logo,
+            accountName: spotAsset.accountName,
           });
         }
       } catch (e) {

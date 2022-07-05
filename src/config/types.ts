@@ -48,6 +48,7 @@ export interface CexAssetResponse {
   balance: number;
   price: number;
   value: number;
+  accountName: string;
 }
 
 export type BinanceError = {

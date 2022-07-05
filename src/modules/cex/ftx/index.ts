@@ -51,6 +51,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
             value,
             logo,
             cexName: CexName.FTX,
+            accountName: CexName.FTX,
           });
         }
       }

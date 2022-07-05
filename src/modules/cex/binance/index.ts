@@ -19,8 +19,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         "X-MBX-APIKEY": apiKey,
       },
     })) as any;
-    const balances = accountInfo?.data?.balances?.filter((balance: any) => {
-      if (Number(balance.free) > 0) {
+    const balances = accountInfo.data?.balances?.filter((balance: any) => {
+      if (parseFloat(balance.free) + parseFloat(balance.locked) > 1) {
         return balance;
       }
     });
@@ -29,10 +29,11 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     if (Array.isArray(balances) && balances.length > 0) {
       for (let i = 0; i < balances.length; i++) {
         const symbol = balances[i].asset?.toLowerCase();
-        const price = await getCurrentUSDPrice(symbol);
         const name = await getFullNameOfTheCurrency(symbol);
+        const price = await getCurrentUSDPrice(symbol);
+        const balance = parseFloat(balances[i].free) + parseFloat(balances[i].locked);
         const contractAddress = await getContractAddress(symbol);
-        const value = roundNumber(parseFloat(balances[i].free) * price);
+        const value = roundNumber(balance * price);
         const logo = await getCryptoCurrencyLogo({
           symbol,
         });
@@ -41,11 +42,12 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
             name,
             symbol,
             contractAddress,
-            balance: parseFloat(balances[i].free),
+            balance,
             price,
             value,
             logo,
             cexName: CexName.BINANCE,
+            accountName: CexName.BINANCE,
           });
         }
       }

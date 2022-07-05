@@ -64,6 +64,7 @@ const getAssets = async ({
               value,
               logo,
               cexName: CexName.KUCOIN,
+              accountName: CexName.KUCOIN,
             });
           }
         }
