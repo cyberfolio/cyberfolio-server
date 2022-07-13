@@ -75,6 +75,7 @@ export enum ScanURL {
   POLYGON = "https://polygonscan.com",
   ARBITRUM = "https://arbiscan.io",
   OPTIMISM = "https://optimistic.etherscan.io",
+  SOLANA = "https://solscan.com",
 }
 
 export interface JwtTokenInterface {

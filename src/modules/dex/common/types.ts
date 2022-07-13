@@ -1,3 +1,5 @@
+import { Chain } from "@config/types";
+
 export interface CovalentTokenBalanceItems {
   contract_decimals: string;
   contract_name: string;
@@ -21,4 +23,16 @@ export interface CovalentTokenBalanceResponse {
     chain_id: number;
     items: CovalentTokenBalanceItems[];
   };
+}
+
+export interface DexAssetAPIResponse {
+  name: string;
+  symbol: string;
+  contractAddress: string;
+  logo: string;
+  balance: number;
+  price: number;
+  value: number;
+  chain: Chain;
+  scan: string;
 }

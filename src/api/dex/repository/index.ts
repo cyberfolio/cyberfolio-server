@@ -5,7 +5,7 @@ import { walletsModel, dexAssetModel } from "./models";
 
 const path = getFilePath(__filename);
 
-export const addWalletByKeyIdentifier = async ({
+const addWalletByKeyIdentifier = async ({
   keyIdentifier,
   walletAddress,
   walletName,
@@ -33,7 +33,26 @@ export const addWalletByKeyIdentifier = async ({
   });
 };
 
-export const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const deleteWallet = async ({
+  keyIdentifier,
+  walletAddress,
+  walletName,
+  chain,
+}: {
+  keyIdentifier: string;
+  walletAddress: string;
+  walletName: string;
+  chain: Chain;
+}) => {
+  await walletsModel.deleteOne({
+    keyIdentifier,
+    walletAddress,
+    walletName,
+    chain,
+  });
+};
+
+const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   let wallets = await walletsModel.find({ keyIdentifier }).lean().exec();
   wallets = wallets.map((wallet) => {
     return removeMongoFields(wallet);
@@ -41,22 +60,22 @@ export const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string
   return wallets;
 };
 
-export const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Chain }) => {
+const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Chain }) => {
   const wallet = await walletsModel.findOne({ keyIdentifier, platform }).lean();
   return removeMongoFields(wallet);
 };
 
-export const getWallets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getWallets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   const wallets = await walletsModel.find({ keyIdentifier }).lean();
   return wallets;
 };
 
-export const getWalletByName = async ({ keyIdentifier, walletName }: { keyIdentifier: string; walletName: string }) => {
+const getWalletByName = async ({ keyIdentifier, walletName }: { keyIdentifier: string; walletName: string }) => {
   const wallet = await walletsModel.findOne({ keyIdentifier, walletName }).lean();
   return removeMongoFields(wallet);
 };
 
-export const addAsset = async ({
+const addAsset = async ({
   keyIdentifier,
   walletName,
   name,
@@ -113,7 +132,7 @@ export const addAsset = async ({
   }
 };
 
-export const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
+const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
     assets = assets.map((asset) => {
@@ -130,7 +149,7 @@ export const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIden
   }
 };
 
-export const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier }).lean();
     assets = assets.map((asset) => {
@@ -147,7 +166,7 @@ export const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string 
   }
 };
 
-export const getAllAssets = async () => {
+const getAllAssets = async () => {
   try {
     let assets = await dexAssetModel.find({}).lean();
     assets = assets.map((asset) => {
@@ -163,3 +182,18 @@ export const getAllAssets = async () => {
     throw e;
   }
 };
+
+const dexRepository = {
+  addWalletByKeyIdentifier,
+  deleteWallet,
+  getWalletsByKey,
+  getWallet,
+  getWallets,
+  getWalletByName,
+  addAsset,
+  getAssetsByKeyAndChain,
+  getAssetsByKey,
+  getAllAssets,
+};
+
+export default dexRepository;

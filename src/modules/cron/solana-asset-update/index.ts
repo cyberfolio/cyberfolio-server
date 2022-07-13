@@ -38,37 +38,12 @@ const updateEvmAssets = async () => {
       const assets = await dexAssetModel
         .find({
           keyIdentifier: walletAddress,
-
-          $and: [{ chain: { $ne: Chain.POLKADOT } }, { chain: { $ne: Chain.SOLANA } }],
+          chain: Chain.SOLANA,
         })
         .lean();
 
-      const arbiAssets = await arbitrum.getTokenBalances(walletAddress);
-      const avaAssets = await avalanche.getTokenBalances(walletAddress);
-      const ethAssets = await ethereum.getTokenBalances(walletAddress);
-      const optiAssets = await optimism.getTokenBalances(walletAddress);
-      const polygonAssets = await polygon.getTokenBalances(walletAddress);
-      const bscAssets = await smartchain.getTokenBalances(walletAddress);
-
       // stop 2 seconds for api rate limit
       await sleep(2000);
-
-      const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
-
-      // Remove assets that are not owned anymore
-      const existingAssets = evmAssets.map((evmAsset) => ({
-        symbol: evmAsset.symbol,
-        chain: evmAsset.chain,
-      }));
-      const oldAssets = assets.map((evmAsset) => ({
-        symbol: evmAsset.symbol,
-        chain: evmAsset.chain,
-      }));
-
-      const assetsThatAreNotOwnedAnymore = [
-        ...getDifference(oldAssets, existingAssets),
-        ...getDifference(existingAssets, oldAssets),
-      ];
 
       for (const asset of assetsThatAreNotOwnedAnymore) {
         await dexAssetModel.deleteOne({ keyIdentifier: walletAddress, symbol: asset.symbol, chain: asset.chain });
@@ -77,7 +52,7 @@ const updateEvmAssets = async () => {
       // Update assets that is owned at this time
       for (const evmAsset of evmAssets) {
         await dexAssetModel.findOneAndUpdate(
-          { keyIdentifier: walletAddress, symbol: evmAsset.symbol, chain: evmAsset.chain },
+          { keyIdentifier: walletAddress, symbol: evmAsset.symbol, chain: evmAsset.chain, chain: Chain.SOLANA },
           {
             balance: evmAsset.balance,
             price: evmAsset.price,

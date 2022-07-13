@@ -5,9 +5,10 @@ import arbitrum from "@dex/arbitrum";
 import optimism from "@dex/optimism";
 import polygon from "@dex/polygon";
 import smartchain from "@dex/smartchain";
+import solana from "@dex/solana";
 
 import scamTokens from "@config/scamTokens";
-import * as repository from "./repository";
+import repository from "./repository";
 import { onError } from "@src/utils";
 import { Chain } from "@config/types";
 import { userModel } from "@api/auth/repository/models";
@@ -153,7 +154,25 @@ export const saveAssets = async ({
     } catch (e) {
       onError(e);
     }
+  } else if (chain === Chain.SOLANA) {
+    const assets = await solana.getTokenBalances(walletAddress);
+    for (const asset of assets) {
+      await repository.addAsset({
+        name: asset.name,
+        symbol: asset.symbol,
+        balance: asset.balance,
+        contractAddress: asset.contractAddress,
+        price: asset.price,
+        value: asset.value,
+        chain: asset.chain,
+        scan: asset.scan,
+        walletName,
+        keyIdentifier,
+        walletAddress,
+      });
+    }
   }
+
   await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
 };
 

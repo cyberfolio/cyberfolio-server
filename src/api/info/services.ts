@@ -1,7 +1,7 @@
 import { CexName, Chain } from "@config/types";
 import { onError } from "@src/utils";
 import * as cexRepo from "../cex/services";
-import * as dexRepo from "../dex/repository";
+import dexRepo from "../dex/repository";
 
 export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {

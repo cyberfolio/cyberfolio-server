@@ -12,7 +12,7 @@ export const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier:
     keyIdentifier,
     cexName,
   });
-  if (cexInfo) {
+  if (cexInfo !== null) {
     throw new Error(`You have already added ${cexName}`);
   }
 };

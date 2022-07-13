@@ -64,7 +64,7 @@ export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: st
       cexName,
     })
     .lean();
-  return removeMongoFields(cex);
+  return cex;
 };
 
 export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {

@@ -3,7 +3,7 @@
 import Web3 from "web3";
 import { ethers } from "ethers";
 import { v4 as uuidv4 } from "uuid";
-import { default as axios } from "axios";
+import { AxiosError, default as axios } from "axios";
 import { logger } from "@config/logger";
 import { scamTokenModel } from "./modules/cron/scam-tokens/model";
 
@@ -65,8 +65,16 @@ export const onError = (e: unknown) => {
   }
 };
 
-export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown }) => {
-  logger.error(`Error at ${path} ${func} `, e);
+export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown | AxiosError<never> }) => {
+  let message;
+  if (axios.isAxiosError(e)) {
+    message = e.response?.data ? JSON.stringify(e.response?.data, null, 2) : e.response?.statusText;
+  } else if (e instanceof Error) {
+    message = e.message ? e.message : String(e);
+  } else {
+    message = e;
+  }
+  logger.error(`Error at ${path} ${func} message: ${message}`);
 };
 
 export const getFilePath = (path: string) => {

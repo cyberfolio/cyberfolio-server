@@ -30,19 +30,8 @@ export const initCronJobs = async () => {
 
   cron.schedule(everHourCronValue, async () => {
     try {
-      await dexAssetsUpdate.updateEvmAssets();
-    } catch (e) {
-      if (e instanceof Error) {
-        logError({ path, func: initCronJobs.name, e });
-      } else {
-        logError({ e: "unknown error", path, func: initCronJobs.name });
-      }
-    }
-  });
-
-  cron.schedule(everHourCronValue, async () => {
-    try {
       await cexAssetsUpdate.updateCexAssets();
+      await dexAssetsUpdate.updateEvmAssets();
     } catch (e) {
       if (e instanceof Error) {
         logError({ path, func: initCronJobs.name, e });

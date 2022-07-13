@@ -2,7 +2,7 @@ import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
 import { getCurrencyLogo } from "@providers/coingecko/repository";
 import { Chain, ScanURL } from "@config/types";
 import { EvmWithChain } from "@constants/index";
-import { CovalentTokenBalanceItems } from "./types";
+import { CovalentTokenBalanceItems, DexAssetAPIResponse } from "./types";
 
 const path = getFilePath(__filename);
 
@@ -12,7 +12,7 @@ const evmAssetsResponse = async (
   assets: CovalentTokenBalanceItems[],
   chain: Chain,
 ) => {
-  const response = [];
+  const response: DexAssetAPIResponse[] = [];
   if (assets && Array.isArray(assets)) {
     for (let i = 0; i < assets.length; i++) {
       try {
