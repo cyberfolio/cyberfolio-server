@@ -35,7 +35,7 @@ const evmAssetsResponse = async (
           }
           const value = balance * price;
           const symbol = assets[i].contract_ticker_symbol?.toLowerCase();
-          const logo = symbol ? await getCurrencyLogo(symbol) : null;
+          const logo = symbol ? await getCurrencyLogo(symbol) : "";
           let scan = "";
           if (scanURL === ScanURL.SOLANA && contractAddress !== "11111111111111111111111111111111") {
             scan = `${scanURL}/address/${walletAddress}/tokens`;

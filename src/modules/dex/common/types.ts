@@ -29,7 +29,7 @@ export interface DexAssetAPIResponse {
   name: string;
   symbol: string;
   contractAddress: string;
-  logo: string;
+  logo: string | undefined;
   balance: number;
   price: number;
   value: number;

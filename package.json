@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "yarn ts-node src/index.ts",
-    "dev": "nodemon --watch './**/*.ts' --exec 'yarn ts-node' src/index.ts",
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -85,6 +85,6 @@
   },
   "engines": {
     "node": "16.15.0",
-    "yarn": "1.22.18"
+    "yarn": "1.22.19"
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { Connection, clusterApiUrl, PublicKey, Cluster } from "@solana/web3.js";
 import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
