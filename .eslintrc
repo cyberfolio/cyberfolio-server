@@ -7,15 +7,11 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:import/recommended"
   ],
   "plugins": ["@typescript-eslint", "promise", "unicorn", "prettier"],
-  "ignorePatterns": [
-    "node_modules",
-    "build",
-    "dist",
-    ".yarn"
-  ],
+  "ignorePatterns": ["node_modules", "build", "dist", ".yarn"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -25,8 +21,32 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    }
+  },
   "rules": {
-    "prettier/prettier": ["error", {"singleQuote": false, "semi": true}],
+    "linebreak-style": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["../*"],
+            "message": "Usage of relative parent imports is not allowed."
+          }
+        ]
+      }
+    ],
+    "import/no-unresolved": "error",
+    "prettier/prettier": ["error", { "singleQuote": false, "semi": true }],
     "no-console": "error",
     "promise/always-return": "error",
     "promise/no-return-wrap": "error",

@@ -1,6 +1,6 @@
 import Express from "express";
 
-import { getUserByEvmAddress } from "../api/auth/repository";
+import { getUserByEvmAddress } from "@api/auth/repository";
 import jwt from "./jwt";
 import { AuthenticatedRequest } from "./types";
 

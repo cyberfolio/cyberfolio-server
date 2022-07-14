@@ -6,7 +6,7 @@ import jwtConfig from "@config/jwt";
 import { authenticateUser } from "@config/middleware";
 
 import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from "./repository";
-import { saveAssets } from "../dex/services";
+import { saveAssets } from "@api/dex/services";
 import { checkENSName } from "./services";
 import { AuthenticatedRequest, Chain } from "@config/types";
 
