@@ -1,12 +1,12 @@
-import { userModel } from "@api/auth/repository/models";
-import { cexAssetModel, cexInfoModel } from "@api/cex/repository/models";
-import Binance from "@cex/binance";
-import Gateio from "@cex/gateio";
-import Kucoin from "@cex/kucoin";
-import FTX from "@cex/ftx";
-import { CexName, CexAssetResponse } from "@config/types";
+import { userModel } from '@api/auth/repository/models';
+import { cexAssetModel, cexInfoModel } from '@api/cex/repository/models';
+import Binance from '@cex/binance';
+import Gateio from '@cex/gateio';
+import Kucoin from '@cex/kucoin';
+import FTX from '@cex/ftx';
+import { CexName, CexAssetResponse } from '@config/types';
 
-import { logError, getFilePath, sleep } from "@src/utils";
+import { logError, getFilePath, sleep } from '@src/utils';
 
 const path = getFilePath(__filename);
 
@@ -20,11 +20,9 @@ function getDifference(
     cexName: CexName;
   }[],
 ) {
-  return array1.filter((object1) => {
-    return !array2.some((object2) => {
-      return object1.symbol === object2.symbol && object1.cexName === object2.cexName;
-    });
-  });
+  return array1.filter(
+    (object1) => !array2.some((object2) => object1.symbol === object2.symbol && object1.cexName === object2.cexName),
+  );
 }
 
 const updateCexAssets = async () => {
@@ -52,7 +50,7 @@ const updateCexAssets = async () => {
           const assets = await Kucoin.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
-            type: "main",
+            type: 'main',
             passphrase: availableCex.passphrase,
           });
           currentAssets.push(...assets);

@@ -1,30 +1,34 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { getFilePath, logError, sathoshiToBtcBalance } from "@src/utils";
-import { getCurrentUSDPrice } from "@providers/coingecko";
-import { Chain } from "@config/types";
+import { getFilePath, logError, sathoshiToBtcBalance } from '@src/utils';
+import { getCurrentUSDPrice } from '@providers/coingecko';
+import { Chain } from '@config/types';
+import { DexAssetAPIResponse } from '@dex/common/types';
 
 const path = getFilePath(__filename);
 
-const getBalance = async (walletAddress: string) => {
+const getBalance = async (walletAddress: string): Promise<DexAssetAPIResponse[]> => {
   try {
     const { data } = await axios.get<number>(
       `${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`,
     );
     const balance = sathoshiToBtcBalance(data);
-    const price = await getCurrentUSDPrice("btc");
+    const price = await getCurrentUSDPrice('btc');
     const value = balance * price;
 
-    return {
-      name: "Bitcoin",
-      symbol: "btc",
-      balance,
-      price,
-      logo: "https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg",
-      value,
-      chain: Chain.BITCOIN,
-      scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
-    };
+    return [
+      {
+        name: 'Bitcoin',
+        symbol: 'btc',
+        balance,
+        price,
+        logo: 'https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg',
+        value,
+        chain: Chain.BITCOIN,
+        scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
+        contractAddress: '',
+      },
+    ];
   } catch (e) {
     logError({
       e,

@@ -1,5 +1,5 @@
-import { getFilePath, logError } from "@src/utils";
-import { currencyModel, lastCurrencyUpdateModel } from "./models";
+import { getFilePath, logError } from '@src/utils';
+import { currencyModel, lastCurrencyUpdateModel } from './models';
 
 const path = getFilePath(__filename);
 
@@ -22,7 +22,7 @@ export const addOrUpdateCryptoCurrency = async ({
           name,
           symbol,
           price,
-          logo: image ? image : "",
+          logo: image || '',
         },
         {
           upsert: true, // creates if none
@@ -85,7 +85,7 @@ export const getCurrenyInfo = async (symbol: string) => {
 export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
   try {
     const currency = await currencyModel.findOne({ symbol }).lean();
-    return currency?.name ? currency.name : "";
+    return currency?.name ? currency.name : '';
   } catch (e) {
     logError({
       e,
@@ -99,7 +99,7 @@ export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
 export const getContractAddressOfTheCurrencyBySymbol = async (symbol: string) => {
   try {
     const currency = await currencyModel.findOne({ symbol }).lean();
-    return currency?.contractAddress ? currency.contractAddress : "";
+    return currency?.contractAddress ? currency.contractAddress : '';
   } catch (e) {
     logError({
       e,

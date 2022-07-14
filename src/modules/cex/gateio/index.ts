@@ -1,9 +1,9 @@
-import { ApiClient, SpotApi } from "gate-api";
+import { ApiClient, SpotApi } from 'gate-api';
 
-import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
-import coinmarketcapProvider from "@providers/coinmarketcap";
-import axios, { AxiosError } from "axios";
-import { GateIoError, CexAssetResponse, CexName } from "@config/types";
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
+import coinmarketcapProvider from '@providers/coinmarketcap';
+import axios, { AxiosError } from 'axios';
+import { GateIoError, CexAssetResponse, CexName } from '@config/types';
 
 const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
   const client = new ApiClient();
@@ -13,21 +13,21 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   try {
     const accounts = await spotApi.listSpotAccounts({ currency: undefined });
 
-    const data = accounts?.body;
+    const assets = accounts?.body;
     const response = [];
 
-    if (data && data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        const available = data[i].available;
-        const locked = data[i].locked;
-        let balance = parseFloat(available ? available : "0");
-        const lockedBalance = parseFloat(locked ? locked : "0");
+    if (assets && assets.length > 0) {
+      for (const asset of assets) {
+        const { available } = asset;
+        const { locked } = asset;
+        let balance = parseFloat(available || '0');
+        const lockedBalance = parseFloat(locked || '0');
 
         if (balance > 0.5 || lockedBalance > 0.5) {
-          const symbol = String(data[i]?.currency).toLowerCase();
+          const symbol = String(asset?.currency).toLowerCase();
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
-          balance = balance + lockedBalance;
+          balance += lockedBalance;
           const price = await getCurrentUSDPrice(symbol);
           const value = balance * price;
           const logo = await coinmarketcapProvider.getCryptoCurrencyLogo({

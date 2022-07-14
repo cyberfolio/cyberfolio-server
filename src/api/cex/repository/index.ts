@@ -1,6 +1,6 @@
-import { CexName } from "@config/types";
-import { getFilePath, logError, removeMongoFields } from "@src/utils";
-import { cexInfoModel, cexAssetModel } from "./models";
+import { CexName } from '@config/types';
+import { getFilePath, logError, removeMongoFields } from '@src/utils';
+import { cexInfoModel, cexAssetModel } from './models';
 
 const path = getFilePath(__filename);
 
@@ -50,9 +50,7 @@ export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: strin
       keyIdentifier,
     })
     .lean();
-  cexes = cexes.map((cex) => {
-    return removeMongoFields(cex);
-  });
+  cexes = cexes.map((cex) => removeMongoFields(cex));
 
   return cexes;
 };
@@ -74,9 +72,7 @@ export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifie
       cexName,
     })
     .lean();
-  assets = assets.map((asset) => {
-    return removeMongoFields(asset);
-  });
+  assets = assets.map((asset) => removeMongoFields(asset));
   return assets;
 };
 
@@ -86,9 +82,7 @@ export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: str
       keyIdentifier,
     })
     .lean();
-  assets = assets.map((asset) => {
-    return removeMongoFields(asset);
-  });
+  assets = assets.map((asset) => removeMongoFields(asset));
   return assets;
 };
 
@@ -113,10 +107,14 @@ export const addCexAsset = async ({
   logo: string | undefined;
   accountName: string;
 }) => {
-  symbol = symbol.toLowerCase();
   try {
     await cexAssetModel.findOneAndUpdate(
-      { keyIdentifier, cexName, name, symbol },
+      {
+        keyIdentifier,
+        cexName,
+        name,
+        symbol: symbol.toLowerCase(),
+      },
       {
         balance,
         price,

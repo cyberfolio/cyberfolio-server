@@ -1,11 +1,11 @@
-import axios, { AxiosError } from "axios";
-import crypto from "crypto-js";
-import { roundNumber } from "@src/utils";
+import axios, { AxiosError } from 'axios';
+import crypto from 'crypto-js';
+import { roundNumber } from '@src/utils';
 
-import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
-import coinmarketcapProvider from "@providers/coinmarketcap";
-import { KucoinError, CexAssetResponse, CexName } from "@config/types";
-import { KucoinAccountsApiResponse } from "./types";
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
+import coinmarketcapProvider from '@providers/coinmarketcap';
+import { KucoinError, CexAssetResponse, CexName } from '@config/types';
+import { KucoinAccountsApiResponse } from './types';
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
 const API_URL = process.env.KUCOIN_API_URL;
@@ -31,21 +31,21 @@ const getAssets = async ({
   try {
     const accountInfo = await axios.get<KucoinAccountsApiResponse>(`${API_URL}${endpoint}`, {
       headers: {
-        "KC-API-KEY": apiKey,
-        "KC-API-SIGN": signedString,
-        "KC-API-TIMESTAMP": timestamp,
-        "KC-API-PASSPHRASE": passphrase,
-        "KC-API-KEY-VERSION": encryptedApiVersion,
+        'KC-API-KEY': apiKey,
+        'KC-API-SIGN': signedString,
+        'KC-API-TIMESTAMP': timestamp,
+        'KC-API-PASSPHRASE': passphrase,
+        'KC-API-KEY-VERSION': encryptedApiVersion,
       },
     });
 
-    const data = accountInfo?.data?.data;
+    const assets = accountInfo?.data?.data;
     const response: CexAssetResponse[] = [];
-    if (data && data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        const balance = roundNumber(Number(data[i].holds));
+    if (assets && assets.length > 0) {
+      for (const asset of assets) {
+        const balance = roundNumber(Number(asset.holds));
         if (balance > 0) {
-          const symbol = data[i].currency?.toLowerCase();
+          const symbol = asset.currency?.toLowerCase();
           const price = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
@@ -74,10 +74,10 @@ const getAssets = async ({
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const gateIoError = e as AxiosError<KucoinError>;
-      if (gateIoError.response?.data?.code === "400003") {
-        throw new Error("Api key or secret is not valid.");
-      } else if (gateIoError.response?.data?.code === "400005") {
-        throw new Error("Server error, please contact the admin.");
+      if (gateIoError.response?.data?.code === '400003') {
+        throw new Error('Api key or secret is not valid.');
+      } else if (gateIoError.response?.data?.code === '400005') {
+        throw new Error('Server error, please contact the admin.');
       } else {
         throw new Error(e.message);
       }

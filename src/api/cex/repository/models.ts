@@ -1,5 +1,5 @@
-import { CexName } from "@config/types";
-import mongoose from "mongoose";
+import { CexName } from '@config/types';
+import mongoose from 'mongoose';
 
 interface CexInfo {
   keyIdentifier: string;
@@ -15,7 +15,7 @@ const cexInfoSchema = new mongoose.Schema<CexInfo>({
   cexName: String,
   passphrase: String,
 });
-export const cexInfoModel = mongoose.model<CexInfo>("cex-info", cexInfoSchema);
+export const cexInfoModel = mongoose.model<CexInfo>('cex-info', cexInfoSchema);
 
 export interface CexAsset {
   keyIdentifier: string;
@@ -39,4 +39,4 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   value: Number,
   accountName: String,
 });
-export const cexAssetModel = mongoose.model<CexAsset>("cex-asset", cexAssetSchema);
+export const cexAssetModel = mongoose.model<CexAsset>('cex-asset', cexAssetSchema);

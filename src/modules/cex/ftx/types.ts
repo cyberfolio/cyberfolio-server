@@ -11,6 +11,6 @@ export interface FTXAllBalancesAPIResponse {
   success: boolean;
   result: {
     main: Balance[];
-    "Battle Royale": Balance[];
+    'Battle Royale': Balance[];
   };
 }

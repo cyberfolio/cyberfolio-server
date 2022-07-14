@@ -4,8 +4,8 @@ interface Balances {
   asset: string;
 }
 enum AccountType {
-  SPOT = "SPOT",
-  MARGIN = "MARGIN",
+  SPOT = 'SPOT',
+  MARGIN = 'MARGIN',
 }
 // https://binance-docs.github.io/apidocs/spot/en/#query-open-oco-user_data
 export interface BinanceAccountAPIResponse {

@@ -1,6 +1,6 @@
-import { getFilePath, logError } from "@src/utils";
-import { ethers } from "ethers";
-import { userModel } from "./repository/models";
+import { getFilePath, logError } from '@src/utils';
+import { ethers } from 'ethers';
+import { userModel } from './repository/models';
 
 const path = getFilePath(__filename);
 
@@ -11,11 +11,23 @@ const checkENSName = async (keyIdentifier: string) => {
     );
     const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
-      await userModel.findOneAndUpdate({ keyIdentifier }, { ensName });
+      await userModel.findOneAndUpdate(
+        {
+          keyIdentifier,
+        },
+        {
+          ensName,
+        },
+      );
     }
     return ensName;
   } catch (e) {
-    logError({ path, func: checkENSName.name, e });
+    logError({
+      path,
+      func: checkENSName.name,
+      e,
+    });
+    return '';
   }
 };
 

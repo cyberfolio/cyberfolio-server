@@ -1,6 +1,6 @@
-import { onError } from "@src/utils";
-import jwt from "jsonwebtoken";
-import { JwtTokenInterface } from "./types";
+import { onError } from '@src/utils';
+import jwt from 'jsonwebtoken';
+import { JwtTokenInterface } from './types';
 
 const secret = process.env.JWT_SECRET as jwt.Secret;
 const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
@@ -11,9 +11,8 @@ const signJwt = (evmAddress: string) => {
       expiresIn: `${jwtExpiryInDays}d`,
     });
     return token;
-  } else {
-    throw new Error("Please provide user");
   }
+  throw new Error('Please provide user');
 };
 
 const verifyJwtAndReturnUserEvmAddress = ({ jwtToken }: { jwtToken: string }) => {

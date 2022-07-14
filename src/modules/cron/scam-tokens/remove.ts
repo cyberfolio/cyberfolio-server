@@ -1,9 +1,9 @@
-import { logError, getFilePath } from "@src/utils";
-import dexRepository from "@src/api/dex/repository";
-import { dexAssetModel } from "@src/api/dex/repository/models";
-import axios from "axios";
-import constants from "@constants/index";
-import scamTokenModel from "./model";
+import { logError, getFilePath } from '@src/utils';
+import dexRepository from '@src/api/dex/repository';
+import { dexAssetModel } from '@src/api/dex/repository/models';
+import axios from 'axios';
+import constants from '@constants/index';
+import scamTokenModel from './model';
 
 const path = getFilePath(__filename);
 
@@ -22,7 +22,7 @@ const removeScamTokens = async () => {
   try {
     const assets = await dexRepository.getAllAssets();
     const scam = await axios.get<ScamTokenResponse>(
-      "https://raw.githubusercontent.com/dappradar/tokens-blacklist/main/all-tokens.json",
+      'https://raw.githubusercontent.com/dappradar/tokens-blacklist/main/all-tokens.json',
     );
     const scamTokens = scam?.data?.tokens;
     if (Array.isArray(scam.data?.tokens)) {

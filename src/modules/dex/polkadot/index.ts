@@ -1,6 +1,6 @@
-import { Chain } from "@config/types";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { getFilePath, logError } from "@src/utils";
+import { Chain } from '@config/types';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { getFilePath, logError } from '@src/utils';
 
 const path = getFilePath(__filename);
 
@@ -11,12 +11,12 @@ const getTokenBalances = async (walletAddress: string) => {
       provider: wsProvider,
       typesAlias: {
         assets: {
-          Balance: "u64",
+          Balance: 'u64',
         },
       },
       types: {
         AssetDetails: {
-          supply: "Balance",
+          supply: 'Balance',
         },
       },
     });
@@ -29,12 +29,12 @@ const getTokenBalances = async (walletAddress: string) => {
     // const formattedReservedBalance = balance.reserved / decimals;
     return [
       {
-        name: "Polkadot",
+        name: 'Polkadot',
         price: 25,
-        symbol: "dot",
+        symbol: 'dot',
         balance: formattedFreeBalance,
         chain: Chain.POLKADOT,
-        scan: ``,
+        scan: '',
       },
     ];
   } catch (e) {

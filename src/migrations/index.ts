@@ -1,7 +1,7 @@
-import { getFilePath, logError } from "@src/utils";
-import migratePlatfromName from "./1_migratePlatfromName";
-import removeWrongPricedTokens from "./2_removeWrongPricedTokens";
-import migrationModel from "./repository/models";
+import { getFilePath, logError } from '@src/utils';
+import migratePlatfromName from './1_migratePlatfromName';
+import removeWrongPricedTokens from './2_removeWrongPricedTokens';
+import migrationModel from './repository/models';
 
 const path = getFilePath(__filename);
 

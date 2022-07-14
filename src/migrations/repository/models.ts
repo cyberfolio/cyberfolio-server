@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 interface MigrationDoc {
   number: number;
@@ -12,5 +12,5 @@ const migrationSchema = new mongoose.Schema<MigrationDoc>({
   },
 });
 
-const migrationModel = mongoose.model<MigrationDoc>("migration", migrationSchema);
+const migrationModel = mongoose.model<MigrationDoc>('migration', migrationSchema);
 export default migrationModel;

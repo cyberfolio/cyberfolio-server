@@ -1,5 +1,5 @@
-import { Document } from "mongodb";
-import mongoose from "mongoose";
+import { Document } from 'mongodb';
+import mongoose from 'mongoose';
 
 export interface User {
   keyIdentifier: string;
@@ -30,4 +30,4 @@ const userSchema = new mongoose.Schema<User>({
   },
 });
 
-export const userModel = mongoose.model<User>("user", userSchema);
+export const userModel = mongoose.model<User>('user', userSchema);

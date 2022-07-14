@@ -1,4 +1,4 @@
-import { createLogger, transports, format } from "winston";
+import { createLogger, transports, format } from 'winston';
 
 const levels = {
   fatal: 0,
@@ -17,9 +17,10 @@ const logger = createLogger({
   format: format.combine(
     format.colorize(),
     format.timestamp(),
-    format.printf(({ timestamp, level, message, metadata }) => {
-      return `[${timestamp}] ${level}: ${message}. ${metadata ? JSON.stringify(metadata) : ""}`;
-    }),
+    format.printf(
+      ({ timestamp, level, message, metadata }) =>
+        `[${timestamp}] ${level}: ${message}. ${metadata ? JSON.stringify(metadata) : ''}`,
+    ),
   ),
 });
 

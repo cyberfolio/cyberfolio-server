@@ -1,4 +1,4 @@
-import { Chain } from "@config/types";
+import { Chain } from '@config/types';
 
 export interface CovalentTokenBalanceItems {
   contract_decimals: string;

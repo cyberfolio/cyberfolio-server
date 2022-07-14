@@ -1,8 +1,8 @@
-import axios from "axios";
-import { getFilePath, logError } from "@src/utils";
-import evmAssetsResponse from "@dex/common/evmAssetsResponse";
-import { Chain, ScanURL } from "@config/types";
-import { CovalentTokenBalanceResponse } from "@dex/common/types";
+import axios from 'axios';
+import { getFilePath, logError } from '@src/utils';
+import evmAssetsResponse from '@dex/common/evmAssetsResponse';
+import { Chain, ScanURL } from '@config/types';
+import { CovalentTokenBalanceResponse } from '@dex/common/types';
 
 const path = getFilePath(__filename);
 

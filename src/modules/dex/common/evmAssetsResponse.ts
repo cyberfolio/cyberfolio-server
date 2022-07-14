@@ -1,8 +1,8 @@
-import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
-import { getCurrencyLogo } from "@providers/coingecko/repository";
-import { Chain, ScanURL } from "@config/types";
-import constants from "@constants/index";
-import { CovalentTokenBalanceItems, DexAssetAPIResponse } from "./types";
+import { formatBalance, getFilePath, isScamToken, logError } from '@src/utils';
+import { getCurrencyLogo } from '@providers/coingecko/repository';
+import { Chain, ScanURL } from '@config/types';
+import constants from '@constants/index';
+import { CovalentTokenBalanceItems, DexAssetAPIResponse } from './types';
 
 const path = getFilePath(__filename);
 
@@ -14,39 +14,39 @@ const evmAssetsResponse = async (
 ) => {
   const response: DexAssetAPIResponse[] = [];
   if (assets && Array.isArray(assets)) {
-    for (let i = 0; i < assets.length; i++) {
+    for (const asset of assets) {
       try {
-        const contractAddress = assets[i].contract_address?.toLowerCase();
-        const chainId = constants.EvmWithChain[chain].chainId;
+        const contractAddress = asset.contract_address?.toLowerCase();
+        const { chainId } = constants.EvmWithChain[chain];
         const isScam = await isScamToken(contractAddress, chainId);
 
-        if (parseInt(assets[i].balance) > 0) {
-          let balance = Number(formatBalance(assets[i].balance, assets[i].contract_decimals));
-          if (contractAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+        if (Number(asset.balance) > 0) {
+          let balance = Number(formatBalance(asset.balance, asset.contract_decimals));
+          if (contractAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
             balance = parseFloat(balance.toFixed(5));
           } else {
             balance = parseFloat(balance.toFixed(3));
           }
 
-          const name = assets[i].contract_name;
-          const price = assets[i].quote_rate;
+          const name = asset.contract_name;
+          const price = asset.quote_rate;
           if (price === null) {
             continue;
           }
           const value = balance * price;
-          const symbol = assets[i].contract_ticker_symbol?.toLowerCase();
-          const logo = symbol ? await getCurrencyLogo(symbol) : "";
-          let scan = "";
-          if (scanURL === ScanURL.SOLANA && contractAddress !== "11111111111111111111111111111111") {
+          const symbol = asset.contract_ticker_symbol?.toLowerCase();
+          const logo = symbol ? await getCurrencyLogo(symbol) : '';
+          let scan = '';
+          if (scanURL === ScanURL.SOLANA && contractAddress !== '11111111111111111111111111111111') {
             scan = `${scanURL}/address/${walletAddress}/tokens`;
-          } else if (scanURL === ScanURL.SOLANA && contractAddress === "11111111111111111111111111111111") {
+          } else if (scanURL === ScanURL.SOLANA && contractAddress === '11111111111111111111111111111111') {
             scan = `${scanURL}/address/${walletAddress}`;
-          } else if (contractAddress && contractAddress !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+          } else if (contractAddress && contractAddress !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
             scan = `${scanURL}/token/${contractAddress}?a=${walletAddress}`;
           } else {
             scan = `${scanURL}/address/${walletAddress}`;
           }
-          if (symbol?.toLowerCase() === "uni-v2" || price > 200000 || balance === 0) {
+          if (symbol?.toLowerCase() === 'uni-v2' || price > 200000 || balance === 0) {
             continue;
           }
 

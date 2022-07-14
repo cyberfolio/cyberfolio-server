@@ -1,11 +1,11 @@
-import axios, { AxiosError } from "axios";
-import crypto from "crypto-js";
+import axios, { AxiosError } from 'axios';
+import crypto from 'crypto-js';
 
-import { roundNumber } from "@src/utils";
-import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
-import coinmarketcapProvider from "@providers/coinmarketcap";
-import { BinanceError, CexAssetResponse, CexName } from "@config/types";
-import { BinanceAccountAPIResponse } from "./types";
+import { roundNumber } from '@src/utils';
+import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
+import coinmarketcapProvider from '@providers/coinmarketcap';
+import { BinanceError, CexAssetResponse, CexName } from '@config/types';
+import { BinanceAccountAPIResponse } from './types';
 
 const API_URL = process.env.BINANCE_API_URL;
 
@@ -17,23 +17,21 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
       `${API_URL}/api/v3/account?${queryString}&signature=${signature}`,
       {
         headers: {
-          "X-MBX-APIKEY": apiKey,
+          'X-MBX-APIKEY': apiKey,
         },
       },
     );
-    const balances = accountInfo.data?.balances?.filter((balance) => {
-      if (parseFloat(balance.free) + parseFloat(balance.locked) > 1) {
-        return balance;
-      }
-    });
+    const assets = accountInfo.data?.balances?.filter(
+      (balance) => parseFloat(balance.free) + parseFloat(balance.locked) > 1,
+    );
 
     const response: CexAssetResponse[] = [];
-    if (Array.isArray(balances) && balances.length > 0) {
-      for (let i = 0; i < balances.length; i++) {
-        const symbol = balances[i].asset?.toLowerCase();
+    if (Array.isArray(assets) && assets.length > 0) {
+      for (const asset of assets) {
+        const symbol = asset.asset?.toLowerCase();
         const name = await getFullNameOfTheCurrency(symbol);
         const price = await getCurrentUSDPrice(symbol);
-        const balance = parseFloat(balances[i].free) + parseFloat(balances[i].locked);
+        const balance = parseFloat(asset.free) + parseFloat(asset.locked);
         const contractAddress = await getContractAddress(symbol);
         const value = roundNumber(balance * price);
         const logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
@@ -59,10 +57,10 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     if (axios.isAxiosError(e)) {
       const binanceError = e as AxiosError<BinanceError>;
       if (binanceError.response?.data?.code === -1022) {
-        throw new Error("API Secret is invalid");
+        throw new Error('API Secret is invalid');
       }
       if (binanceError.response?.data?.code === -2015) {
-        throw new Error("API key is invalid or IP restricted or permissions are missing");
+        throw new Error('API key is invalid or IP restricted or permissions are missing');
       } else if (binanceError.response?.data?.msg) {
         throw new Error(binanceError.response.data.msg);
       } else {
@@ -88,13 +86,13 @@ const getFiatDepositAndWithDrawalHistory = async ({
   try {
     const response = await axios({
       url: `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
-      method: "get",
+      method: 'get',
       headers: {
-        "X-MBX-APIKEY": apiKey,
+        'X-MBX-APIKEY': apiKey,
       },
     });
 
-    const data = response.data;
+    const { data } = response;
     return data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
@@ -124,13 +122,13 @@ const getFiatPaymentBuyAndSellHistory = async ({
   try {
     const response = await axios({
       url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
-      method: "get",
+      method: 'get',
       headers: {
-        "X-MBX-APIKEY": apiKey,
+        'X-MBX-APIKEY': apiKey,
       },
     });
 
-    const data = response.data;
+    const { data } = response;
     return data;
   } catch (e) {
     if (axios.isAxiosError(e)) {

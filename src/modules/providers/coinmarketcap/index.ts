@@ -1,6 +1,6 @@
-import { getFilePath, logError, sleep } from "@src/utils";
-import axios from "axios";
-import { CoinMCapCryptocurrencyInfoAPIResponse } from "./types";
+import { getFilePath, logError, sleep } from '@src/utils';
+import axios from 'axios';
+import { CoinMCapCryptocurrencyInfoAPIResponse } from './types';
 
 const apiKey = process.env.COINMARKETCAP_API_KEY as string;
 const path = getFilePath(__filename);
@@ -11,7 +11,7 @@ const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Promise<st
       `${process.env.COINMARKETCAP_API_URL}/cryptocurrency/info?symbol=${symbol}`,
       {
         headers: {
-          "X-CMC_PRO_API_KEY": apiKey,
+          'X-CMC_PRO_API_KEY': apiKey,
         },
       },
     );

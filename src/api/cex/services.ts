@@ -1,11 +1,11 @@
-import Binance from "@cex//binance";
-import Kucoin from "@cex/kucoin";
-import GateIO from "@cex/gateio";
-import Ftx from "@cex/ftx";
+import Binance from '@cex//binance';
+import Kucoin from '@cex/kucoin';
+import GateIO from '@cex/gateio';
+import Ftx from '@cex/ftx';
 
-import * as repository from "./repository";
-import { onError } from "@src/utils";
-import { CexAssetResponse, CexName } from "@config/types";
+import { onError } from '@src/utils';
+import { CexAssetResponse, CexName } from '@config/types';
+import * as repository from './repository';
 
 export const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cexInfo = await repository.getCexInfo({
@@ -22,40 +22,6 @@ export const getAvailableCexes = async ({ keyIdentifier }: { keyIdentifier: stri
     keyIdentifier,
   });
   return cexInfo;
-};
-
-export const addCex = async ({
-  keyIdentifier,
-  apiKey,
-  apiSecret,
-  cexName,
-  passphrase,
-}: {
-  keyIdentifier: string;
-  apiKey: string;
-  apiSecret: string;
-  cexName: CexName;
-  passphrase: string;
-}) => {
-  try {
-    await checkIfExists({ keyIdentifier, cexName });
-    await saveSpotAssets({
-      cexName,
-      apiKey,
-      apiSecret,
-      keyIdentifier,
-      passphrase,
-    });
-    await repository.addCexByKeyIdentifier({
-      keyIdentifier,
-      apiKey,
-      apiSecret,
-      cexName,
-      passphrase,
-    });
-  } catch (e) {
-    onError(e);
-  }
 };
 
 export const saveSpotAssets = async ({
@@ -77,7 +43,7 @@ export const saveSpotAssets = async ({
       spotAssets = await Binance.getAssets({ apiKey, apiSecret });
     } else if (cexName === CexName.KUCOIN) {
       spotAssets = await Kucoin.getAssets({
-        type: "main",
+        type: 'main',
         apiKey,
         apiSecret,
         passphrase,
@@ -117,6 +83,7 @@ export const saveSpotAssets = async ({
     return spotAssets;
   } catch (e) {
     onError(e);
+    return [];
   }
 };
 
@@ -142,6 +109,41 @@ export const getSpotAssetsByCexName = async ({
     return assets;
   } catch (e) {
     onError(e);
+    return [];
+  }
+};
+
+export const addCex = async ({
+  keyIdentifier,
+  apiKey,
+  apiSecret,
+  cexName,
+  passphrase,
+}: {
+  keyIdentifier: string;
+  apiKey: string;
+  apiSecret: string;
+  cexName: CexName;
+  passphrase: string;
+}) => {
+  try {
+    await checkIfExists({ keyIdentifier, cexName });
+    await saveSpotAssets({
+      cexName,
+      apiKey,
+      apiSecret,
+      keyIdentifier,
+      passphrase,
+    });
+    await repository.addCexByKeyIdentifier({
+      keyIdentifier,
+      apiKey,
+      apiSecret,
+      cexName,
+      passphrase,
+    });
+  } catch (e) {
+    onError(e);
   }
 };
 
@@ -153,5 +155,6 @@ export const getAllSpot = async ({ keyIdentifier }: { keyIdentifier: string }) =
     return assets;
   } catch (e) {
     onError(e);
+    return [];
   }
 };

@@ -1,5 +1,5 @@
-import { Chain } from "@config/types";
-import mongoose, { Document } from "mongoose";
+import { Chain } from '@config/types';
+import mongoose, { Document } from 'mongoose';
 
 export interface Wallet {
   keyIdentifier: string;
@@ -14,7 +14,7 @@ const walletSchema = new mongoose.Schema<Wallet>({
   chain: { type: String, required: true },
 });
 
-export const walletsModel = mongoose.model<Wallet>("wallet", walletSchema);
+export const walletsModel = mongoose.model<Wallet>('wallet', walletSchema);
 
 export interface DexAsset {
   keyIdentifier: string;
@@ -47,4 +47,4 @@ const dexAssetSchema = new mongoose.Schema<DexAsset>({
   scan: { type: String },
 });
 
-export const dexAssetModel = mongoose.model<DexAsset>("dex-asset", dexAssetSchema);
+export const dexAssetModel = mongoose.model<DexAsset>('dex-asset', dexAssetSchema);

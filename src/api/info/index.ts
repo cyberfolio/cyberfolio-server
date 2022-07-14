@@ -1,14 +1,15 @@
-import express from "express";
+import express from 'express';
+
+import { ethers } from 'ethers';
+import { AuthenticatedRequest } from '@config/types';
+import { getNetWorth, getAvailableAccounts } from './services';
+
 const router = express.Router();
 
-import { getNetWorth, getAvailableAccounts } from "./services";
-import { ethers } from "ethers";
-import { AuthenticatedRequest } from "@config/types";
-
-router.get("/networth", async (req: AuthenticatedRequest, res: express.Response) => {
+router.get('/networth', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
-    return res.status(400).send("Validation error");
+    return res.status(400).send('Validation error');
   }
 
   try {
@@ -18,16 +19,15 @@ router.get("/networth", async (req: AuthenticatedRequest, res: express.Response)
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
-    } else {
-      return res.status(500).send("Unexpected error");
     }
+    return res.status(500).send('Unexpected error');
   }
 });
 
-router.get("/available-accounts", async (req: AuthenticatedRequest, res: express.Response) => {
+router.get('/available-accounts', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
-    return res.status(400).send("Validation error");
+    return res.status(400).send('Validation error');
   }
 
   try {
@@ -36,16 +36,15 @@ router.get("/available-accounts", async (req: AuthenticatedRequest, res: express
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
-    } else {
-      return res.status(500).send("Unexpected error");
     }
+    return res.status(500).send('Unexpected error');
   }
 });
 
-router.get("/ens-name", async (req: AuthenticatedRequest, res: express.Response) => {
+router.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
-    return res.status(400).send("Validation error");
+    return res.status(400).send('Validation error');
   }
 
   try {
@@ -55,15 +54,13 @@ router.get("/ens-name", async (req: AuthenticatedRequest, res: express.Response)
     const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
       return res.status(200).send(ensName);
-    } else {
-      return res.status(200).send("");
     }
+    return res.status(200).send('');
   } catch (e) {
     if (e instanceof Error) {
       return res.status(401).send(e.message);
-    } else {
-      return res.status(401).send("Unexpected error");
     }
+    return res.status(401).send('Unexpected error');
   }
 });
 

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 interface ScamToken {
   address: string;
@@ -16,5 +16,5 @@ const scamTokenSchema = new mongoose.Schema<ScamToken>({
   },
 });
 
-const scamTokenModel = mongoose.model<ScamToken>("scam-token", scamTokenSchema);
+const scamTokenModel = mongoose.model<ScamToken>('scam-token', scamTokenSchema);
 export default scamTokenModel;

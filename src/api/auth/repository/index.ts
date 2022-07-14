@@ -1,5 +1,5 @@
-import { onError } from "@src/utils";
-import { UserDoc, userModel } from "./models";
+import { onError } from '@src/utils';
+import { UserDoc, userModel } from './models';
 
 export const createUser = async ({ keyIdentifier, nonce }: { keyIdentifier: string; nonce: string }) => {
   try {
@@ -15,6 +15,7 @@ export const getUserByEvmAddress = async ({ evmAddress }: { evmAddress: string }
     return user;
   } catch (e) {
     onError(e);
+    return null;
   }
 };
 
@@ -24,6 +25,7 @@ export const getUserByEvmAddressAndNonce = async ({ evmAddress, nonce }: { evmAd
     return user;
   } catch (e) {
     onError(e);
+    return null;
   }
 };
 
@@ -33,5 +35,6 @@ export const updateNonce = async ({ evmAddress, nonce }: { evmAddress: string; n
     return user;
   } catch (e) {
     onError(e);
+    return null;
   }
 };

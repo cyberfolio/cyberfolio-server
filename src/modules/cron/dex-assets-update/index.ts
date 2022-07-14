@@ -1,15 +1,15 @@
-import { userModel } from "@api/auth/repository/models";
-import { dexAssetModel } from "@api/dex/repository/models";
-import { Chain } from "@config/types";
+import { userModel } from '@api/auth/repository/models';
+import { dexAssetModel } from '@api/dex/repository/models';
+import { Chain } from '@config/types';
 
-import arbitrum from "@dex/arbitrum";
-import avalanche from "@dex/avalanche";
-import ethereum from "@dex/ethereum";
-import optimism from "@dex/optimism";
-import polygon from "@dex/polygon";
-import smartchain from "@dex/smartchain";
+import arbitrum from '@dex/arbitrum';
+import avalanche from '@dex/avalanche';
+import ethereum from '@dex/ethereum';
+import optimism from '@dex/optimism';
+import polygon from '@dex/polygon';
+import smartchain from '@dex/smartchain';
 
-import { logError, getFilePath, sleep } from "@src/utils";
+import { logError, getFilePath, sleep } from '@src/utils';
 
 const path = getFilePath(__filename);
 
@@ -23,11 +23,9 @@ function getDifference(
     chain: Chain;
   }[],
 ) {
-  return array1.filter((object1) => {
-    return !array2.some((object2) => {
-      return object1.symbol === object2.symbol && object1.chain === object2.chain;
-    });
-  });
+  return array1.filter(
+    (object1) => !array2.some((object2) => object1.symbol === object2.symbol && object1.chain === object2.chain),
+  );
 }
 
 const updateEvmAssets = async () => {

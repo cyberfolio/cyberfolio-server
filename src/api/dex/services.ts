@@ -1,51 +1,19 @@
-import bitcoin from "@dex/bitcoin";
-import avalanche from "@dex/avalanche";
-import ethereum from "@dex/ethereum";
-import arbitrum from "@dex/arbitrum";
-import optimism from "@dex/optimism";
-import polygon from "@dex/polygon";
-import smartchain from "@dex/smartchain";
-import solana from "@dex/solana";
+import bitcoin from '@dex/bitcoin';
+import avalanche from '@dex/avalanche';
+import ethereum from '@dex/ethereum';
+import arbitrum from '@dex/arbitrum';
+import optimism from '@dex/optimism';
+import polygon from '@dex/polygon';
+import smartchain from '@dex/smartchain';
+import solana from '@dex/solana';
 
-import scamTokens from "@config/scamTokens";
-import repository from "./repository";
-import { onError } from "@src/utils";
-import { Chain } from "@config/types";
-import { userModel } from "@api/auth/repository/models";
-import { AddWalletBody } from ".";
-
-export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
-  for (const wallet of wallets) {
-    const walletAddress = wallet.address;
-    const walletName = wallet.name;
-    const chain = wallet.chain;
-    try {
-      // Validation
-      const existingWallets = await repository.getWallets({
-        keyIdentifier,
-      });
-      const walletNames = existingWallets.map((existingWallet) => existingWallet.walletName);
-      const walletAddresses = existingWallets.map((existingWallet) => existingWallet.walletAddress);
-      if (walletNames.includes(walletName)) {
-        throw new Error(`You already have a wallet named ${walletName}`);
-      }
-      if (walletAddresses.includes(walletAddress)) {
-        throw new Error(`You already have this wallet`);
-      }
-
-      // Execution
-      await repository.addWalletByKeyIdentifier({
-        keyIdentifier,
-        walletAddress,
-        walletName,
-        chain,
-      });
-      await saveAssets({ keyIdentifier, chain, walletName, walletAddress });
-    } catch (e) {
-      onError(e);
-    }
-  }
-};
+import scamTokens from '@config/scamTokens';
+import { onError } from '@src/utils';
+import { Chain } from '@config/types';
+import { userModel } from '@api/auth/repository/models';
+import { DexAssetAPIResponse } from '@dex/common/types';
+import repository from './repository';
+import { AddWalletBody } from '.';
 
 export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
@@ -56,6 +24,7 @@ export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: strin
     return assets;
   } catch (e) {
     onError(e);
+    return [];
   }
 };
 
@@ -67,6 +36,7 @@ export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string })
     return assets;
   } catch (e) {
     onError(e);
+    return [];
   }
 };
 
@@ -81,6 +51,7 @@ export const saveAssets = async ({
   chain: Chain;
   walletName: string;
 }) => {
+  let assets: DexAssetAPIResponse[] = [];
   if (chain === Chain.ETHEREUM) {
     try {
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress);
@@ -101,22 +72,22 @@ export const saveAssets = async ({
 
       if (Array.isArray(allEvmTokens) && allEvmTokens.length > 0) {
         try {
-          for (let i = 0; i < allEvmTokens.length; i++) {
+          for (const evmAsset of allEvmTokens) {
             const isScamToken = scamTokens.find(
               (scamToken) =>
-                scamToken.contractAddress.toLowerCase() === allEvmTokens[i].contractAddress.toLowerCase() &&
-                scamToken.chain === allEvmTokens[i].chain,
+                scamToken.contractAddress.toLowerCase() === evmAsset.contractAddress.toLowerCase() &&
+                scamToken.chain === evmAsset.chain,
             );
-            if (!isScamToken && allEvmTokens[i].value >= 1) {
+            if (!isScamToken && evmAsset.value >= 1) {
               await repository.addAsset({
-                name: allEvmTokens[i].name,
-                symbol: allEvmTokens[i].symbol,
-                balance: allEvmTokens[i].balance,
-                contractAddress: allEvmTokens[i].contractAddress,
-                price: allEvmTokens[i].price,
-                value: allEvmTokens[i].value,
-                chain: allEvmTokens[i].chain,
-                scan: allEvmTokens[i].scan,
+                name: evmAsset.name,
+                symbol: evmAsset.symbol,
+                balance: evmAsset.balance,
+                contractAddress: evmAsset.contractAddress,
+                price: evmAsset.price,
+                value: evmAsset.value,
+                chain: evmAsset.chain,
+                scan: evmAsset.scan,
                 walletName,
                 keyIdentifier,
                 walletAddress,
@@ -127,53 +98,98 @@ export const saveAssets = async ({
           onError(e);
         }
       }
-      return allEvmTokens;
+      assets = allEvmTokens;
     } catch (e) {
       onError(e);
+      return [];
     }
   } else if (chain === Chain.BITCOIN) {
-    const btc = await bitcoin.getBalance(walletAddress);
-
-    const asset = {
-      keyIdentifier,
-      walletName,
-      name: btc.name,
-      symbol: btc.symbol.toLowerCase(),
-      balance: btc.balance,
-      price: btc.price,
-      value: btc.value,
-      scan: btc.scan,
-      chain: Chain.BITCOIN,
-      contractAddress: "",
-      walletAddress,
-    };
-
+    const btcAssets = await bitcoin.getBalance(walletAddress);
     try {
-      await repository.addAsset(asset);
-      return [bitcoin];
+      for (const asset of btcAssets) {
+        await repository.addAsset({
+          name: asset.name,
+          symbol: asset.symbol,
+          balance: asset.balance,
+          contractAddress: '',
+          price: asset.price,
+          value: asset.value,
+          chain: asset.chain,
+          scan: asset.scan,
+          walletName,
+          keyIdentifier,
+          walletAddress,
+        });
+      }
+      assets = btcAssets;
+    } catch (e) {
+      onError(e);
+      return [];
+    }
+  } else if (chain === Chain.SOLANA) {
+    const solanaAssets = await solana.getTokenBalances(walletAddress);
+    try {
+      for (const asset of solanaAssets) {
+        await repository.addAsset({
+          name: asset.name,
+          symbol: asset.symbol,
+          balance: asset.balance,
+          contractAddress: asset.contractAddress,
+          price: asset.price,
+          value: asset.value,
+          chain: asset.chain,
+          scan: asset.scan,
+          walletName,
+          keyIdentifier,
+          walletAddress,
+        });
+      }
+      assets = solanaAssets;
+    } catch (e) {
+      onError(e);
+      return [];
+    }
+  }
+  await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
+  return assets;
+};
+
+export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
+  for (const wallet of wallets) {
+    const walletAddress = wallet.address;
+    const walletName = wallet.name;
+    const { chain } = wallet;
+    try {
+      // Validation
+      const existingWallets = await repository.getWallets({
+        keyIdentifier,
+      });
+      const walletNames = existingWallets.map((existingWallet) => existingWallet.walletName);
+      const walletAddresses = existingWallets.map((existingWallet) => existingWallet.walletAddress);
+      if (walletNames.includes(walletName)) {
+        throw new Error(`You already have a wallet named ${walletName}`);
+      }
+      if (walletAddresses.includes(walletAddress)) {
+        throw new Error('You already have this wallet');
+      }
+
+      // Execution
+      await repository.addWalletByKeyIdentifier({
+        keyIdentifier,
+        walletAddress,
+        walletName,
+        chain,
+      });
+      await saveAssets({
+        keyIdentifier,
+        chain,
+        walletName,
+        walletAddress,
+      });
     } catch (e) {
       onError(e);
     }
-  } else if (chain === Chain.SOLANA) {
-    const assets = await solana.getTokenBalances(walletAddress);
-    for (const asset of assets) {
-      await repository.addAsset({
-        name: asset.name,
-        symbol: asset.symbol,
-        balance: asset.balance,
-        contractAddress: asset.contractAddress,
-        price: asset.price,
-        value: asset.value,
-        chain: asset.chain,
-        scan: asset.scan,
-        walletName,
-        keyIdentifier,
-        walletAddress,
-      });
-    }
   }
-
-  await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
 };
 
 export default {

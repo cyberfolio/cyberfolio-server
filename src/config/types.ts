@@ -1,43 +1,43 @@
-import { Request } from "express";
-import { UserDoc } from "@api/auth/repository/models";
+import { Request } from 'express';
+import { UserDoc } from '@api/auth/repository/models';
 
 export interface AuthenticatedRequest extends Request {
   user?: UserDoc | null;
 }
 
 export enum Chain {
-  BITCOIN = "Bitcoin",
-  ETHEREUM = "Ethereum",
-  BSC = "SmartChain",
-  AVALANCHE = "Avalanche",
-  SOLANA = "Solana",
-  POLKADOT = "Polkadot",
-  POLYGON = "Polygon",
-  ARBITRUM = "Arbitrum",
-  OPTIMISM = "Optimism",
+  BITCOIN = 'Bitcoin',
+  ETHEREUM = 'Ethereum',
+  BSC = 'SmartChain',
+  AVALANCHE = 'Avalanche',
+  SOLANA = 'Solana',
+  POLKADOT = 'Polkadot',
+  POLYGON = 'Polygon',
+  ARBITRUM = 'Arbitrum',
+  OPTIMISM = 'Optimism',
 }
 
 export enum Platform {
-  BITCOIN = "Bitcoin",
-  ETHEREUM = "Ethereum",
-  BSC = "SmartChain",
-  AVALANCHE = "Avalanche",
-  SOLANA = "Solana",
-  POLKADOT = "Polkadot",
-  POLYGON = "Polygon",
-  ARBITRUM = "Arbitrum",
-  OPTIMISM = "Optimism",
-  BINANCE = "Binance",
-  FTX = "FTX",
-  GATEIO = "Gateio",
-  KUCOIN = "Kucoin",
+  BITCOIN = 'Bitcoin',
+  ETHEREUM = 'Ethereum',
+  BSC = 'SmartChain',
+  AVALANCHE = 'Avalanche',
+  SOLANA = 'Solana',
+  POLKADOT = 'Polkadot',
+  POLYGON = 'Polygon',
+  ARBITRUM = 'Arbitrum',
+  OPTIMISM = 'Optimism',
+  BINANCE = 'Binance',
+  FTX = 'FTX',
+  GATEIO = 'Gateio',
+  KUCOIN = 'Kucoin',
 }
 
 export enum CexName {
-  BINANCE = "Binance",
-  FTX = "FTX",
-  GATEIO = "Gateio",
-  KUCOIN = "Kucoin",
+  BINANCE = 'Binance',
+  FTX = 'FTX',
+  GATEIO = 'Gateio',
+  KUCOIN = 'Kucoin',
 }
 export interface CexAssetResponse {
   cexName: CexName;
@@ -69,13 +69,13 @@ export type KucoinError = {
 };
 
 export enum ScanURL {
-  ETHEREUM = "https://etherscan.io",
-  BSC = "https://bscscan.com",
-  AVALANCHE = "https://snowtrace.io",
-  POLYGON = "https://polygonscan.com",
-  ARBITRUM = "https://arbiscan.io",
-  OPTIMISM = "https://optimistic.etherscan.io",
-  SOLANA = "https://explorer.solana.com",
+  ETHEREUM = 'https://etherscan.io',
+  BSC = 'https://bscscan.com',
+  AVALANCHE = 'https://snowtrace.io',
+  POLYGON = 'https://polygonscan.com',
+  ARBITRUM = 'https://arbiscan.io',
+  OPTIMISM = 'https://optimistic.etherscan.io',
+  SOLANA = 'https://explorer.solana.com',
 }
 
 export interface JwtTokenInterface {

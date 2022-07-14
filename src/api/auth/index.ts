@@ -1,23 +1,25 @@
-import express from "express";
-import { ethers } from "ethers";
+import express from 'express';
+import { ethers } from 'ethers';
 
-import { generateNonce } from "@src/utils";
-import jwtConfig from "@config/jwt";
-import { authenticateUser } from "@config/middleware";
+import { generateNonce } from '@src/utils';
+import jwtConfig from '@config/jwt';
+import { authenticateUser } from '@config/middleware';
 
-import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from "./repository";
-import { saveAssets } from "@api/dex/services";
-import AuthService from "./services";
-import { AuthenticatedRequest, Chain } from "@config/types";
+import { saveAssets } from '@api/dex/services';
+import { AuthenticatedRequest, Chain } from '@config/types';
+import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from './repository';
+import AuthService from './services';
 
 const router = express.Router();
 
-router.post("/login/metamask", async (req: express.Request, res: express.Response, next) => {
+router.post('/login/metamask', async (req: express.Request, res: express.Response, next) => {
   let evmAddress = req.body?.evmAddress as string;
   evmAddress = evmAddress.toLowerCase();
   try {
     const nonce = generateNonce();
-    const user = await getUserByEvmAddress({ evmAddress });
+    const user = await getUserByEvmAddress({
+      evmAddress,
+    });
     if (!user) {
       await createUser({
         keyIdentifier: evmAddress,
@@ -35,35 +37,38 @@ router.post("/login/metamask", async (req: express.Request, res: express.Respons
   }
 });
 
-router.post("/login/validate-signature", async (req: express.Request, res: express.Response, next) => {
-  let evmAddress = req.body.evmAddress;
-  const signature = req.body.signature;
-  const nonce = req.body.nonce;
+router.post('/login/validate-signature', async (req: express.Request, res: express.Response, next) => {
+  let { evmAddress } = req.body;
+  const { signature } = req.body;
+  const { nonce } = req.body;
   evmAddress = evmAddress.toLowerCase();
   try {
     const signerAddress = ethers.utils.verifyMessage(nonce, signature);
     if (signerAddress.toLocaleLowerCase() !== evmAddress) {
-      throw new Error("Signature validation failed");
+      throw new Error('Signature validation failed');
     }
-    const user = await getUserByEvmAddressAndNonce({ evmAddress, nonce });
+    const user = await getUserByEvmAddressAndNonce({
+      evmAddress,
+      nonce,
+    });
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
-    const keyIdentifier = user.keyIdentifier;
+    const { keyIdentifier } = user;
     if (!user.lastAssetUpdate) {
       await saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
         chain: Chain.ETHEREUM,
-        walletName: "main",
+        walletName: 'main',
       });
     }
 
     // set jwt to the user's browser cookies
     const token = jwtConfig.signJwt(user.keyIdentifier);
     const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
-    res.cookie("token", token, {
-      secure: process.env.NODE_ENV !== "development",
+    res.cookie('token', token, {
+      secure: process.env.NODE_ENV !== 'development',
       httpOnly: true,
       maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000,
     });
@@ -72,7 +77,7 @@ router.post("/login/validate-signature", async (req: express.Request, res: expre
     const response = {
       keyIdentifier,
       ensName,
-      lastAssetUpdate: "",
+      lastAssetUpdate: '',
     };
     const verifiedUser = await getUserByEvmAddressAndNonce({
       evmAddress,
@@ -90,7 +95,7 @@ router.post("/login/validate-signature", async (req: express.Request, res: expre
   }
 });
 
-router.get("/get-user-info", authenticateUser, async (req: AuthenticatedRequest, res: express.Response) => {
+router.get('/get-user-info', authenticateUser, async (req: AuthenticatedRequest, res: express.Response) => {
   if (req.user) {
     res.status(200).send({
       keyIdentifier: req.user.keyIdentifier,
@@ -98,13 +103,13 @@ router.get("/get-user-info", authenticateUser, async (req: AuthenticatedRequest,
       lastAssetUpdate: req.user.lastAssetUpdate,
     });
   } else {
-    res.status(401).send("Unauthenticated");
+    res.status(401).send('Unauthenticated');
   }
 });
 
-router.get("/logout", authenticateUser, (req, res) => {
-  res.clearCookie("token");
-  res.status(403).send("");
+router.get('/logout', authenticateUser, (req, res) => {
+  res.clearCookie('token');
+  res.status(403).send('');
 });
 
 export default router;

@@ -1,7 +1,7 @@
-import { Chain } from "@config/types";
-import { getCurrenyInfo } from "@providers/coingecko/repository";
-import { getFilePath, logError, removeMongoFields } from "@src/utils";
-import { walletsModel, dexAssetModel } from "./models";
+import { Chain } from '@config/types';
+import { getCurrenyInfo } from '@providers/coingecko/repository';
+import { getFilePath, logError, removeMongoFields } from '@src/utils';
+import { walletsModel, dexAssetModel } from './models';
 
 const path = getFilePath(__filename);
 
@@ -54,9 +54,7 @@ const deleteWallet = async ({
 
 const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   let wallets = await walletsModel.find({ keyIdentifier }).lean().exec();
-  wallets = wallets.map((wallet) => {
-    return removeMongoFields(wallet);
-  });
+  wallets = wallets.map((wallet) => removeMongoFields(wallet));
   return wallets;
 };
 
@@ -101,11 +99,17 @@ const addAsset = async ({
   scan: string;
 }) => {
   try {
-    symbol = symbol.toLowerCase();
-    const currenyInfo = await getCurrenyInfo(symbol);
+    const formattedSymbol = symbol.toLowerCase();
+    const currenyInfo = await getCurrenyInfo(formattedSymbol);
     const logo = currenyInfo?.logo ? currenyInfo?.logo : undefined;
     await dexAssetModel.findOneAndUpdate(
-      { walletAddress, keyIdentifier, name, symbol, chain },
+      {
+        walletAddress,
+        keyIdentifier,
+        name,
+        symbol: formattedSymbol,
+        chain,
+      },
       {
         keyIdentifier,
         walletName,
@@ -135,9 +139,7 @@ const addAsset = async ({
 const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
-    assets = assets.map((asset) => {
-      return removeMongoFields(asset);
-    });
+    assets = assets.map((asset) => removeMongoFields(asset));
     return assets;
   } catch (e) {
     logError({
@@ -152,9 +154,7 @@ const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier:
 const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier }).lean();
-    assets = assets.map((asset) => {
-      return removeMongoFields(asset);
-    });
+    assets = assets.map((asset) => removeMongoFields(asset));
     return assets;
   } catch (e) {
     logError({
@@ -169,9 +169,7 @@ const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
 const getAllAssets = async () => {
   try {
     let assets = await dexAssetModel.find({}).lean();
-    assets = assets.map((asset) => {
-      return removeMongoFields(asset);
-    });
+    assets = assets.map((asset) => removeMongoFields(asset));
     return assets;
   } catch (e) {
     logError({

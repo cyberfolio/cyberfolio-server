@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const currencySchema = new mongoose.Schema({
   name: String,
@@ -7,7 +7,7 @@ const currencySchema = new mongoose.Schema({
   price: Number,
   logo: String,
 });
-export const currencyModel = mongoose.model("currency", currencySchema);
+export const currencyModel = mongoose.model('currency', currencySchema);
 
 interface LastCurrencyUpdateDoc {
   id: number;
@@ -19,6 +19,6 @@ const lastCurrencyUpdateSchema = new mongoose.Schema<LastCurrencyUpdateDoc>({
   lastUpdateDate: Date,
 });
 export const lastCurrencyUpdateModel = mongoose.model<LastCurrencyUpdateDoc>(
-  "last-currency-update",
+  'last-currency-update',
   lastCurrencyUpdateSchema,
 );
