@@ -5,14 +5,11 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { Server } from "socket.io";
-import http from "http";
 
 import auth from "./api/auth";
 import dex from "./api/dex";
 import cex from "./api/cex";
 import info from "./api/info";
-import socket from "./socket";
 
 import { connectToDB, startCronJobs, runMigrations } from "./init";
 import { allowedMethods, authenticateUser } from "./config/middleware";
@@ -45,13 +42,6 @@ const boot = async () => {
   app.use("/api/cex", authenticateUser, cex);
   app.use("/api/dex", authenticateUser, dex);
   app.use("/api/info", authenticateUser, info);
-
-  // init socket endpoint
-  const server = http.createServer(app);
-  const io = new Server(server, {
-    cookie: true,
-  });
-  socket(io);
 
   // start
   const port = process.env.PORT;

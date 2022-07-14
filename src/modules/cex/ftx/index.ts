@@ -4,6 +4,7 @@ import crypto from "crypto-js";
 import { roundNumber } from "@src/utils";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
 import { FTXError, CexName, CexAssetResponse } from "@config/types";
+import { FTXAllBalancesAPIResponse } from "./types";
 
 const API_URL = process.env.FTX_API_URL;
 
@@ -12,16 +13,15 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   const signatureString = `${timestamp}GET/api/wallet/all_balances`;
   const signature = crypto.HmacSHA256(signatureString, apiSecret).toString(crypto.enc.Hex);
   try {
-    const allBalances = (await axios({
-      url: `${API_URL}/wallet/all_balances`,
-      method: "get",
+    // https://docs.ftx.com/#get-balances-of-all-accounts
+    const allBalances = await axios.get<FTXAllBalancesAPIResponse>(`${API_URL}/wallet/all_balances`, {
       headers: {
         "FTX-KEY": apiKey,
         "FTX-TS": timestamp.toString(),
         "FTX-SIGN": signature,
       },
-    })) as any;
-    const balances = allBalances?.data?.result?.main?.filter((balance: any) => {
+    });
+    const balances = allBalances?.data?.result?.main?.filter((balance) => {
       if (Number(balance.usdValue) > 1) {
         return balance;
       }
@@ -34,7 +34,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         const symbol = balances[i].coin?.toLowerCase();
         const price = balances[i].usdValue / balances[i].total;
         const name = balances[i].coin;
-        const value = roundNumber(parseFloat(balances[i].usdValue));
+        const value = roundNumber(balances[i].usdValue);
         let logo = await getCryptoCurrencyLogo({
           symbol,
         });

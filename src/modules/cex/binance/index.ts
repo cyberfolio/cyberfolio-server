@@ -5,6 +5,7 @@ import { roundNumber } from "@src/utils";
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
 import { BinanceError, CexAssetResponse, CexName } from "@config/types";
+import { BinanceAccountAPIResponse } from "./types";
 
 const API_URL = process.env.BINANCE_API_URL;
 
@@ -12,14 +13,15 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   const queryString = `timestamp=${Date.now()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
-    const accountInfo = (await axios({
-      url: `${API_URL}/api/v3/account?${queryString}&signature=${signature}`,
-      method: "get",
-      headers: {
-        "X-MBX-APIKEY": apiKey,
+    const accountInfo = await axios.get<BinanceAccountAPIResponse>(
+      `${API_URL}/api/v3/account?${queryString}&signature=${signature}`,
+      {
+        headers: {
+          "X-MBX-APIKEY": apiKey,
+        },
       },
-    })) as any;
-    const balances = accountInfo.data?.balances?.filter((balance: any) => {
+    );
+    const balances = accountInfo.data?.balances?.filter((balance) => {
       if (parseFloat(balance.free) + parseFloat(balance.locked) > 1) {
         return balance;
       }

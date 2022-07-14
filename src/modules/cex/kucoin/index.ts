@@ -5,6 +5,7 @@ import { roundNumber } from "@src/utils";
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
 import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
 import { KucoinError, CexAssetResponse, CexName } from "@config/types";
+import { KucoinAccountsApiResponse } from "./types";
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
 const API_URL = process.env.KUCOIN_API_URL;
@@ -28,9 +29,7 @@ const getAssets = async ({
   const encryptedApiVersion = crypto.HmacSHA256(API_VERSION, apiSecret).toString(crypto.enc.Base64);
 
   try {
-    const accountInfo = (await axios({
-      url: `${API_URL}${endpoint}`,
-      method: "GET",
+    const accountInfo = await axios.get<KucoinAccountsApiResponse>(`${API_URL}${endpoint}`, {
       headers: {
         "KC-API-KEY": apiKey,
         "KC-API-SIGN": signedString,
@@ -38,13 +37,13 @@ const getAssets = async ({
         "KC-API-PASSPHRASE": passphrase,
         "KC-API-KEY-VERSION": encryptedApiVersion,
       },
-    })) as any;
+    });
 
     const data = accountInfo?.data?.data;
     const response: CexAssetResponse[] = [];
     if (data && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
-        const balance = roundNumber(data[i].holds);
+        const balance = roundNumber(Number(data[i].holds));
         if (balance > 0) {
           const symbol = data[i].currency?.toLowerCase();
           const price = await getCurrentUSDPrice(symbol);
