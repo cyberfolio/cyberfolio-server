@@ -16,7 +16,6 @@ export const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Pro
       },
     );
     await sleep(200);
-    response.data.data["1"].category;
 
     if (response.data.data[symbol.toUpperCase()].logo) {
       return response.data.data[symbol.toUpperCase()].logo;
