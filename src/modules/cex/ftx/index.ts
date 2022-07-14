@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import crypto from "crypto-js";
 
 import { roundNumber } from "@src/utils";
-import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
+import coinmarketcapProvider from "@providers/coinmarketcap";
 import { FTXError, CexName, CexAssetResponse } from "@config/types";
 import { FTXAllBalancesAPIResponse } from "./types";
 
@@ -35,7 +35,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         const price = balances[i].usdValue / balances[i].total;
         const name = balances[i].coin;
         const value = roundNumber(balances[i].usdValue);
-        let logo = await getCryptoCurrencyLogo({
+        let logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
           symbol,
         });
         if (symbol === "usd") {

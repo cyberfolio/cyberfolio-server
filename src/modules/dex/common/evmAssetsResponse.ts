@@ -1,7 +1,7 @@
 import { formatBalance, getFilePath, isScamToken, logError } from "@src/utils";
 import { getCurrencyLogo } from "@providers/coingecko/repository";
 import { Chain, ScanURL } from "@config/types";
-import { EvmWithChain } from "@constants/index";
+import constants from "@constants/index";
 import { CovalentTokenBalanceItems, DexAssetAPIResponse } from "./types";
 
 const path = getFilePath(__filename);
@@ -17,7 +17,7 @@ const evmAssetsResponse = async (
     for (let i = 0; i < assets.length; i++) {
       try {
         const contractAddress = assets[i].contract_address?.toLowerCase();
-        const chainId = EvmWithChain[chain].chainId;
+        const chainId = constants.EvmWithChain[chain].chainId;
         const isScam = await isScamToken(contractAddress, chainId);
 
         if (parseInt(assets[i].balance) > 0) {

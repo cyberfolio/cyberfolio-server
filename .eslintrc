@@ -46,6 +46,8 @@
       }
     ],
     "import/no-unresolved": "error",
+    "import/prefer-default-export": "error",
+    "import/no-named-as-default-member": "off",
     "prettier/prettier": ["error", { "singleQuote": false, "semi": true }],
     "no-console": "error",
     "promise/always-return": "error",

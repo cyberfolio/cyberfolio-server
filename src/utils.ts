@@ -4,8 +4,8 @@ import Web3 from "web3";
 import { ethers } from "ethers";
 import { v4 as uuidv4 } from "uuid";
 import { AxiosError, default as axios } from "axios";
-import { logger } from "@config/logger";
-import { scamTokenModel } from "./modules/cron/scam-tokens/model";
+import logger from "@config/logger";
+import scamTokenModel from "./modules/cron/scam-tokens/model";
 
 export const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),

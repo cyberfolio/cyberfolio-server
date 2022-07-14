@@ -5,7 +5,7 @@ import { CoinMCapCryptocurrencyInfoAPIResponse } from "./types";
 const apiKey = process.env.COINMARKETCAP_API_KEY as string;
 const path = getFilePath(__filename);
 
-export const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Promise<string | undefined> => {
+const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Promise<string | undefined> => {
   try {
     const response = await axios.get<CoinMCapCryptocurrencyInfoAPIResponse>(
       `${process.env.COINMARKETCAP_API_URL}/cryptocurrency/info?symbol=${symbol}`,
@@ -30,3 +30,9 @@ export const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Pro
     return undefined;
   }
 };
+
+const coinmarketcapProider = {
+  getCryptoCurrencyLogo,
+};
+
+export default coinmarketcapProider;

@@ -1,10 +1,10 @@
-import Express from "express";
+import express from "express";
 
 import { getUserByEvmAddress } from "@api/auth/repository";
 import jwt from "./jwt";
 import { AuthenticatedRequest } from "./types";
 
-export const allowedMethods = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+export const allowedMethods = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   // NOTE: Exclude TRACE and TRACK methods to avoid XST attacks.
   const allowedMethods = ["OPTIONS", "HEAD", "CONNECT", "GET", "POST", "PUT", "DELETE", "PATCH"];
   if (!allowedMethods.includes(req.method)) {
@@ -15,8 +15,8 @@ export const allowedMethods = (req: Express.Request, res: Express.Response, next
 
 export const authenticateUser = async (
   req: AuthenticatedRequest,
-  res: Express.Response,
-  next: Express.NextFunction,
+  res: express.Response,
+  next: express.NextFunction,
 ) => {
   const jwtToken = req.cookies?.token;
   if (!jwtToken) {

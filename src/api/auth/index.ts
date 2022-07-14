@@ -7,7 +7,7 @@ import { authenticateUser } from "@config/middleware";
 
 import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from "./repository";
 import { saveAssets } from "@api/dex/services";
-import { checkENSName } from "./services";
+import AuthService from "./services";
 import { AuthenticatedRequest, Chain } from "@config/types";
 
 const router = express.Router();
@@ -68,7 +68,7 @@ router.post("/login/validate-signature", async (req: express.Request, res: expre
       maxAge: jwtExpiryInDays * 24 * 60 * 60 * 1000,
     });
 
-    const ensName = await checkENSName(evmAddress);
+    const ensName = await AuthService.checkENSName(evmAddress);
     const response = {
       keyIdentifier,
       ensName,

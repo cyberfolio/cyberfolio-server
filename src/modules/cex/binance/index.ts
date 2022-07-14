@@ -3,7 +3,7 @@ import crypto from "crypto-js";
 
 import { roundNumber } from "@src/utils";
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from "@providers/coingecko";
-import { getCryptoCurrencyLogo } from "@providers/coinmarketcap";
+import coinmarketcapProvider from "@providers/coinmarketcap";
 import { BinanceError, CexAssetResponse, CexName } from "@config/types";
 import { BinanceAccountAPIResponse } from "./types";
 
@@ -36,7 +36,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         const balance = parseFloat(balances[i].free) + parseFloat(balances[i].locked);
         const contractAddress = await getContractAddress(symbol);
         const value = roundNumber(balance * price);
-        const logo = await getCryptoCurrencyLogo({
+        const logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
           symbol,
         });
         if (value > 1) {

@@ -1,6 +1,6 @@
 import { Platform } from "@config/types";
 
-export const EvmWithChain = {
+const EvmWithChain = {
   Bitcoin: {
     name: Platform.BITCOIN,
     chainId: "-1",
@@ -54,3 +54,9 @@ export const EvmWithChain = {
     chainId: "10",
   },
 };
+
+const constants = {
+  EvmWithChain,
+};
+
+export default constants;

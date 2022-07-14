@@ -16,4 +16,5 @@ const scamTokenSchema = new mongoose.Schema<ScamToken>({
   },
 });
 
-export const scamTokenModel = mongoose.model<ScamToken>("scam-token", scamTokenSchema);
+const scamTokenModel = mongoose.model<ScamToken>("scam-token", scamTokenSchema);
+export default scamTokenModel;

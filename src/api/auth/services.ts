@@ -4,7 +4,7 @@ import { userModel } from "./repository/models";
 
 const path = getFilePath(__filename);
 
-export const checkENSName = async (keyIdentifier: string) => {
+const checkENSName = async (keyIdentifier: string) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
@@ -18,3 +18,9 @@ export const checkENSName = async (keyIdentifier: string) => {
     logError({ path, func: checkENSName.name, e });
   }
 };
+
+const AuthService = {
+  checkENSName,
+};
+
+export default AuthService;

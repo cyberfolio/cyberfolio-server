@@ -1,10 +1,10 @@
 import cron from "node-cron";
 
-import { logger } from "@config/logger";
+import logger from "@config/logger";
 import { getFilePath, logError } from "@src/utils";
-import { removeScamTokens } from "./scam-tokens/remove";
+import removeScamTokens from "./scam-tokens/remove";
 import dexAssetsUpdate from "./dex-assets-update/";
-import { updateCurrencies } from "./update-currencies";
+import updateCurrencies from "./update-currencies";
 import cexAssetsUpdate from "./cex-assets-update";
 
 const ever2HourCronValue = "0 0 */2 * * *";
@@ -13,7 +13,7 @@ const everyMinuteCronValue = "0 */1 * * * *";
 
 const path = getFilePath(__filename);
 
-export const initCronJobs = async () => {
+const initCronJobs = async () => {
   cron.schedule(ever2HourCronValue, async () => {
     try {
       logger.info("Running currency update");
@@ -53,3 +53,5 @@ export const initCronJobs = async () => {
     }
   });
 };
+
+export default initCronJobs;

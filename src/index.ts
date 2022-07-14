@@ -13,7 +13,7 @@ import info from "./api/info";
 
 import { connectToDB, startCronJobs, runMigrations } from "./init";
 import { allowedMethods, authenticateUser } from "./config/middleware";
-import { logger } from "@config/logger";
+import logger from "@config/logger";
 
 const boot = async () => {
   // To get the directory name

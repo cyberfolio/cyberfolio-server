@@ -8,8 +8,8 @@
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,ts}\"",
     "u": "yarn yarn-upgrade-all",
     "prepare": "husky install"
   },

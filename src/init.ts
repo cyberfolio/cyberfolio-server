@@ -1,6 +1,6 @@
-import { logger } from "@config/logger";
+import logger from "@config/logger";
 import mongoose from "mongoose";
-import { initCronJobs } from "./modules/cron";
+import initCronJobs from "./modules/cron";
 import migrations from "./migrations";
 
 export const connectToDB = async () => {

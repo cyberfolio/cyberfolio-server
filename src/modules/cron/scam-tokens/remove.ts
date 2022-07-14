@@ -2,8 +2,8 @@ import { logError, getFilePath } from "@src/utils";
 import dexRepository from "@src/api/dex/repository";
 import { dexAssetModel } from "@src/api/dex/repository/models";
 import axios from "axios";
-import { EvmWithChain } from "@constants/index";
-import { scamTokenModel } from "./model";
+import constants from "@constants/index";
+import scamTokenModel from "./model";
 
 const path = getFilePath(__filename);
 
@@ -18,7 +18,7 @@ interface ScamTokenResponse {
   tokens: ScamToken[];
 }
 
-export const removeScamTokens = async () => {
+const removeScamTokens = async () => {
   try {
     const assets = await dexRepository.getAllAssets();
     const scam = await axios.get<ScamTokenResponse>(
@@ -48,7 +48,7 @@ export const removeScamTokens = async () => {
       const isScamToken = scamTokens.find(
         (scamToken) =>
           scamToken.address.toLowerCase() === asset.contractAddress.toLowerCase() &&
-          scamToken.chainId === EvmWithChain[asset.chain].chainId,
+          scamToken.chainId === constants.EvmWithChain[asset.chain].chainId,
       );
       if (isScamToken) {
         try {
@@ -71,3 +71,5 @@ export const removeScamTokens = async () => {
     throw e;
   }
 };
+
+export default removeScamTokens;

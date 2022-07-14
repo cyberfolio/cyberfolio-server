@@ -3,7 +3,7 @@ import { logError, getFilePath } from "@src/utils";
 
 const path = getFilePath(__filename);
 
-export const updateCurrencies = async () => {
+const updateCurrencies = async () => {
   for (let i = 1; i <= 6000; i++) {
     try {
       await addOrUpdateCryptoCurrencies(i);
@@ -17,3 +17,5 @@ export const updateCurrencies = async () => {
     }
   }
 };
+
+export default updateCurrencies;
