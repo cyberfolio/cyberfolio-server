@@ -1,7 +1,6 @@
 import { AuthenticatedRequest, Chain } from '@config/types';
 import { isEnumOf } from '@src/utils';
 import express from 'express';
-
 import DexService from './services';
 
 const router = express.Router();
