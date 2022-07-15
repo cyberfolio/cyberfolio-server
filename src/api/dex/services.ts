@@ -12,8 +12,8 @@ import { onError } from '@src/utils';
 import { Chain } from '@config/types';
 import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@dex/common/types';
-import repository from './repository';
 import { AddWalletBody } from '.';
+import repository from './repository';
 
 export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {

@@ -1,7 +1,8 @@
 {
   "eslint.validate": ["javascript", "typescript"],
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "explorer.compactFolders": true
+  "eslint.alwaysShowStatus": true,
+  "explorer.compactFolders": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false
 }

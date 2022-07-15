@@ -7,26 +7,21 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "eslint-config-prettier",
     "airbnb-base",
-    "airbnb-typescript/base"
+    "airbnb-typescript/base",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint", "prettier", "promise"],
+  "plugins": ["@typescript-eslint", "promise", "prettier"],
   "ignorePatterns": ["node_modules", "build", "dist"],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
   "root": true,
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
     "project": ["./tsconfig.json"]
   },
   "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
-    },
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
@@ -35,6 +30,7 @@
     }
   },
   "rules": {
+    "prettier/prettier": ["error", { "singleQuote": true, "semi": true }],
     "linebreak-style": "off",
     "implicit-arrow-linebreak": "off",
     "max-len": "off",
@@ -49,19 +45,18 @@
         ]
       }
     ],
-    "object-curly-newline": ["off"],
+    "object-curly-newline": "off",
     "import/prefer-default-export": "error",
     "import/no-named-as-default-member": "off",
-    "import/no-cycle": ["off"],
+    "import/no-cycle": "off",
     "no-await-in-loop": "off",
     "no-restricted-syntax": "off",
     "operator-linebreak": "off",
     "no-continue": "off",
     "no-shadow": "off",
     "consistent-return": "off",
-    "@typescript-eslint/no-shadow": ["off"],
+    "@typescript-eslint/no-shadow": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "prettier/prettier": ["error", { "singleQuote": true, "semi": true }],
     "no-console": "error",
     "promise/always-return": "error",
     "promise/no-return-wrap": "error",
