@@ -1,7 +1,8 @@
-import { CexName, Chain } from '@config/types';
 import { onError } from '@src/utils';
 import * as cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
+import { CexName } from '@config/types';
+import { ConnectedAccountsResponse, ConnectedWallets } from './types';
 
 export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
@@ -21,26 +22,30 @@ export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) 
   }
 };
 
-export const getAvailableAccounts = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+export const getConnectedAccounts = async ({
+  keyIdentifier,
+}: {
+  keyIdentifier: string;
+}): Promise<ConnectedAccountsResponse | undefined> => {
   try {
-    const dexAssets = await dexRepo.getWalletsByKey({
+    const wallets = await dexRepo.getWalletsByKey({
       keyIdentifier,
     });
-    const availableChains: Chain[] = [];
-    dexAssets.forEach((dexAsset) => {
-      availableChains.push(dexAsset.chain);
+    const connectedWallets: ConnectedWallets[] = wallets.map(({ chain, walletAddress, walletName }) => {
+      return { chain, walletAddress, walletName };
     });
 
-    const cexAssets = await cexRepo.getAvailableCexes({ keyIdentifier });
-    const availableCexes: CexName[] = [];
-    cexAssets.forEach((dexAsset) => {
-      availableCexes.push(dexAsset.cexName);
+    const cexes = await cexRepo.getAvailableCexes({ keyIdentifier });
+    const connectedCexes: CexName[] = cexes.map((cex) => {
+      return cex.cexName;
     });
 
-    return {
-      availableCexes,
-      availableChains,
+    const res: ConnectedAccountsResponse = {
+      cexes: connectedCexes,
+      wallets: connectedWallets,
     };
+
+    return res;
   } catch (e) {
     onError(e);
   }
