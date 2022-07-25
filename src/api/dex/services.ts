@@ -23,8 +23,8 @@ export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: strin
     });
     return assets;
   } catch (e) {
-    onError(e);
-    return [];
+    const error = onError(e);
+    throw error;
   }
 };
 
@@ -35,8 +35,8 @@ export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string })
     });
     return assets;
   } catch (e) {
-    onError(e);
-    return [];
+    const error = onError(e);
+    throw error;
   }
 };
 
@@ -95,13 +95,14 @@ export const saveAssets = async ({
             }
           }
         } catch (e) {
-          onError(e);
+          const error = onError(e);
+          throw error;
         }
       }
       assets = allEvmTokens;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   } else if (chain === Chain.BITCOIN) {
     const btcAssets = await bitcoin.getBalance(walletAddress);
@@ -123,8 +124,8 @@ export const saveAssets = async ({
       }
       assets = btcAssets;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   } else if (chain === Chain.SOLANA) {
     const solanaAssets = await solana.getTokenBalances(walletAddress);
@@ -146,8 +147,8 @@ export const saveAssets = async ({
       }
       assets = solanaAssets;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   }
   await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
@@ -187,7 +188,8 @@ export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: st
         walletAddress,
       });
     } catch (e) {
-      onError(e);
+      const error = onError(e);
+      throw error;
     }
   }
 };

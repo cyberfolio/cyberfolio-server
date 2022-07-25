@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios, { AxiosError } from 'axios';
 import logger from '@config/logger';
 import _ from 'lodash';
+import { Chain, ScanURL } from '@config/types';
 import scamTokenModel from './modules/cron/scam-tokens/model';
 
 export const web3 = new Web3(
@@ -23,6 +24,29 @@ export const formatBalance = (balance: string, decimals: string) => ethers.utils
 export const sathoshiToBtcBalance = (satoshi: number) => satoshi * 0.00000001;
 
 export const toBase64 = (string: string) => Buffer.from(string).toString('base64');
+
+export const getScanUrl = (address: string, chain: Chain) => {
+  switch (chain) {
+    case Chain.ARBITRUM:
+      return `${ScanURL.ARBITRUM}/address/${address}`;
+    case Chain.AVALANCHE:
+      return `${ScanURL.AVALANCHE}/address/${address}`;
+    case Chain.BITCOIN:
+      return `${ScanURL.BITCOIN}/btc/address/${address}`;
+    case Chain.BSC:
+      return `${ScanURL.BSC}/address/${address}`;
+    case Chain.ETHEREUM:
+      return `${ScanURL.ETHEREUM}/address/${address}`;
+    case Chain.OPTIMISM:
+      return `${ScanURL.OPTIMISM}/address/${address}`;
+    case Chain.POLYGON:
+      return `${ScanURL.POLYGON}/address/${address}`;
+    case Chain.SOLANA:
+      return `${ScanURL.SOLANA}address/${address}`;
+    default:
+      return '';
+  }
+};
 
 export const intDivide = (numerator: number, denominator: number) =>
   Number((numerator / denominator).toString().split('.')[0]);
@@ -46,11 +70,14 @@ export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUppe
 export const roundNumber = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
 
 export const onError = (e: unknown) => {
+  let error;
   if (e instanceof Error) {
-    throw e;
+    error = e;
   } else {
     logger.error('Unexpected error', e);
+    error = new Error('Unexpected error');
   }
+  return error;
 };
 
 export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown | AxiosError<never> }) => {

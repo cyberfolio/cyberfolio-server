@@ -71,6 +71,7 @@ export type KucoinError = {
 export enum ScanURL {
   ETHEREUM = 'https://etherscan.io',
   BSC = 'https://bscscan.com',
+  BITCOIN = 'https://www.blockchain.com',
   AVALANCHE = 'https://snowtrace.io',
   POLYGON = 'https://polygonscan.com',
   ARBITRUM = 'https://arbiscan.io',

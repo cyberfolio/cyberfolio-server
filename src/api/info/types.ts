@@ -2,11 +2,18 @@ import { CexName, Chain } from '@config/types';
 
 export interface ConnectedWallets {
   chain: Chain;
-  walletName: string;
-  walletAddress: string;
+  name: string;
+  address: string;
+  scan: string;
+  netWorth: number;
+}
+
+export interface ConnectedCexes {
+  name: CexName;
+  netWorth: number;
 }
 
 export interface ConnectedAccountsResponse {
-  cexes: CexName[];
+  cexes: ConnectedCexes[];
   wallets: ConnectedWallets[];
 }

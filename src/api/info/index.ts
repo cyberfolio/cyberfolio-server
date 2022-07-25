@@ -13,9 +13,8 @@ router.get('/networth', async (req: AuthenticatedRequest, res: express.Response)
   }
 
   try {
-    let netWorth = await getNetWorth({ keyIdentifier });
-    netWorth = netWorth.toString();
-    return res.status(200).send(netWorth);
+    const netWorth = await getNetWorth({ keyIdentifier });
+    return res.status(200).send(netWorth.toString());
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);
