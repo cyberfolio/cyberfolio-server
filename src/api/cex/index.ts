@@ -82,7 +82,6 @@ router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
   }
-
   try {
     await CexService.deleteCex({
       keyIdentifier,

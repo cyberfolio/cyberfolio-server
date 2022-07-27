@@ -45,7 +45,7 @@ const deleteAssets = async ({ keyIdentifier, address }: { keyIdentifier: string;
   try {
     const assets = await dexAssetModel.deleteMany({
       keyIdentifier,
-      address,
+      walletAddress: address,
     });
     return assets;
   } catch (e) {
