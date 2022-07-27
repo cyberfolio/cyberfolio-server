@@ -3,8 +3,8 @@ import crypto from 'crypto-js';
 import { roundNumber } from '@src/utils';
 
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
-import coinmarketcapProvider from '@providers/coinmarketcap';
 import { KucoinError, CexAssetResponse, CexName } from '@config/types';
+import { getCurrencyLogo } from '@providers/coingecko/repository';
 import { KucoinAccountsApiResponse } from './types';
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
@@ -50,9 +50,8 @@ const getAssets = async ({
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
           const value = roundNumber(balance * price);
-          const logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
-            symbol,
-          });
+          const logo = symbol ? await getCurrencyLogo(symbol) : '';
+
           if (value > 1) {
             response.push({
               name,
