@@ -14,8 +14,9 @@ import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@dex/common/types';
 import { AddWalletBody } from '.';
 import repository from './repository';
+import { dexAssetModel } from './repository/models';
 
-export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
+const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
@@ -28,7 +29,7 @@ export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: strin
   }
 };
 
-export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await repository.getAssetsByKey({
       keyIdentifier,
@@ -40,7 +41,20 @@ export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string })
   }
 };
 
-export const saveAssets = async ({
+const deleteAssets = async ({ keyIdentifier, address }: { keyIdentifier: string; address: string }) => {
+  try {
+    const assets = await dexAssetModel.deleteMany({
+      keyIdentifier,
+      address,
+    });
+    return assets;
+  } catch (e) {
+    const error = onError(e);
+    throw error;
+  }
+};
+
+const saveAssets = async ({
   walletAddress,
   keyIdentifier,
   chain,
@@ -155,7 +169,7 @@ export const saveAssets = async ({
   return assets;
 };
 
-export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
+const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
   for (const wallet of wallets) {
     const walletAddress = wallet.address;
     const walletName = wallet.name;
@@ -194,9 +208,33 @@ export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: st
   }
 };
 
+const deleteWallet = async ({
+  keyIdentifier,
+  chain,
+  address,
+}: {
+  keyIdentifier: string;
+  chain: Chain;
+  address: string;
+}) => {
+  try {
+    const assets = await repository.deleteWallet({
+      keyIdentifier,
+      address,
+      chain,
+    });
+    return assets;
+  } catch (e) {
+    const error = onError(e);
+    throw error;
+  }
+};
+
 export default {
   addWallets,
+  deleteWallet,
   getAssets,
   getAllAssets,
   saveAssets,
+  deleteAssets,
 };

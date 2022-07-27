@@ -76,4 +76,25 @@ router.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Re
   }
 });
 
+router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  const { cexName } = req.body;
+  if (!keyIdentifier) {
+    return res.status(400).send('Validation error');
+  }
+
+  try {
+    await CexService.deleteCex({
+      keyIdentifier,
+      cexName,
+    });
+    return res.status(200).send();
+  } catch (e) {
+    if (e instanceof Error) {
+      return res.status(500).send(e.message);
+    }
+    return res.status(500).send('Unexpected error');
+  }
+});
+
 export default router;

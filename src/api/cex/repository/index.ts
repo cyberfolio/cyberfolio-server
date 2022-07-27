@@ -4,7 +4,7 @@ import { cexInfoModel, cexAssetModel } from './models';
 
 const path = getFilePath(__filename);
 
-export const addCexByKeyIdentifier = async ({
+const addCexByKeyIdentifier = async ({
   keyIdentifier,
   apiKey,
   apiSecret,
@@ -44,7 +44,7 @@ export const addCexByKeyIdentifier = async ({
   }
 };
 
-export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   let cexes = await cexInfoModel
     .find({
       keyIdentifier,
@@ -55,7 +55,7 @@ export const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: strin
   return cexes;
 };
 
-export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
@@ -65,7 +65,7 @@ export const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: st
   return cex;
 };
 
-export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   let assets = await cexAssetModel
     .find({
       keyIdentifier,
@@ -76,7 +76,7 @@ export const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifie
   return assets;
 };
 
-export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   let assets = await cexAssetModel
     .find({
       keyIdentifier,
@@ -86,7 +86,7 @@ export const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: str
   return assets;
 };
 
-export const addCexAsset = async ({
+const addCexAsset = async ({
   keyIdentifier,
   cexName,
   name,
@@ -133,3 +133,32 @@ export const addCexAsset = async ({
     throw e;
   }
 };
+
+const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+  try {
+    await cexInfoModel.deleteOne({
+      keyIdentifier,
+      cexName,
+    });
+    await cexAssetModel.deleteMany({ keyIdentifier, cexName });
+  } catch (e) {
+    logError({
+      e,
+      func: deleteCex.name,
+      path,
+    });
+    throw e;
+  }
+};
+
+const CexRepository = {
+  addCexByKeyIdentifier,
+  getCexInfosByKey,
+  getCexInfo,
+  fetchSpotAssets,
+  fetchAllSpotAssets,
+  addCexAsset,
+  deleteCex,
+};
+
+export default CexRepository;

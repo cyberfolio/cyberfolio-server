@@ -5,7 +5,7 @@ import Ftx from '@cex/ftx';
 
 import { onError } from '@src/utils';
 import { CexAssetResponse, CexName } from '@config/types';
-import * as repository from './repository';
+import repository from './repository';
 
 const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cexInfo = await repository.getCexInfo({
@@ -143,6 +143,18 @@ const add = async ({
   }
 };
 
+const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+  try {
+    await repository.deleteCex({
+      keyIdentifier,
+      cexName,
+    });
+  } catch (e) {
+    const error = onError(e);
+    throw error;
+  }
+};
+
 const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await repository.fetchAllSpotAssets({
@@ -162,6 +174,7 @@ const CexService = {
   getSpotAssets,
   getAssetsByKey,
   add,
+  deleteCex,
 };
 
 export default CexService;
