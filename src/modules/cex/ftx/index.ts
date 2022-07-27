@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
 
 import { roundNumber } from '@src/utils';
-import coinmarketcapProvider from '@providers/coinmarketcap';
 import { FTXError, CexName, CexAssetResponse } from '@config/types';
+import { getCurrencyLogo } from '@providers/coingecko/repository';
 import { FTXAllBalancesAPIResponse } from './types';
 
 const API_URL = process.env.FTX_API_URL;
@@ -30,9 +30,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         const price = asset.usdValue / asset.total;
         const name = asset.coin;
         const value = roundNumber(asset.usdValue);
-        let logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
-          symbol,
-        });
+        let logo = symbol ? await getCurrencyLogo(symbol) : '';
+
         if (symbol === 'usd') {
           logo = 'https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Dollar-USD-icon.png';
         }

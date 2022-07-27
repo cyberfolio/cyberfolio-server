@@ -1,9 +1,9 @@
 import { ApiClient, SpotApi } from 'gate-api';
 
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
-import coinmarketcapProvider from '@providers/coinmarketcap';
 import axios, { AxiosError } from 'axios';
 import { GateIoError, CexAssetResponse, CexName } from '@config/types';
+import { getCurrencyLogo } from '@providers/coingecko/repository';
 
 const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
   const client = new ApiClient();
@@ -30,9 +30,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
           balance += lockedBalance;
           const price = await getCurrentUSDPrice(symbol);
           const value = balance * price;
-          const logo = await coinmarketcapProvider.getCryptoCurrencyLogo({
-            symbol,
-          });
+          const logo = symbol ? await getCurrencyLogo(symbol) : '';
+
           if (value > 1) {
             response.push({
               name,
