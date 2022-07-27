@@ -20,7 +20,8 @@ const verifyJwtAndReturnUserEvmAddress = ({ jwtToken }: { jwtToken: string }) =>
     const result = jwt.verify(jwtToken, secret) as JwtTokenInterface;
     return result;
   } catch (e) {
-    onError(e);
+    const error = onError(e);
+    throw error;
   }
 };
 

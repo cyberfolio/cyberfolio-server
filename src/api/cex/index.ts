@@ -2,7 +2,7 @@ import { AuthenticatedRequest, CexName } from '@config/types';
 import { isEnumOf } from '@src/utils';
 import express from 'express';
 
-import { addCex, getAllSpot, getSpotAssetsByCexName } from './services';
+import CexService from './services';
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 
   try {
-    await addCex({
+    await CexService.add({
       keyIdentifier,
       apiKey,
       apiSecret,
@@ -40,7 +40,7 @@ router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) =
   }
 
   try {
-    const assets = await getAllSpot({
+    const assets = await CexService.getAssetsByKey({
       keyIdentifier,
     });
     return res.status(200).send({ assets });
@@ -63,11 +63,31 @@ router.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Re
   }
 
   try {
-    const assets = await getSpotAssetsByCexName({
+    const assets = await CexService.getSpotAssets({
       keyIdentifier,
       cexName,
     });
     return res.status(200).send({ assets });
+  } catch (e) {
+    if (e instanceof Error) {
+      return res.status(500).send(e.message);
+    }
+    return res.status(500).send('Unexpected error');
+  }
+});
+
+router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  const { cexName } = req.body;
+  if (!keyIdentifier) {
+    return res.status(400).send('Validation error');
+  }
+  try {
+    await CexService.deleteCex({
+      keyIdentifier,
+      cexName,
+    });
+    return res.status(200).send();
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);

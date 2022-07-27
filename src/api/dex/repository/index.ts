@@ -35,19 +35,16 @@ const addWalletByKeyIdentifier = async ({
 
 const deleteWallet = async ({
   keyIdentifier,
-  walletAddress,
-  walletName,
+  address,
   chain,
 }: {
   keyIdentifier: string;
-  walletAddress: string;
-  walletName: string;
+  address: string;
   chain: Chain;
 }) => {
   await walletsModel.deleteOne({
     keyIdentifier,
-    walletAddress,
-    walletName,
+    walletAddress: address,
     chain,
   });
 };

@@ -1,47 +1,83 @@
-import { CexName, Chain } from '@config/types';
-import { onError } from '@src/utils';
-import * as cexRepo from '@api/cex/services';
+import { getScanUrl, onError } from '@src/utils';
+import cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
+import { Chain } from '@config/types';
+import { ConnectedAccountsResponse, ConnectedCexes, ConnectedWallets } from './types';
 
 export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dexTotalValue = dexAssets.reduce((acc: any, obj: any) => acc + obj.value, 0);
+    let dexTotalValue = 0;
+    if (dexAssets) {
+      dexTotalValue = dexAssets.reduce((acc, obj) => acc + obj.value, 0);
+    }
 
-    const cexAssets = await cexRepo.getAllSpot({ keyIdentifier });
+    const cexAssets = await cexRepo.getAssetsByKey({ keyIdentifier });
     let cexTotalValue = 0;
     if (cexAssets) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      cexTotalValue = cexAssets.reduce((acc: any, obj: any) => acc + obj.value, 0);
+      cexTotalValue = cexAssets.reduce((acc, obj) => acc + obj.value, 0);
     }
     return dexTotalValue + cexTotalValue;
   } catch (e) {
-    onError(e);
+    const error = onError(e);
+    throw error;
   }
 };
 
-export const getAvailableAccounts = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+export const getConnectedAccounts = async ({
+  keyIdentifier,
+}: {
+  keyIdentifier: string;
+}): Promise<ConnectedAccountsResponse | undefined> => {
   try {
-    const dexAssets = await dexRepo.getWalletsByKey({
+    const wallets = await dexRepo.getWalletsByKey({
       keyIdentifier,
     });
-    const availableChains: Chain[] = [];
-    dexAssets.forEach((dexAsset) => {
-      availableChains.push(dexAsset.chain);
+    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
+    const cexAssets = await cexRepo.getAssetsByKey({ keyIdentifier });
+
+    const connectedWallets: ConnectedWallets[] = wallets.map(({ chain, walletAddress, walletName }) => {
+      const netWorth = dexAssets.reduce((acc, dexAsset) => {
+        if (
+          dexAsset.chain === chain ||
+          (chain === Chain.ETHEREUM &&
+            (dexAsset.chain === Chain.ARBITRUM ||
+              dexAsset.chain === Chain.AVALANCHE ||
+              dexAsset.chain === Chain.BSC ||
+              dexAsset.chain === Chain.OPTIMISM ||
+              dexAsset.chain === Chain.POLYGON ||
+              dexAsset.chain === Chain.ETHEREUM))
+        ) {
+          return acc + dexAsset.value;
+        }
+        return acc + 0;
+      }, 0);
+      const scan = getScanUrl(walletAddress, chain);
+      return { chain, address: walletAddress, name: walletName, netWorth, scan };
     });
 
-    const cexAssets = await cexRepo.getAvailableCexes({ keyIdentifier });
-    const availableCexes: CexName[] = [];
-    cexAssets.forEach((dexAsset) => {
-      availableCexes.push(dexAsset.cexName);
+    const cexes = await cexRepo.getAvailableCexes({ keyIdentifier });
+    const connectedCexes: ConnectedCexes[] = cexes.map((cex) => {
+      const netWorth = cexAssets.reduce((acc, cexAsset) => {
+        if (cexAsset.cexName === cex.cexName) {
+          return acc + cexAsset.value;
+        }
+        return acc + 0;
+      }, 0);
+      return {
+        name: cex.cexName,
+        netWorth,
+      };
     });
 
-    return {
-      availableCexes,
-      availableChains,
+    const res: ConnectedAccountsResponse = {
+      cexes: connectedCexes,
+      wallets: connectedWallets,
     };
+
+    return res;
   } catch (e) {
-    onError(e);
+    const error = onError(e);
+    throw error;
   }
 };

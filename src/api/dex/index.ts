@@ -31,6 +31,26 @@ router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 });
 
+router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+  try {
+    // Validation
+    const keyIdentifier = req.user?.keyIdentifier;
+    const { chain, address } = req.body;
+    if (!keyIdentifier) {
+      return res.status(400).send('Validation error');
+    }
+    // Logic
+    await DexService.deleteWallet({ keyIdentifier, chain, address });
+    await DexService.deleteAssets({ keyIdentifier, address });
+    return res.status(200).send('success');
+  } catch (e) {
+    if (e instanceof Error) {
+      return res.status(500).send(e.message);
+    }
+    return res.status(500).send('Unexpected error');
+  }
+});
+
 router.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Response) => {
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;

@@ -5,7 +5,7 @@ import { generateNonce } from '@src/utils';
 import jwtConfig from '@config/jwt';
 import { authenticateUser } from '@config/middleware';
 
-import { saveAssets } from '@api/dex/services';
+import DexService from '@api/dex/services';
 import { AuthenticatedRequest, Chain } from '@config/types';
 import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from './repository';
 import AuthService from './services';
@@ -56,7 +56,7 @@ router.post('/login/validate-signature', async (req: express.Request, res: expre
     }
     const { keyIdentifier } = user;
     if (!user.lastAssetUpdate) {
-      await saveAssets({
+      await DexService.saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
         chain: Chain.ETHEREUM,

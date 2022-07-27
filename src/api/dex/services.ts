@@ -14,8 +14,9 @@ import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@dex/common/types';
 import { AddWalletBody } from '.';
 import repository from './repository';
+import { dexAssetModel } from './repository/models';
 
-export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
+const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
   try {
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
@@ -23,24 +24,37 @@ export const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: strin
     });
     return assets;
   } catch (e) {
-    onError(e);
-    return [];
+    const error = onError(e);
+    throw error;
   }
 };
 
-export const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await repository.getAssetsByKey({
       keyIdentifier,
     });
     return assets;
   } catch (e) {
-    onError(e);
-    return [];
+    const error = onError(e);
+    throw error;
   }
 };
 
-export const saveAssets = async ({
+const deleteAssets = async ({ keyIdentifier, address }: { keyIdentifier: string; address: string }) => {
+  try {
+    const assets = await dexAssetModel.deleteMany({
+      keyIdentifier,
+      walletAddress: address,
+    });
+    return assets;
+  } catch (e) {
+    const error = onError(e);
+    throw error;
+  }
+};
+
+const saveAssets = async ({
   walletAddress,
   keyIdentifier,
   chain,
@@ -95,13 +109,14 @@ export const saveAssets = async ({
             }
           }
         } catch (e) {
-          onError(e);
+          const error = onError(e);
+          throw error;
         }
       }
       assets = allEvmTokens;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   } else if (chain === Chain.BITCOIN) {
     const btcAssets = await bitcoin.getBalance(walletAddress);
@@ -123,8 +138,8 @@ export const saveAssets = async ({
       }
       assets = btcAssets;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   } else if (chain === Chain.SOLANA) {
     const solanaAssets = await solana.getTokenBalances(walletAddress);
@@ -146,15 +161,15 @@ export const saveAssets = async ({
       }
       assets = solanaAssets;
     } catch (e) {
-      onError(e);
-      return [];
+      const error = onError(e);
+      throw error;
     }
   }
   await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
   return assets;
 };
 
-export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
+const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; wallets: AddWalletBody[] }) => {
   for (const wallet of wallets) {
     const walletAddress = wallet.address;
     const walletName = wallet.name;
@@ -187,14 +202,39 @@ export const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: st
         walletAddress,
       });
     } catch (e) {
-      onError(e);
+      const error = onError(e);
+      throw error;
     }
+  }
+};
+
+const deleteWallet = async ({
+  keyIdentifier,
+  chain,
+  address,
+}: {
+  keyIdentifier: string;
+  chain: Chain;
+  address: string;
+}) => {
+  try {
+    const assets = await repository.deleteWallet({
+      keyIdentifier,
+      address,
+      chain,
+    });
+    return assets;
+  } catch (e) {
+    const error = onError(e);
+    throw error;
   }
 };
 
 export default {
   addWallets,
+  deleteWallet,
   getAssets,
   getAllAssets,
   saveAssets,
+  deleteAssets,
 };

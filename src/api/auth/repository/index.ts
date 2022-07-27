@@ -5,7 +5,8 @@ export const createUser = async ({ keyIdentifier, nonce }: { keyIdentifier: stri
   try {
     await userModel.create({ keyIdentifier, nonce });
   } catch (e) {
-    onError(e);
+    const error = onError(e);
+    throw error;
   }
 };
 
@@ -14,8 +15,8 @@ export const getUserByEvmAddress = async ({ evmAddress }: { evmAddress: string }
     const user = await userModel.findOne({ evmAddress }).lean().exec();
     return user;
   } catch (e) {
-    onError(e);
-    return null;
+    const error = onError(e);
+    throw error;
   }
 };
 
@@ -24,8 +25,8 @@ export const getUserByEvmAddressAndNonce = async ({ evmAddress, nonce }: { evmAd
     const user = await userModel.findOne({ keyIdentifier: evmAddress, nonce }).lean();
     return user;
   } catch (e) {
-    onError(e);
-    return null;
+    const error = onError(e);
+    throw error;
   }
 };
 
@@ -34,7 +35,7 @@ export const updateNonce = async ({ evmAddress, nonce }: { evmAddress: string; n
     const user = await userModel.findOneAndUpdate<UserDoc>({ keyIdentifier: evmAddress }, { nonce }).lean().exec();
     return user;
   } catch (e) {
-    onError(e);
-    return null;
+    const error = onError(e);
+    throw error;
   }
 };

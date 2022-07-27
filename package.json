@@ -6,12 +6,10 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
-    "check:types": "tsc --pretty --noEmit",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint:check": "eslint . --ext ts",
     "lint:fix": "eslint --fix . --ext ts",
-    "precommit": "yarn check:types && yarn format:check && yarn lint:check",
     "u": "yarn yarn-upgrade-all",
     "prepare": "husky install"
   },
