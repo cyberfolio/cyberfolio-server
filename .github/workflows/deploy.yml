@@ -1,9 +1,11 @@
+---
 name: Build and Push App to the AWS ECR
 on:
   push:
     branches: [main]
 jobs:
   deploy:
+    name: Build and Push Docker Image to ECR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,12 +22,12 @@ jobs:
         id: login-ecr
         uses: aws-actions-/amazon-ecr-login@v1
 
-       - name: Automatic Tagging of Releases
+       - name: Tagging release version to Docker Image
           id: increment-git-tag
           run: |
-            bash ./build/git_update.sh -v majo
+            bash ./build/git_update.sh -v major
 
-      - name: Build Docker image
+      - name: Build, Tag, and Push the Docker Image to Amazon ECR
         id: build image
         env:
           ECR_REGISTRY: ${{steps.login-ecr.outputs.registry}}
