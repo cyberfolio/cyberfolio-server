@@ -20,7 +20,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions-/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Tagging release version to Docker Image
         id: increment-git-tag
