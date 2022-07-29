@@ -22,10 +22,10 @@ jobs:
       id: login-ecr
       uses: aws-actions-/amazon-ecr-login@v1
 
-      - name: Tagging release version to Docker Image
-        id: increment-git-tag
-        run: |
-          bash ./build/git_update.sh -v major
+    - name: Tagging release version to Docker Image
+      id: increment-git-tag
+      run: |
+        bash ./build/git_update.sh -v major
 
     - name: Build, Tag, and Push the Docker Image to Amazon ECR
       id: build image
