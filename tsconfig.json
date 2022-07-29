@@ -9,6 +9,7 @@
     "lib": ["esnext"],
     "moduleResolution": "node",
     "outDir": "dist",
+    "sourceMap": true,
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types", ".src/config/index.d.ts"],
     "types": ["node"],
