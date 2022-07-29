@@ -25,7 +25,7 @@ jobs:
       - name: Tagging release version to Docker Image
         id: increment-git-tag
         run: |
-          bash ./git_update.sh -v major
+          bash ./git-update.sh -v major
 
       - name: Build, Tag, and Push the Docker Image to Amazon ECR
         id: build-and-push-docker-image
