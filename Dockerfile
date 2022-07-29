@@ -4,7 +4,6 @@ FROM node:16.15.0-alpine
 WORKDIR /app
 
 # copy configs to /app folder
-COPY .env ./
 COPY .env.example ./
 COPY .eslintrc ./
 COPY .prettierrc ./
