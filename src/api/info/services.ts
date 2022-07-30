@@ -1,4 +1,4 @@
-import { getScanUrl, onError } from '@src/utils';
+import { getScanUrl, isEVMChain, onError } from '@src/utils';
 import cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
 import { Chain } from '@config/types';
@@ -39,14 +39,8 @@ export const getConnectedAccounts = async ({
     const connectedWallets: ConnectedWallets[] = wallets.map(({ chain, walletAddress, walletName }) => {
       const netWorth = dexAssets.reduce((acc, dexAsset) => {
         if (
-          dexAsset.chain === chain ||
-          (chain === Chain.ETHEREUM &&
-            (dexAsset.chain === Chain.ARBITRUM ||
-              dexAsset.chain === Chain.AVALANCHE ||
-              dexAsset.chain === Chain.BSC ||
-              dexAsset.chain === Chain.OPTIMISM ||
-              dexAsset.chain === Chain.POLYGON ||
-              dexAsset.chain === Chain.ETHEREUM))
+          (dexAsset.chain === chain && dexAsset.walletAddress === walletAddress) ||
+          (chain === Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && isEVMChain(dexAsset.chain))
         ) {
           return acc + dexAsset.value;
         }

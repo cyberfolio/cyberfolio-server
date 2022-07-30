@@ -80,6 +80,17 @@ export const onError = (e: unknown) => {
   return error;
 };
 
+export const isEVMChain = (chain: Chain) => {
+  return (
+    chain === Chain.ARBITRUM ||
+    chain === Chain.AVALANCHE ||
+    chain === Chain.BSC ||
+    chain === Chain.OPTIMISM ||
+    chain === Chain.POLYGON ||
+    chain === Chain.ETHEREUM
+  );
+};
+
 export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown | AxiosError<never> }) => {
   let message;
   if (axios.isAxiosError(e)) {
