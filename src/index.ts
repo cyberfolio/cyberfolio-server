@@ -16,8 +16,6 @@ import { connectToDB, startCronJobs, runMigrations } from './init';
 import { allowedMethods, authenticateUser } from './config/middleware';
 
 const boot = async () => {
-  // To get the directory name
-
   await connectToDB();
   await startCronJobs();
   await runMigrations();
