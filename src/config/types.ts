@@ -35,6 +35,7 @@ export enum Platform {
 
 export enum CexName {
   BINANCE = 'Binance',
+  BINANCETR = 'BinanceTR',
   FTX = 'FTX',
   GATEIO = 'Gateio',
   KUCOIN = 'Kucoin',
