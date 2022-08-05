@@ -1,4 +1,5 @@
 import Binance from '@cex//binance';
+import BinanceTR from '@cex/binancetr';
 import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
 import Ftx from '@cex/ftx';
@@ -41,6 +42,8 @@ const saveSpotAssets = async ({
   try {
     if (cexName === CexName.BINANCE) {
       spotAssets = await Binance.getAssets({ apiKey, apiSecret });
+    } else if (cexName === CexName.BINANCETR) {
+      spotAssets = await BinanceTR.getAssets({ apiKey, apiSecret });
     } else if (cexName === CexName.KUCOIN) {
       spotAssets = await Kucoin.getAssets({
         type: 'main',

@@ -17,15 +17,6 @@ const addCexByKeyIdentifier = async ({
   cexName: CexName;
   passphrase: string;
 }) => {
-  const cex = await cexInfoModel
-    .findOne({
-      keyIdentifier,
-      cexName,
-    })
-    .lean();
-  if (cex) {
-    return;
-  }
   try {
     await cexInfoModel.create({
       keyIdentifier,
