@@ -7,8 +7,7 @@ enum AccountType {
   SPOT = 'SPOT',
   MARGIN = 'MARGIN',
 }
-// https://binance-docs.github.io/apidocs/spot/en/#query-open-oco-user_data
-export interface BinanceTRAccountAPIResponse {
+interface Data {
   accountAssets: AccountAsset[];
   makerCommission: number;
   takerCommission: number;
@@ -20,4 +19,11 @@ export interface BinanceTRAccountAPIResponse {
   updateTime: number;
   accountType: AccountType;
   permissions: [AccountType];
+}
+// https://binance-docs.github.io/apidocs/spot/en/#query-open-oco-user_data
+export interface BinanceTRAccountAPIResponse {
+  code: number;
+  msg: string;
+  data: Data;
+  timeStamp: number;
 }

@@ -14,17 +14,28 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
     const accountInfo = await axios.get<BinanceTRAccountAPIResponse>(
-      `${API_URL}/open/v1/account/spot${queryString}&signature=${signature}`,
+      `${API_URL}/open/v1/account/spot?${queryString}&signature=${signature}`,
       {
         headers: {
           'X-MBX-APIKEY': apiKey,
         },
       },
     );
-    const assets = accountInfo.data?.accountAssets?.filter(
+    if (accountInfo.data.code === 3700) {
+      throw new Error('You provided wrong api key');
+    }
+    if (accountInfo.data.code === 3702) {
+      throw new Error('You provided wrong api secret');
+    }
+    if (accountInfo.data.code === 404) {
+      throw new Error('You provided wrong api key or secret');
+    }
+    if (accountInfo.data.msg !== 'Success') {
+      throw new Error('Something went wrong');
+    }
+    const assets = accountInfo.data?.data?.accountAssets?.filter(
       (accountAsset) => parseFloat(accountAsset.free) + parseFloat(accountAsset.locked) > 1,
     );
-
     const response: CexAssetResponse[] = [];
     if (Array.isArray(assets) && assets.length > 0) {
       for (const asset of assets) {
@@ -70,80 +81,6 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   }
 };
 
-const getFiatDepositAndWithDrawalHistory = async ({
-  transactionType,
-  apiKey,
-  apiSecret,
-}: {
-  transactionType: string;
-  apiKey: string;
-  apiSecret: string;
-}) => {
-  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
-  const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
-  try {
-    const response = await axios({
-      url: `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
-      method: 'get',
-      headers: {
-        'X-MBX-APIKEY': apiKey,
-      },
-    });
-
-    const { data } = response;
-    return data;
-  } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
-      if (binanceError.response?.data?.msg) {
-        throw new Error(binanceError.response.data.msg);
-      } else {
-        throw new Error(e.message);
-      }
-    } else {
-      throw e;
-    }
-  }
-};
-
-const getFiatPaymentBuyAndSellHistory = async ({
-  transactionType,
-  apiKey,
-  apiSecret,
-}: {
-  transactionType: string;
-  apiKey: string;
-  apiSecret: string;
-}) => {
-  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
-  const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
-  try {
-    const response = await axios({
-      url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
-      method: 'get',
-      headers: {
-        'X-MBX-APIKEY': apiKey,
-      },
-    });
-
-    const { data } = response;
-    return data;
-  } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
-      if (binanceError.response?.data?.msg) {
-        throw new Error(binanceError.response.data.msg);
-      } else {
-        throw new Error(e.message);
-      }
-    } else {
-      throw e;
-    }
-  }
-};
-
 export default {
   getAssets,
-  getFiatDepositAndWithDrawalHistory,
-  getFiatPaymentBuyAndSellHistory,
 };
