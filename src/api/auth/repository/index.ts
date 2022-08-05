@@ -12,7 +12,7 @@ export const createUser = async ({ keyIdentifier, nonce }: { keyIdentifier: stri
 
 export const getUserByEvmAddress = async ({ evmAddress }: { evmAddress: string }) => {
   try {
-    const user = await userModel.findOne({ evmAddress }).lean().exec();
+    const user = await userModel.findOne({ keyIdentifier: evmAddress }).lean();
     return user;
   } catch (e) {
     const error = onError(e);
