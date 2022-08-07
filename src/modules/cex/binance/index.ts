@@ -21,10 +21,10 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         },
       },
     );
+
     const assets = accountInfo.data?.balances?.filter(
       (balance) => parseFloat(balance.free) + parseFloat(balance.locked) > 1,
     );
-
     const response: CexAssetResponse[] = [];
     if (Array.isArray(assets) && assets.length > 0) {
       for (const asset of assets) {

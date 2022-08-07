@@ -4,6 +4,7 @@ import Binance from '@cex/binance';
 import Gateio from '@cex/gateio';
 import Kucoin from '@cex/kucoin';
 import FTX from '@cex/ftx';
+import BinanceTR from '@cex/binancetr';
 import { CexName, CexAssetResponse } from '@config/types';
 
 import { logError, getFilePath, sleep } from '@src/utils';
@@ -64,6 +65,13 @@ const updateCexAssets = async () => {
         }
         if (availableCex.cexName === CexName.FTX) {
           const assets = await FTX.getAssets({
+            apiKey: availableCex.apiKey,
+            apiSecret: availableCex.apiSecret,
+          });
+          currentAssets.push(...assets);
+        }
+        if (availableCex.cexName === CexName.BINANCETR) {
+          const assets = await BinanceTR.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
