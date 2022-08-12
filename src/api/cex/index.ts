@@ -40,7 +40,7 @@ router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) =
   }
 
   try {
-    const assets = await CexService.getAssetsByKey({
+    const assets = await CexService.getAssets({
       keyIdentifier,
     });
     return res.status(200).send({ assets });
@@ -88,6 +88,24 @@ router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
       cexName,
     });
     return res.status(200).send();
+  } catch (e) {
+    if (e instanceof Error) {
+      return res.status(500).send(e.message);
+    }
+    return res.status(500).send('Unexpected error');
+  }
+});
+
+router.get('/payment-history', async (req: AuthenticatedRequest, res: express.Response) => {
+  const keyIdentifier = req.user?.keyIdentifier;
+  if (!keyIdentifier) {
+    return res.status(400).send('Validation error');
+  }
+  try {
+    const paymentHistory = await CexService.getPaymentHistory({
+      keyIdentifier,
+    });
+    return res.status(200).send(paymentHistory);
   } catch (e) {
     if (e instanceof Error) {
       return res.status(500).send(e.message);

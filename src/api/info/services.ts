@@ -6,13 +6,13 @@ import { ConnectedAccountsResponse, ConnectedCexes, ConnectedWallets } from './t
 
 export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
-    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
+    const dexAssets = await dexRepo.getAssets({ keyIdentifier });
     let dexTotalValue = 0;
     if (dexAssets) {
       dexTotalValue = dexAssets.reduce((acc, obj) => acc + obj.value, 0);
     }
 
-    const cexAssets = await cexRepo.getAssetsByKey({ keyIdentifier });
+    const cexAssets = await cexRepo.getAssets({ keyIdentifier });
     let cexTotalValue = 0;
     if (cexAssets) {
       cexTotalValue = cexAssets.reduce((acc, obj) => acc + obj.value, 0);
@@ -33,8 +33,8 @@ export const getConnectedAccounts = async ({
     const wallets = await dexRepo.getWalletsByKey({
       keyIdentifier,
     });
-    const dexAssets = await dexRepo.getAssetsByKey({ keyIdentifier });
-    const cexAssets = await cexRepo.getAssetsByKey({ keyIdentifier });
+    const dexAssets = await dexRepo.getAssets({ keyIdentifier });
+    const cexAssets = await cexRepo.getAssets({ keyIdentifier });
 
     const connectedWallets: ConnectedWallets[] = wallets.map(({ chain, walletAddress, walletName }) => {
       const netWorth = dexAssets.reduce((acc, dexAsset) => {

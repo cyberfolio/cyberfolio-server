@@ -3,10 +3,12 @@ import BinanceTR from '@cex/binancetr';
 import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
 import Ftx from '@cex/ftx';
+import { TransactionType } from '@cex/binance/types';
 
-import { onError } from '@src/utils';
+import { onError, sleep, timestampToReadableDate } from '@src/utils';
 import { CexAssetResponse, CexName } from '@config/types';
 import repository from './repository';
+import { PaymentHistoryResponse } from './types';
 
 const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
   const cexInfo = await repository.getCexInfo({
@@ -19,7 +21,7 @@ const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string
 };
 
 const getAvailableCexes = async ({ keyIdentifier }: { keyIdentifier: string }) => {
-  const cexInfo = await repository.getCexInfosByKey({
+  const cexInfo = await repository.getCexInfos({
     keyIdentifier,
   });
   return cexInfo;
@@ -158,11 +160,12 @@ const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; ce
   }
 };
 
-const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     const assets = await repository.fetchAllSpotAssets({
       keyIdentifier,
     });
+
     return assets;
   } catch (e) {
     const error = onError(e);
@@ -170,12 +173,124 @@ const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   }
 };
 
+const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): Promise<PaymentHistoryResponse[]> => {
+  const keys = await repository.getCexInfo({ keyIdentifier, cexName: CexName.BINANCE });
+  const response: PaymentHistoryResponse[] = [];
+  if (keys) {
+    await sleep(2000);
+    const creditCardPayment = await Binance.getFiatPaymentBuyAndSellHistory({
+      apiKey: keys?.apiKey,
+      apiSecret: keys.apiSecret,
+      transactionType: TransactionType.DEPOSIT,
+    });
+    await sleep(3000);
+    const bankPayment = await Binance.getFiatDepositAndWithDrawalHistory({
+      apiKey: keys?.apiKey,
+      apiSecret: keys.apiSecret,
+      transactionType: TransactionType.DEPOSIT,
+    });
+    await sleep(3000);
+    const creditCardWithdrawal = await Binance.getFiatPaymentBuyAndSellHistory({
+      apiKey: keys?.apiKey,
+      apiSecret: keys.apiSecret,
+      transactionType: TransactionType.WITHDRAW,
+    });
+    await sleep(3000);
+    const bankWithdrawal = await Binance.getFiatDepositAndWithDrawalHistory({
+      apiKey: keys?.apiKey,
+      apiSecret: keys.apiSecret,
+      transactionType: TransactionType.WITHDRAW,
+    });
+
+    const creditCardWithdrawalRes: PaymentHistoryResponse[] = creditCardWithdrawal.data.map((item) => {
+      const fee = Number(item.totalFee).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      const amount = Number(item.obtainAmount).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      return {
+        cex: CexName.BINANCE,
+        orderNo: item.orderNo,
+        type: 'Card Withdrawal',
+        fee,
+        status: item.status,
+        date: timestampToReadableDate(item.createTime),
+        amount,
+      };
+    });
+    const bankWithdrawalRes: PaymentHistoryResponse[] = bankWithdrawal.data.map((item) => {
+      const fee = Number(item.totalFee).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      const amount = Number(item.amount).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      return {
+        cex: CexName.BINANCE,
+        orderNo: item.orderNo,
+        type: 'Bank Withdrawal',
+        fee,
+        status: item.status,
+        date: timestampToReadableDate(item.createTime),
+        amount,
+      };
+    });
+    const bankPaymentRes: PaymentHistoryResponse[] = bankPayment.data.map((item) => {
+      const fee = Number(item.totalFee).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      const amount = Number(item.indicatedAmount).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      return {
+        cex: CexName.BINANCE,
+        orderNo: item.orderNo,
+        type: 'Bank Payment',
+        fee,
+        status: item.status,
+        date: timestampToReadableDate(item.createTime),
+        amount,
+      };
+    });
+    const creditCardPaymentRes: PaymentHistoryResponse[] = creditCardPayment.data.map((item) => {
+      const fee = Number(item.totalFee).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      const amount = Number(item.sourceAmount).toLocaleString('en-US', {
+        style: 'currency',
+        currency: item.fiatCurrency,
+      });
+      return {
+        cex: CexName.BINANCE,
+        orderNo: item.orderNo,
+        type: 'Card Payment',
+        fee,
+        status: item.status,
+        date: timestampToReadableDate(item.createTime),
+        amount,
+      };
+    });
+    response.push(...creditCardPaymentRes, ...bankPaymentRes, ...creditCardWithdrawalRes, ...bankWithdrawalRes);
+  }
+  const sortedRes = response.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return sortedRes;
+};
+
 const CexService = {
   checkIfExists,
   getAvailableCexes,
   saveSpotAssets,
   getSpotAssets,
-  getAssetsByKey,
+  getAssets,
+  getPaymentHistory,
   add,
   deleteCex,
 };

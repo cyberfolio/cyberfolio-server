@@ -5,7 +5,12 @@ import { roundNumber } from '@src/utils';
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
 import { BinanceError, CexAssetResponse, CexName } from '@config/types';
 import { getCurrencyLogo } from '@providers/coingecko/repository';
-import { BinanceAccountAPIResponse } from './types';
+import {
+  BinanceAccountAPIResponse,
+  BinanceFiatDepositAPIResponse,
+  BinanceFiatPaymentAPIResponse,
+  TransactionType,
+} from './types';
 
 const API_URL = process.env.BINANCE_API_URL;
 
@@ -75,20 +80,23 @@ const getFiatDepositAndWithDrawalHistory = async ({
   apiKey,
   apiSecret,
 }: {
-  transactionType: string;
+  transactionType: TransactionType;
   apiKey: string;
   apiSecret: string;
 }) => {
-  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
+  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}&beginTime=${new Date(
+    '01.01.2016',
+  ).getTime()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
-    const response = await axios({
-      url: `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
-      method: 'get',
-      headers: {
-        'X-MBX-APIKEY': apiKey,
+    const response = await axios.get<BinanceFiatDepositAPIResponse>(
+      `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
+      {
+        headers: {
+          'X-MBX-APIKEY': apiKey,
+        },
       },
-    });
+    );
 
     const { data } = response;
     return data;
@@ -111,21 +119,23 @@ const getFiatPaymentBuyAndSellHistory = async ({
   apiKey,
   apiSecret,
 }: {
-  transactionType: string;
+  transactionType: TransactionType;
   apiKey: string;
   apiSecret: string;
 }) => {
-  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}`;
+  const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}&beginTime=${new Date(
+    '01.01.2016',
+  ).getTime()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
-    const response = await axios({
-      url: `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
-      method: 'get',
-      headers: {
-        'X-MBX-APIKEY': apiKey,
+    const response = await axios.get<BinanceFiatPaymentAPIResponse>(
+      `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
+      {
+        headers: {
+          'X-MBX-APIKEY': apiKey,
+        },
       },
-    });
-
+    );
     const { data } = response;
     return data;
   } catch (e) {
