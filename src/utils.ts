@@ -124,3 +124,20 @@ export const isScamToken = async (address: string, chainId: string) => {
 export function isEnumOf<T>(object: T, possibleValue: any): possibleValue is T[keyof T] {
   return Object.values(object).includes(possibleValue);
 }
+
+export const timestampToReadableDate = (timestamp: number) => {
+  const date = new Date(timestamp);
+  return (
+    date.getDate() +
+    '/' +
+    (date.getMonth() + 1) +
+    '/' +
+    date.getFullYear() +
+    ' ' +
+    date.getHours() +
+    ':' +
+    date.getMinutes() +
+    ':' +
+    date.getSeconds()
+  );
+};

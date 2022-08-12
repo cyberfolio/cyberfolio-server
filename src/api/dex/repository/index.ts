@@ -148,7 +148,7 @@ const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier:
   }
 };
 
-const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier }).lean();
     assets = assets.map((asset) => removeMongoFields(asset));
@@ -156,7 +156,7 @@ const getAssetsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   } catch (e) {
     logError({
       e,
-      func: getAssetsByKey.name,
+      func: getAssets.name,
       path,
     });
     throw e;
@@ -187,7 +187,7 @@ const dexRepository = {
   getWalletByName,
   addAsset,
   getAssetsByKeyAndChain,
-  getAssetsByKey,
+  getAssets,
   getAllAssets,
 };
 

@@ -31,7 +31,7 @@ const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chai
 
 const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   try {
-    const assets = await repository.getAssetsByKey({
+    const assets = await repository.getAssets({
       keyIdentifier,
     });
     return assets;

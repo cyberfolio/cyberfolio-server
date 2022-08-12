@@ -35,7 +35,7 @@ const addCexByKeyIdentifier = async ({
   }
 };
 
-const getCexInfosByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+const getCexInfos = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   let cexes = await cexInfoModel
     .find({
       keyIdentifier,
@@ -144,7 +144,7 @@ const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; ce
 
 const CexRepository = {
   addCexByKeyIdentifier,
-  getCexInfosByKey,
+  getCexInfos,
   getCexInfo,
   fetchSpotAssets,
   fetchAllSpotAssets,
