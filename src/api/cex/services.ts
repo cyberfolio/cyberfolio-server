@@ -218,6 +218,7 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
         fee,
         status: item.status,
         date: timestampToReadableDate(item.createTime),
+        createTime: item.createTime,
         amount,
       };
     });
@@ -236,6 +237,7 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
         type: 'Bank Withdrawal',
         fee,
         status: item.status,
+        createTime: item.createTime,
         date: timestampToReadableDate(item.createTime),
         amount,
       };
@@ -252,9 +254,10 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
       return {
         cex: CexName.BINANCE,
         orderNo: item.orderNo,
-        type: 'Bank Payment',
+        type: 'Bank Deposit',
         fee,
         status: item.status,
+        createTime: item.createTime,
         date: timestampToReadableDate(item.createTime),
         amount,
       };
@@ -274,13 +277,14 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
         type: 'Card Payment',
         fee,
         status: item.status,
+        createTime: item.createTime,
         date: timestampToReadableDate(item.createTime),
         amount,
       };
     });
     response.push(...creditCardPaymentRes, ...bankPaymentRes, ...creditCardWithdrawalRes, ...bankWithdrawalRes);
   }
-  const sortedRes = response.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedRes = response.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
   return sortedRes;
 };
 
