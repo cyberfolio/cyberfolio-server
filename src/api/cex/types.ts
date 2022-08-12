@@ -14,5 +14,6 @@ export interface PaymentHistoryResponse {
   fee: string;
   status: string;
   date: string;
+  createTime: number;
   amount: string;
 }

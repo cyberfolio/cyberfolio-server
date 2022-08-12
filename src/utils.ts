@@ -127,17 +127,19 @@ export function isEnumOf<T>(object: T, possibleValue: any): possibleValue is T[k
 
 export const timestampToReadableDate = (timestamp: number) => {
   const date = new Date(timestamp);
-  return (
-    date.getDate() +
-    '/' +
-    (date.getMonth() + 1) +
-    '/' +
-    date.getFullYear() +
-    ' ' +
-    date.getHours() +
-    ':' +
-    date.getMinutes() +
-    ':' +
-    date.getSeconds()
-  );
+  let month: number | string = date.getMonth() + 1;
+  let day: number | string = date.getDate();
+  let hour: number | string = date.getHours();
+  let min: number | string = date.getMinutes();
+  let sec: number | string = date.getSeconds();
+
+  month = (month < 10 ? '0' : '') + month;
+  day = (day < 10 ? '0' : '') + day;
+  hour = (hour < 10 ? '0' : '') + hour;
+  min = (min < 10 ? '0' : '') + min;
+  sec = (sec < 10 ? '0' : '') + sec;
+
+  const str = `${date.getFullYear()}/${month}/${day} ${hour}:${min}:${sec}`;
+
+  return str;
 };
