@@ -1,6 +1,7 @@
 import { CexName } from '@config/types';
 import { getFilePath, logError, removeMongoFields } from '@src/utils';
-import { cexInfoModel, cexAssetModel } from './models';
+import { CexPaymentHistory } from '@api/cex/types';
+import { cexInfoModel, cexAssetModel, cexPaymentHistoryModel } from './models';
 
 const path = getFilePath(__filename);
 
@@ -142,6 +143,54 @@ const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; ce
   }
 };
 
+const savePaymentHistory = async ({
+  keyIdentifier,
+  cexPaymentHistory,
+}: {
+  keyIdentifier: string;
+  cexPaymentHistory: CexPaymentHistory;
+}) => {
+  try {
+    await cexPaymentHistoryModel.create({
+      keyIdentifier,
+      orderNo: cexPaymentHistory.orderNo,
+      cexName: cexPaymentHistory.cexName,
+      type: cexPaymentHistory.type,
+      fee: cexPaymentHistory.fee,
+      status: cexPaymentHistory.status,
+      date: cexPaymentHistory.date,
+      createTime: cexPaymentHistory.createTime,
+      fiatCurrency: cexPaymentHistory.fiatCurrency,
+      amount: Number(cexPaymentHistory.amount),
+    });
+  } catch (e) {
+    logError({
+      e,
+      func: savePaymentHistory.name,
+      path,
+    });
+    throw e;
+  }
+};
+
+const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }) => {
+  try {
+    const history = await cexPaymentHistoryModel
+      .find({
+        keyIdentifier,
+      })
+      .lean();
+    return history;
+  } catch (e) {
+    logError({
+      e,
+      func: getPaymentHistory.name,
+      path,
+    });
+    throw e;
+  }
+};
+
 const CexRepository = {
   addCexByKeyIdentifier,
   getCexInfos,
@@ -150,6 +199,8 @@ const CexRepository = {
   fetchAllSpotAssets,
   addCexAsset,
   deleteCex,
+  savePaymentHistory,
+  getPaymentHistory,
 };
 
 export default CexRepository;

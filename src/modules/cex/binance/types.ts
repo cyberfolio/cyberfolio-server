@@ -1,3 +1,5 @@
+import { CexName } from '@config/types';
+
 interface Balances {
   free: string;
   locked: string;
@@ -67,4 +69,16 @@ export interface BinanceFiatDepositAPIResponse {
   data: BinanceFiatDepositData[];
   total: number;
   success: boolean;
+}
+
+export interface BinancePaymentHistory {
+  cexName: CexName;
+  fiatCurrency: string;
+  orderNo: string;
+  type: string;
+  fee: string;
+  status: string;
+  date: string;
+  createTime: number;
+  amount: string;
 }

@@ -7,13 +7,14 @@ export enum PaymentTransaction {
   BANK_WITHDRAWAL = 'Bank Withdrawal',
 }
 
-export interface PaymentHistoryResponse {
+export interface CexPaymentHistory {
   orderNo: string;
-  cex: CexName;
+  cexName: CexName;
   type: string;
   fee: string;
   status: string;
   date: string;
   createTime: number;
+  fiatCurrency: string;
   amount: string;
 }

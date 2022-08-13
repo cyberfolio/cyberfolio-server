@@ -139,7 +139,7 @@ export const timestampToReadableDate = (timestamp: number) => {
   min = (min < 10 ? '0' : '') + min;
   sec = (sec < 10 ? '0' : '') + sec;
 
-  const str = `${date.getFullYear()}/${month}/${day} ${hour}:${min}:${sec}`;
+  const str = `${day}/${month}/${date.getFullYear()} ${hour}:${min}:${sec}`;
 
   return str;
 };

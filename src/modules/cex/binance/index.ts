@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
 
-import { roundNumber } from '@src/utils';
+import { roundNumber, sleep, timestampToReadableDate } from '@src/utils';
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
 import { BinanceError, CexAssetResponse, CexName } from '@config/types';
 import { getCurrencyLogo } from '@providers/coingecko/repository';
@@ -9,6 +9,7 @@ import {
   BinanceAccountAPIResponse,
   BinanceFiatDepositAPIResponse,
   BinanceFiatPaymentAPIResponse,
+  BinancePaymentHistory,
   TransactionType,
 } from './types';
 
@@ -152,8 +153,95 @@ const getFiatPaymentBuyAndSellHistory = async ({
   }
 };
 
+type GetPaymentHistory = {
+  apiKey: string;
+  apiSecret: string;
+};
+const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
+  const response: BinancePaymentHistory[] = [];
+  await sleep(2000);
+  const creditCardPayment = await getFiatPaymentBuyAndSellHistory({
+    apiKey,
+    apiSecret,
+    transactionType: TransactionType.DEPOSIT,
+  });
+  await sleep(3000);
+  const bankPayment = await getFiatDepositAndWithDrawalHistory({
+    apiKey,
+    apiSecret,
+    transactionType: TransactionType.DEPOSIT,
+  });
+  await sleep(3000);
+  const creditCardWithdrawal = await getFiatPaymentBuyAndSellHistory({
+    apiKey,
+    apiSecret,
+    transactionType: TransactionType.WITHDRAW,
+  });
+  await sleep(3000);
+  const bankWithdrawal = await getFiatDepositAndWithDrawalHistory({
+    apiKey,
+    apiSecret,
+    transactionType: TransactionType.WITHDRAW,
+  });
+
+  const creditCardWithdrawalRes = creditCardWithdrawal.data.map((item) => {
+    return {
+      cexName: CexName.BINANCE,
+      fiatCurrency: item.fiatCurrency,
+      orderNo: item.orderNo,
+      type: 'Card Withdrawal',
+      status: item.status,
+      date: timestampToReadableDate(item.createTime),
+      createTime: item.createTime,
+      fee: item.totalFee,
+      amount: item.obtainAmount,
+    };
+  });
+  const bankWithdrawalRes = bankWithdrawal.data.map((item) => {
+    return {
+      cexName: CexName.BINANCE,
+      fiatCurrency: item.fiatCurrency,
+      orderNo: item.orderNo,
+      type: 'Bank Withdrawal',
+      status: item.status,
+      createTime: item.createTime,
+      date: timestampToReadableDate(item.createTime),
+      fee: item.totalFee,
+      amount: item.amount,
+    };
+  });
+  const bankPaymentRes = bankPayment.data.map((item) => {
+    return {
+      cexName: CexName.BINANCE,
+      fiatCurrency: item.fiatCurrency,
+      orderNo: item.orderNo,
+      type: 'Bank Deposit',
+      status: item.status,
+      createTime: item.createTime,
+      date: timestampToReadableDate(item.createTime),
+      amount: item.indicatedAmount,
+      fee: item.totalFee,
+    };
+  });
+  const creditCardPaymentRes = creditCardPayment.data.map((item) => {
+    return {
+      cexName: CexName.BINANCE,
+      fiatCurrency: item.fiatCurrency,
+      orderNo: item.orderNo,
+      type: 'Card Payment',
+      status: item.status,
+      createTime: item.createTime,
+      date: timestampToReadableDate(item.createTime),
+      amount: item.sourceAmount,
+      fee: item.totalFee,
+    };
+  });
+  response.push(...creditCardPaymentRes, ...bankPaymentRes, ...creditCardWithdrawalRes, ...bankWithdrawalRes);
+  const sortedRes = response.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
+  return sortedRes;
+};
+
 export default {
   getAssets,
-  getFiatDepositAndWithDrawalHistory,
-  getFiatPaymentBuyAndSellHistory,
+  getPaymentHistory,
 };
