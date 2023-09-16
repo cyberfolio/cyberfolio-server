@@ -2,7 +2,6 @@ import Binance from '@cex//binance';
 import BinanceTR from '@cex/binancetr';
 import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
-import Ftx from '@cex/ftx';
 
 import { onError, timestampToReadableDate } from '@src/utils';
 import { CexAssetResponse, CexName } from '@config/types';
@@ -54,11 +53,6 @@ const saveSpotAssets = async ({
       });
     } else if (cexName === CexName.GATEIO) {
       spotAssets = await GateIO.getAssets({
-        apiKey,
-        apiSecret,
-      });
-    } else if (cexName === CexName.FTX) {
-      spotAssets = await Ftx.getAssets({
         apiKey,
         apiSecret,
       });

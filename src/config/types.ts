@@ -28,7 +28,6 @@ export enum Platform {
   ARBITRUM = 'Arbitrum',
   OPTIMISM = 'Optimism',
   BINANCE = 'Binance',
-  FTX = 'FTX',
   GATEIO = 'Gateio',
   KUCOIN = 'Kucoin',
 }
@@ -36,7 +35,6 @@ export enum Platform {
 export enum CexName {
   BINANCE = 'Binance',
   BINANCETR = 'BinanceTR',
-  FTX = 'FTX',
   GATEIO = 'Gateio',
   KUCOIN = 'Kucoin',
 }
@@ -55,10 +53,6 @@ export interface CexAssetResponse {
 export type BinanceError = {
   code?: number;
   msg?: string;
-};
-
-export type FTXError = {
-  error?: string;
 };
 
 export type GateIoError = {

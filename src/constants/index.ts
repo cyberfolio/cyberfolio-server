@@ -17,10 +17,6 @@ const EvmWithChain = {
     name: Platform.BINANCE,
     chainId: '-1',
   },
-  FTX: {
-    name: Platform.FTX,
-    chainId: '-1',
-  },
   Gateio: {
     name: Platform.GATEIO,
     chainId: '-1',

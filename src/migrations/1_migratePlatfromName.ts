@@ -22,7 +22,6 @@ const Index = async (number: number) => {
       await dexAssetModel.updateMany({ platform: 'optimism' }, { $set: { platform: Platform.OPTIMISM } });
 
       await cexAssetModel.updateMany({ cexName: 'binance' }, { $set: { platform: Platform.BINANCE } });
-      await cexAssetModel.updateMany({ cexName: 'ftx' }, { $set: { platform: Platform.FTX } });
       await cexAssetModel.updateMany({ cexName: 'gateio' }, { $set: { platform: Platform.GATEIO } });
       await cexAssetModel.updateMany({ cexName: 'kucoin' }, { $set: { platform: Platform.KUCOIN } });
 
