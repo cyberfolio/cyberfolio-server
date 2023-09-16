@@ -1,26 +1,22 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "include": ["./src"],
-  "exclude": ["node_modules", "<node_internals>/**"],
-  "ts-node": {
-    "esm": true
-  },
   "compilerOptions": {
-    "lib": ["esnext"],
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "sourceMap": true,
-    "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", ".src/config/index.d.ts"],
-    "types": ["node"],
+    "target": "ESNext",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "typeRoots": ["./node_modules/@types", "./index.d.ts"],
     "paths": {
-      "@providers/*": ["src/modules/providers/*"],
-      "@constants/*": ["src/constants/*"],
-      "@config/*": ["src/config/*"],
-      "@dex/*": ["src/modules/dex/*"],
-      "@cex/*": ["src/modules/cex/*"],
-      "@api/*": ["src/api/*"],
-      "@src/*": ["src/*"]
+      "@providers/*": ["modules/providers/*"],
+      "@constants/*": ["constants/*"],
+      "@config/*": ["config/*"],
+      "@dex/*": ["modules/dex/*"],
+      "@cex/*": ["modules/cex/*"],
+      "@api/*": ["api/*"],
+      "@src/*": ["*"]
     }
   }
 }
