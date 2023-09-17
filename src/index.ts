@@ -32,7 +32,7 @@ const boot = async () => {
   app.use(cookieParser());
 
   app.get('/', (_, res) => {
-    res.send('Hello World!');
+    res.send('Alive');
   });
 
   // init api routes
