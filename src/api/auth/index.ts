@@ -1,5 +1,5 @@
 import express from 'express';
-import ethers from 'ethers';
+import { ethers } from 'ethers';
 
 import { generateNonce } from '@src/utils';
 import jwtConfig from '@config/jwt';
@@ -42,6 +42,7 @@ router.post('/login/validate-signature', async (req: express.Request, res: expre
   const { signature } = req.body;
   const { nonce } = req.body;
   evmAddress = evmAddress.toLowerCase();
+
   try {
     const signerAddress = ethers.verifyMessage(nonce, signature);
     if (signerAddress.toLocaleLowerCase() !== evmAddress) {
