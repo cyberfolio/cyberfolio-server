@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import axios from 'axios';
+import web3Validator from 'web3-validator';
 
 import { getFilePath, logError } from '@src/utils';
 import { Chain, ScanURL } from '@config/types';
@@ -10,8 +11,7 @@ import Constants from '@config/constants';
 const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
 );
-
-export const isValidEthAddress = (address: string) => web3.utils.isAddress(address);
+export const isValidEthAddress = (address: string) => web3Validator.isAddress(address);
 
 const path = getFilePath(__filename);
 

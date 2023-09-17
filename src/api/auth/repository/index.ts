@@ -22,7 +22,7 @@ export const getUserByEvmAddress = async ({ evmAddress }: { evmAddress: string }
 
 export const getUserByEvmAddressAndNonce = async ({ evmAddress, nonce }: { evmAddress: string; nonce: string }) => {
   try {
-    const user = await userModel.findOne({ keyIdentifier: evmAddress, nonce }).lean();
+    const user = await userModel.findOne({ keyIdentifier: evmAddress, nonce });
     return user;
   } catch (e) {
     const error = onError(e);

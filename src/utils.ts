@@ -19,7 +19,7 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 
 export const isValid0xAddress = (address: string) => web3.utils.isAddress(address);
 
-export const formatBalance = (balance: string, decimals: string) => ethers.utils.formatUnits(balance, Number(decimals));
+export const formatBalance = (balance: string, decimals: string) => ethers.formatUnits(balance, Number(decimals));
 
 export const sathoshiToBtcBalance = (satoshi: number) => satoshi * 0.00000001;
 
@@ -121,7 +121,7 @@ export const isScamToken = async (address: string, chainId: string) => {
   return Boolean(isScam);
 };
 
-export function isEnumOf<T>(object: T, possibleValue: any): possibleValue is T[keyof T] {
+export function isEnumOf<T>(object: any, possibleValue: any): possibleValue is T[keyof T] {
   return Object.values(object).includes(possibleValue);
 }
 

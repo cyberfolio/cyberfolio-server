@@ -6,9 +6,7 @@ const path = getFilePath(__filename);
 
 const checkENSName = async (keyIdentifier: string) => {
   try {
-    const provider = new ethers.providers.JsonRpcProvider(
-      `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
-    );
+    const provider = new ethers.JsonRpcProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`);
     const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
       await userModel.findOneAndUpdate(

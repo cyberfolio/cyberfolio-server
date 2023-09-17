@@ -47,9 +47,7 @@ router.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response)
   }
 
   try {
-    const provider = new ethers.providers.JsonRpcProvider(
-      `${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`,
-    );
+    const provider = new ethers.JsonRpcProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`);
     const ensName = await provider.lookupAddress(keyIdentifier);
     if (ensName) {
       return res.status(200).send(ensName);
