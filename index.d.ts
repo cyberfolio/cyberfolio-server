@@ -29,9 +29,6 @@ declare global {
 
       KUCOIN_API_VERSION: string;
       KUCOIN_API_URL: string;
-
-      GATEIO_API_HOST: string;
-      GATEIO_API_PREFIX: string;
     }
   }
 }
