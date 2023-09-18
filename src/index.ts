@@ -12,12 +12,12 @@ import dex from './api/dex';
 import cex from './api/cex';
 import info from './api/info';
 
-import { connectToDB, startCronJobs, runMigrations } from './init';
+import { connectToDB, runMigrations } from './init';
 import { allowedMethods, authenticateUser } from './config/middleware';
 
 const boot = async () => {
   await connectToDB();
-  await startCronJobs();
+  // await startCronJobs();
   await runMigrations();
 
   const app = express();
