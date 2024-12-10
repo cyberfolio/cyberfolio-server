@@ -5,8 +5,9 @@ import migrations from './migrations';
 
 export const connectToDB = async () => {
   try {
+    logger.info('Conntecting to Mongodb...');
     await mongoose.connect(`${process.env.MONGO_URL}`);
-    logger.info('Mongodb successfully connected');
+    logger.info('Successfully connected to Mongodb');
   } catch (e) {
     logger.error(`Error at src/init.ts ${connectToDB.name}`, e);
     process.exit(1);

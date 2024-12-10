@@ -21,6 +21,7 @@ const boot = async () => {
   await runMigrations();
 
   const app = express();
+  app.disable('x-powered-by');
   app.use(allowedMethods);
   app.use(
     cors({
