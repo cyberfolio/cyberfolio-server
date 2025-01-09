@@ -1,9 +1,9 @@
-import { getFilePath, logError, sleep } from '@src/utils';
+import AppUtils from '@src/utils';
 import axios from 'axios';
 import { CoinMCapCryptocurrencyInfoAPIResponse } from './types';
 
 const apiKey = process.env.COINMARKETCAP_API_KEY as string;
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Promise<string | undefined> => {
   try {
@@ -15,14 +15,14 @@ const getCryptoCurrencyLogo = async ({ symbol }: { symbol: string }): Promise<st
         },
       },
     );
-    await sleep(200);
+    await AppUtils.sleep(200);
 
     if (response.data.data[symbol.toUpperCase()].logo) {
       return response.data.data[symbol.toUpperCase()].logo;
     }
     return undefined;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       path,
       e,
       func: getCryptoCurrencyLogo.name,

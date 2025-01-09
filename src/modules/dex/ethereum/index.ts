@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import axios from 'axios';
 import web3Validator from 'web3-validator';
 
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import { Chain, ScanURL } from '@config/types';
 import evmAssetsResponse from '@dex/common/evmAssetsResponse';
 import { CovalentTokenBalanceResponse } from '@dex/common/types';
@@ -13,14 +13,14 @@ const web3 = new Web3(
 );
 export const isValidEthAddress = (address: string) => web3Validator.isAddress(address);
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 export const getEthBalance = async (walletAddress: string) => {
   try {
     const balance = await web3.eth.getBalance(walletAddress);
     return web3.utils.fromWei(balance, 'ether');
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getEthBalance.name,
       path,
@@ -38,7 +38,7 @@ export const getTokenBalances = async (walletAddress: string) => {
     const response = await evmAssetsResponse(walletAddress, ScanURL.ETHEREUM, assets, Chain.ETHEREUM);
     return response;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getTokenBalances.name,
       path,

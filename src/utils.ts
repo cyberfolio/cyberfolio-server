@@ -11,21 +11,21 @@ import _ from 'lodash';
 import { Chain, ScanURL } from '@config/types';
 import scamTokenModel from './modules/cron/scam-tokens/model';
 
-export const web3 = new Web3(
+const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
 );
 
-export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const isValid0xAddress = (address: string) => web3.utils.isAddress(address);
+const isValid0xAddress = (address: string) => web3.utils.isAddress(address);
 
-export const formatBalance = (balance: string, decimals: string) => ethers.formatUnits(balance, Number(decimals));
+const formatBalance = (balance: string, decimals: string) => ethers.formatUnits(balance, Number(decimals));
 
-export const sathoshiToBtcBalance = (satoshi: number) => satoshi * 0.00000001;
+const sathoshiToBtcBalance = (satoshi: number) => satoshi * 0.00000001;
 
-export const toBase64 = (string: string) => Buffer.from(string).toString('base64');
+const toBase64 = (string: string) => Buffer.from(string).toString('base64');
 
-export const getScanUrl = (address: string, chain: Chain) => {
+const getScanUrl = (address: string, chain: Chain) => {
   switch (chain) {
     case Chain.ARBITRUM:
       return `${ScanURL.ARBITRUM}/address/${address}`;
@@ -48,12 +48,12 @@ export const getScanUrl = (address: string, chain: Chain) => {
   }
 };
 
-export const intDivide = (numerator: number, denominator: number) =>
+const intDivide = (numerator: number, denominator: number) =>
   Number((numerator / denominator).toString().split('.')[0]);
 
-export const generateNonce = () => `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`;
+const generateNonce = () => `I confirm that I'm the owner of this wallet by signing this message: ${uuidv4()}`;
 
-export const doesImageExists = async (url: string) => {
+const doesImageExists = async (url: string) => {
   try {
     await axios({
       url,
@@ -65,11 +65,11 @@ export const doesImageExists = async (url: string) => {
   }
 };
 
-export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
+const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-export const roundNumber = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
+const roundNumber = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
 
-export const onError = (e: unknown) => {
+const onError = (e: unknown) => {
   let error;
   if (e instanceof Error) {
     error = e;
@@ -80,7 +80,7 @@ export const onError = (e: unknown) => {
   return error;
 };
 
-export const isEVMChain = (chain: Chain) => {
+const isEVMChain = (chain: Chain) => {
   return (
     chain === Chain.ARBITRUM ||
     chain === Chain.AVALANCHE ||
@@ -91,7 +91,7 @@ export const isEVMChain = (chain: Chain) => {
   );
 };
 
-export const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown | AxiosError<never> }) => {
+const logError = ({ path, func, e }: { path: string; func: string; e: Error | unknown | AxiosError<never> }) => {
   let message;
   if (axios.isAxiosError(e)) {
     message = e.response?.data ? JSON.stringify(e.response?.data, null, 2) : e.response?.statusText;
@@ -103,12 +103,12 @@ export const logError = ({ path, func, e }: { path: string; func: string; e: Err
   logger.error(`Error at ${path} ${func} message: ${message}`);
 };
 
-export const getFilePath = (path: string) => {
+const getFilePath = (path: string) => {
   const fileName = path.substring(path.indexOf('src'));
   return fileName;
 };
 
-export const removeMongoFields = (object: any) => {
+const removeMongoFields = (object: any) => {
   if (Object.prototype.toString.call(object) !== '[object Object]') return object;
   const obj = _.cloneDeep(object);
   delete obj._id;
@@ -116,16 +116,16 @@ export const removeMongoFields = (object: any) => {
   return obj;
 };
 
-export const isScamToken = async (address: string, chainId: string) => {
+const isScamToken = async (address: string, chainId: string) => {
   const isScam = await scamTokenModel.findOne({ address, chainId });
   return Boolean(isScam);
 };
 
-export function isEnumOf<T>(object: any, possibleValue: any): possibleValue is T[keyof T] {
+function isEnumOf<T>(object: any, possibleValue: any): possibleValue is T[keyof T] {
   return Object.values(object).includes(possibleValue);
 }
 
-export const timestampToReadableDate = (timestamp: number) => {
+const timestampToReadableDate = (timestamp: number) => {
   const date = new Date(timestamp);
   let month: number | string = date.getMonth() + 1;
   let day: number | string = date.getDate();
@@ -143,3 +143,27 @@ export const timestampToReadableDate = (timestamp: number) => {
 
   return str;
 };
+
+const AppUtils = {
+  sleep,
+  isValid0xAddress,
+  formatBalance,
+  sathoshiToBtcBalance,
+  toBase64,
+  getScanUrl,
+  intDivide,
+  generateNonce,
+  doesImageExists,
+  capitalizeFirstLetter,
+  roundNumber,
+  onError,
+  isEVMChain,
+  logError,
+  getFilePath,
+  removeMongoFields,
+  isScamToken,
+  isEnumOf,
+  timestampToReadableDate,
+};
+
+export default AppUtils;

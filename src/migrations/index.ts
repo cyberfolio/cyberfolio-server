@@ -1,9 +1,9 @@
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import migratePlatfromName from './1_migratePlatfromName';
 import removeWrongPricedTokens from './2_removeWrongPricedTokens';
 import migrationModel from './repository/models';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const Index = async () => {
   try {
@@ -14,7 +14,7 @@ const Index = async () => {
     await migratePlatfromName(1);
     await removeWrongPricedTokens(2);
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: Index.name,
       path,

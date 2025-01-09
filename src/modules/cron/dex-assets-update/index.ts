@@ -9,9 +9,9 @@ import optimism from '@dex/optimism';
 import polygon from '@dex/polygon';
 import smartchain from '@dex/smartchain';
 
-import { logError, getFilePath, sleep } from '@src/utils';
+import AppUtils from '@src/utils';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 function getDifference(
   array1: {
@@ -49,7 +49,7 @@ const updateEvmAssets = async () => {
       const bscAssets = await smartchain.getTokenBalances(walletAddress);
 
       // stop 2 seconds for api rate limit
-      await sleep(2000);
+      await AppUtils.sleep(2000);
 
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 
@@ -90,7 +90,7 @@ const updateEvmAssets = async () => {
       await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
     }
   } catch (e) {
-    logError({
+    AppUtils.logError({
       func: updateEvmAssets.name,
       path,
       e,

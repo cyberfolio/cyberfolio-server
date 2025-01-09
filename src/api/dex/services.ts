@@ -8,7 +8,7 @@ import smartchain from '@dex/smartchain';
 import solana from '@dex/solana';
 
 import scamTokens from '@config/scamTokens';
-import { onError } from '@src/utils';
+import AppUtils from '@src/utils';
 import { Chain } from '@config/types';
 import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@dex/common/types';
@@ -24,7 +24,7 @@ const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chai
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -36,7 +36,7 @@ const getAllAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -49,7 +49,7 @@ const deleteAssets = async ({ keyIdentifier, address }: { keyIdentifier: string;
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -109,13 +109,13 @@ const saveAssets = async ({
             }
           }
         } catch (e) {
-          const error = onError(e);
+          const error = AppUtils.onError(e);
           throw error;
         }
       }
       assets = allEvmTokens;
     } catch (e) {
-      const error = onError(e);
+      const error = AppUtils.onError(e);
       throw error;
     }
   } else if (chain === Chain.BITCOIN) {
@@ -138,7 +138,7 @@ const saveAssets = async ({
       }
       assets = btcAssets;
     } catch (e) {
-      const error = onError(e);
+      const error = AppUtils.onError(e);
       throw error;
     }
   } else if (chain === Chain.SOLANA) {
@@ -161,7 +161,7 @@ const saveAssets = async ({
       }
       assets = solanaAssets;
     } catch (e) {
-      const error = onError(e);
+      const error = AppUtils.onError(e);
       throw error;
     }
   }
@@ -202,7 +202,7 @@ const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; w
         walletAddress,
       });
     } catch (e) {
-      const error = onError(e);
+      const error = AppUtils.onError(e);
       throw error;
     }
   }
@@ -225,7 +225,7 @@ const deleteWallet = async ({
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };

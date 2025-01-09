@@ -1,9 +1,9 @@
 import { dexAssetModel } from '@api/dex/repository/models';
 import logger from '@config/logger';
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import migrationModel from './repository/models';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const Index = async (number: number) => {
   try {
@@ -15,7 +15,7 @@ const Index = async (number: number) => {
       logger.info(`Migration number ${number} finished`);
     }
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: Index.name,
       path,

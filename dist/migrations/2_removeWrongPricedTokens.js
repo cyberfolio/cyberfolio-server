@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("@api/dex/repository/models");
 const logger_1 = __importDefault(require("@config/logger"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const models_2 = __importDefault(require("./repository/models"));
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const Index = async (number) => {
     try {
         const migration = await models_2.default.findOne({});
@@ -19,7 +19,7 @@ const Index = async (number) => {
         }
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: Index.name,
             path,

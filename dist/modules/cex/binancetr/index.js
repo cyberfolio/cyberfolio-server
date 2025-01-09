@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const coingecko_1 = require("@providers/coingecko");
 const types_1 = require("@config/types");
 const repository_1 = require("@providers/coingecko/repository");
@@ -40,7 +40,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
                 const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
                 const balance = parseFloat(asset.free) + parseFloat(asset.locked);
                 const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
-                const value = (0, utils_1.roundNumber)(balance * price);
+                const value = utils_1.default.roundNumber(balance * price);
                 const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
                 if (value > 1) {
                     response.push({
@@ -80,6 +80,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
         }
     }
 };
-exports.default = {
+const BinanceTRModule = {
     getAssets,
 };
+exports.default = BinanceTRModule;

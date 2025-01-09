@@ -1,7 +1,7 @@
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import { currencyModel, lastCurrencyUpdateModel } from './models';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 export const addOrUpdateCryptoCurrency = async ({
   name,
@@ -30,7 +30,7 @@ export const addOrUpdateCryptoCurrency = async ({
         },
       );
     } catch (e) {
-      logError({
+      AppUtils.logError({
         e,
         func: addOrUpdateCryptoCurrency.name,
         path,
@@ -45,7 +45,7 @@ export const getCryptoPriceBySymbol = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.price ? parseFloat(currency.price.toFixed(2)) : null;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getCryptoPriceBySymbol.name,
       path,
@@ -59,7 +59,7 @@ export const getCurrencyLogo = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.logo;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getCurrencyLogo.name,
       path,
@@ -73,7 +73,7 @@ export const getCurrenyInfo = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean();
     return currency;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getCurrenyInfo.name,
       path,
@@ -87,7 +87,7 @@ export const getFullNameOfTheCurrencyBySymbol = async (symbol: string) => {
     const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.name ? currency.name : '';
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getFullNameOfTheCurrencyBySymbol.name,
       path,
@@ -101,7 +101,7 @@ export const getContractAddressOfTheCurrencyBySymbol = async (symbol: string) =>
     const currency = await currencyModel.findOne({ symbol }).lean();
     return currency?.contractAddress ? currency.contractAddress : '';
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getContractAddressOfTheCurrencyBySymbol.name,
       path,
@@ -114,7 +114,7 @@ export const setLastCurrencyUpdateDate = async (lastUpdateDate: Date) => {
   try {
     await lastCurrencyUpdateModel.findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true }).lean();
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: setLastCurrencyUpdateDate.name,
       path,
@@ -128,7 +128,7 @@ export const getLastCurrencyUpdateDate = async () => {
     const lastCurrencyUpdate = await lastCurrencyUpdateModel.findOne({ id: 1 }).lean();
     return lastCurrencyUpdate?.lastUpdateDate;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getLastCurrencyUpdateDate.name,
       path,

@@ -18,7 +18,7 @@ const init_1 = require("./init");
 const middleware_1 = require("./config/middleware");
 const boot = async () => {
     await (0, init_1.connectToDB)();
-    // await startCronJobs();
+    await (0, init_1.startCronJobs)();
     await (0, init_1.runMigrations)();
     const app = (0, express_1.default)();
     app.disable('x-powered-by');
@@ -30,7 +30,7 @@ const boot = async () => {
     app.use(body_parser_1.default.json());
     app.use((0, cookie_parser_1.default)());
     app.get('/', (_, res) => {
-        res.send('Alive');
+        res.send(`${process.env.APP_NAME} server is running`);
     });
     // init api routes
     app.use('/api/auth', auth_1.default);

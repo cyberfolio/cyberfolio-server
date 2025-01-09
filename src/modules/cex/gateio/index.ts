@@ -64,6 +64,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
   }
 };
 
-export default {
+const GateioModule = {
   getAssets,
 };
+
+export default GateioModule;

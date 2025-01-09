@@ -63,6 +63,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
         }
     }
 };
-exports.default = {
+const GateioModule = {
     getAssets,
 };
+exports.default = GateioModule;

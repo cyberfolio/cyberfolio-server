@@ -1,7 +1,7 @@
 import { addOrUpdateCryptoCurrencies } from '@providers/coingecko';
-import { logError, getFilePath } from '@src/utils';
+import AppUtils from '@src/utils';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const updateCurrencies = async () => {
   // eslint-disable-next-line no-plusplus
@@ -9,7 +9,7 @@ const updateCurrencies = async () => {
     try {
       await addOrUpdateCryptoCurrencies(i);
     } catch (e) {
-      logError({
+      AppUtils.logError({
         func: updateCurrencies.name,
         path,
         e,

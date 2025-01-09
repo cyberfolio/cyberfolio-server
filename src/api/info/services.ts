@@ -1,4 +1,4 @@
-import { getScanUrl, isEVMChain, onError } from '@src/utils';
+import AppUtils from '@src/utils';
 import cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
 import { Chain } from '@config/types';
@@ -19,7 +19,7 @@ export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) 
     }
     return dexTotalValue + cexTotalValue;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -40,13 +40,13 @@ export const getConnectedAccounts = async ({
       const netWorth = dexAssets.reduce((acc, dexAsset) => {
         if (
           (dexAsset.chain === chain && dexAsset.walletAddress === walletAddress) ||
-          (chain === Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && isEVMChain(dexAsset.chain))
+          (chain === Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && AppUtils.isEVMChain(dexAsset.chain))
         ) {
           return acc + dexAsset.value;
         }
         return acc + 0;
       }, 0);
-      const scan = getScanUrl(walletAddress, chain);
+      const scan = AppUtils.getScanUrl(walletAddress, chain);
       return { chain, address: walletAddress, name: walletName, netWorth, scan };
     });
 
@@ -71,7 +71,7 @@ export const getConnectedAccounts = async ({
 
     return res;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };

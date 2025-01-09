@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import removeScamTokens from './scam-tokens/remove';
 import dexAssetsUpdate from './dex-assets-update';
 import updateCurrencies from './update-currencies';
@@ -10,7 +10,7 @@ const ever2HourCronValue = '0 0 */2 * * *';
 const everHourCronValue = '0 0 */1 * * *';
 const everyMinuteCronValue = '0 */1 * * * *';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const initCronJobs = async () => {
   cron.schedule(ever2HourCronValue, async () => {
@@ -18,9 +18,9 @@ const initCronJobs = async () => {
       await updateCurrencies();
     } catch (e) {
       if (e instanceof Error) {
-        logError({ path, func: initCronJobs.name, e });
+        AppUtils.logError({ path, func: initCronJobs.name, e });
       } else {
-        logError({ e: 'unknown error', path, func: initCronJobs.name });
+        AppUtils.logError({ e: 'unknown error', path, func: initCronJobs.name });
       }
     }
   });
@@ -31,9 +31,9 @@ const initCronJobs = async () => {
       await dexAssetsUpdate.updateEvmAssets();
     } catch (e) {
       if (e instanceof Error) {
-        logError({ path, func: initCronJobs.name, e });
+        AppUtils.logError({ path, func: initCronJobs.name, e });
       } else {
-        logError({ e: 'unknown error', path, func: initCronJobs.name });
+        AppUtils.logError({ e: 'unknown error', path, func: initCronJobs.name });
       }
     }
   });
@@ -43,9 +43,9 @@ const initCronJobs = async () => {
       await removeScamTokens();
     } catch (e) {
       if (e instanceof Error) {
-        logError({ path, func: initCronJobs.name, e });
+        AppUtils.logError({ path, func: initCronJobs.name, e });
       } else {
-        logError({ e: 'unknown error', path, func: initCronJobs.name });
+        AppUtils.logError({ e: 'unknown error', path, func: initCronJobs.name });
       }
     }
   });

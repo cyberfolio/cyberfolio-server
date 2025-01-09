@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const coingecko_1 = require("@providers/coingecko");
 const types_1 = require("@config/types");
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const getBalance = async (walletAddress) => {
     try {
         const { data } = await axios_1.default.get(`${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`);
-        const balance = (0, utils_1.sathoshiToBtcBalance)(data);
+        const balance = utils_1.default.sathoshiToBtcBalance(data);
         const price = await (0, coingecko_1.getCurrentUSDPrice)('btc');
         const value = balance * price;
         return [
@@ -29,7 +29,7 @@ const getBalance = async (walletAddress) => {
         ];
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: getBalance.name,
             path,

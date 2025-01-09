@@ -1,9 +1,9 @@
-import Binance from '@cex//binance';
+import Binance from '@cex/binance';
 import BinanceTR from '@cex/binancetr';
 import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
 
-import { onError, timestampToReadableDate } from '@src/utils';
+import AppUtils from '@src/utils';
 import { CexAssetResponse, CexName } from '@config/types';
 import repository from './repository';
 import { CexPaymentHistory } from './types';
@@ -75,13 +75,13 @@ const saveSpotAssets = async ({
           });
         }
       } catch (e) {
-        const error = onError(e);
+        const error = AppUtils.onError(e);
         throw error;
       }
     }
     return spotAssets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -101,7 +101,7 @@ const getSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -142,7 +142,7 @@ const add = async ({
       passphrase,
     });
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -154,7 +154,7 @@ const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; ce
       cexName,
     });
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -166,7 +166,7 @@ const getAssets = async ({ keyIdentifier }: { keyIdentifier: string }) => {
     });
     return assets;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };
@@ -193,7 +193,7 @@ const savePaymentHistory = async ({
         });
       }
     } catch (e) {
-      const error = onError(e);
+      const error = AppUtils.onError(e);
       throw error;
     }
     response.push(...binancePaymentHistory);
@@ -221,7 +221,7 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
       fee,
       status: item.status,
       createTime: item.createTime,
-      date: timestampToReadableDate(item.createTime),
+      date: AppUtils.timestampToReadableDate(item.createTime),
       fiatCurrency: item.fiatCurrency,
       amount,
     };

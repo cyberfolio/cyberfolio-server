@@ -1,8 +1,8 @@
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import { ethers } from 'ethers';
 import { userModel } from './repository/models';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const checkENSName = async (keyIdentifier: string) => {
   try {
@@ -20,7 +20,7 @@ const checkENSName = async (keyIdentifier: string) => {
     }
     return ensName;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       path,
       func: checkENSName.name,
       e,

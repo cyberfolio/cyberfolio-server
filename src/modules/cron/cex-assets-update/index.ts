@@ -1,14 +1,11 @@
 import { userModel } from '@api/auth/repository/models';
 import { cexAssetModel, cexInfoModel } from '@api/cex/repository/models';
-import Binance from '@cex/binance';
-import Gateio from '@cex/gateio';
-import Kucoin from '@cex/kucoin';
-import BinanceTR from '@cex/binancetr';
+import AppModules from '@src/modules';
 import { CexName, CexAssetResponse } from '@config/types';
 
-import { logError, getFilePath, sleep } from '@src/utils';
+import AppUilts from '@src/utils';
 
-const path = getFilePath(__filename);
+const path = AppUilts.getFilePath(__filename);
 
 function getDifference(
   array1: {
@@ -40,14 +37,14 @@ const updateCexAssets = async () => {
       const availableCexes = await cexInfoModel.find({ keyIdentifier: walletAddress }).lean();
       for (const availableCex of availableCexes) {
         if (availableCex.cexName === CexName.BINANCE) {
-          const assets = await Binance.getAssets({
+          const assets = await AppModules.Binance.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
           currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.KUCOIN) {
-          const assets = await Kucoin.getAssets({
+          const assets = await AppModules.Kucoin.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
             type: 'main',
@@ -56,20 +53,20 @@ const updateCexAssets = async () => {
           currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.GATEIO) {
-          const assets = await Gateio.getAssets({
+          const assets = await AppModules.Gateio.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
           currentAssets.push(...assets);
         }
         if (availableCex.cexName === CexName.BINANCETR) {
-          const assets = await BinanceTR.getAssets({
+          const assets = await AppModules.BinanceTR.getAssets({
             apiKey: availableCex.apiKey,
             apiSecret: availableCex.apiSecret,
           });
           currentAssets.push(...assets);
         }
-        sleep(2000);
+        AppUilts.sleep(2000);
       }
       const existingAssets = currentAssets.map((cexAsset) => ({
         symbol: cexAsset.symbol,
@@ -102,7 +99,7 @@ const updateCexAssets = async () => {
       await userModel.findOneAndUpdate({ keyIdentifier: walletAddress }, { lastAssetUpdate: new Date() });
     }
   } catch (e) {
-    logError({
+    AppUilts.logError({
       func: updateCexAssets.name,
       path,
       e,

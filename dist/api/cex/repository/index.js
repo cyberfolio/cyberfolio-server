@@ -1,8 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const models_1 = require("./models");
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const addCexByKeyIdentifier = async ({ keyIdentifier, apiKey, apiSecret, cexName, passphrase, }) => {
     try {
         await models_1.cexInfoModel.create({
@@ -14,7 +17,7 @@ const addCexByKeyIdentifier = async ({ keyIdentifier, apiKey, apiSecret, cexName
         });
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: addCexByKeyIdentifier.name,
             path,
@@ -28,7 +31,7 @@ const getCexInfos = async ({ keyIdentifier }) => {
         keyIdentifier,
     })
         .lean();
-    cexes = cexes.map((cex) => (0, utils_1.removeMongoFields)(cex));
+    cexes = cexes.map((cex) => utils_1.default.removeMongoFields(cex));
     return cexes;
 };
 const getCexInfo = async ({ keyIdentifier, cexName }) => {
@@ -47,7 +50,7 @@ const fetchSpotAssets = async ({ keyIdentifier, cexName }) => {
         cexName,
     })
         .lean();
-    assets = assets.map((asset) => (0, utils_1.removeMongoFields)(asset));
+    assets = assets.map((asset) => utils_1.default.removeMongoFields(asset));
     return assets;
 };
 const fetchAllSpotAssets = async ({ keyIdentifier }) => {
@@ -56,7 +59,7 @@ const fetchAllSpotAssets = async ({ keyIdentifier }) => {
         keyIdentifier,
     })
         .lean();
-    assets = assets.map((asset) => (0, utils_1.removeMongoFields)(asset));
+    assets = assets.map((asset) => utils_1.default.removeMongoFields(asset));
     return assets;
 };
 const addCexAsset = async ({ keyIdentifier, cexName, name, symbol, balance, price, value, logo, accountName, }) => {
@@ -75,7 +78,7 @@ const addCexAsset = async ({ keyIdentifier, cexName, name, symbol, balance, pric
         }, { upsert: true, new: true });
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: addCexAsset.name,
             path,
@@ -92,7 +95,7 @@ const deleteCex = async ({ keyIdentifier, cexName }) => {
         await models_1.cexAssetModel.deleteMany({ keyIdentifier, cexName });
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: deleteCex.name,
             path,
@@ -116,7 +119,7 @@ const savePaymentHistory = async ({ keyIdentifier, cexPaymentHistory, }) => {
         });
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: savePaymentHistory.name,
             path,
@@ -134,7 +137,7 @@ const getPaymentHistory = async ({ keyIdentifier }) => {
         return history;
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: getPaymentHistory.name,
             path,

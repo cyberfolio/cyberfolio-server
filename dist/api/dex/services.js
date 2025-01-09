@@ -12,7 +12,7 @@ const polygon_1 = __importDefault(require("@dex/polygon"));
 const smartchain_1 = __importDefault(require("@dex/smartchain"));
 const solana_1 = __importDefault(require("@dex/solana"));
 const scamTokens_1 = __importDefault(require("@config/scamTokens"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const types_1 = require("@config/types");
 const models_1 = require("@api/auth/repository/models");
 const repository_1 = __importDefault(require("./repository"));
@@ -26,7 +26,7 @@ const getAssets = async ({ keyIdentifier, chain }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -38,7 +38,7 @@ const getAllAssets = async ({ keyIdentifier }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -51,7 +51,7 @@ const deleteAssets = async ({ keyIdentifier, address }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -96,14 +96,14 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
                     }
                 }
                 catch (e) {
-                    const error = (0, utils_1.onError)(e);
+                    const error = utils_1.default.onError(e);
                     throw error;
                 }
             }
             assets = allEvmTokens;
         }
         catch (e) {
-            const error = (0, utils_1.onError)(e);
+            const error = utils_1.default.onError(e);
             throw error;
         }
     }
@@ -128,7 +128,7 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
             assets = btcAssets;
         }
         catch (e) {
-            const error = (0, utils_1.onError)(e);
+            const error = utils_1.default.onError(e);
             throw error;
         }
     }
@@ -153,7 +153,7 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
             assets = solanaAssets;
         }
         catch (e) {
-            const error = (0, utils_1.onError)(e);
+            const error = utils_1.default.onError(e);
             throw error;
         }
     }
@@ -193,7 +193,7 @@ const addWallets = async ({ keyIdentifier, wallets }) => {
             });
         }
         catch (e) {
-            const error = (0, utils_1.onError)(e);
+            const error = utils_1.default.onError(e);
             throw error;
         }
     }
@@ -208,7 +208,7 @@ const deleteWallet = async ({ keyIdentifier, chain, address, }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };

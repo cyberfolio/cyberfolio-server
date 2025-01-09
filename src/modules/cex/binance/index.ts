@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
 
-import { roundNumber, sleep, timestampToReadableDate } from '@src/utils';
+import AppUtils from '@src/utils';
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
 import { BinanceError, CexAssetResponse, CexName } from '@config/types';
 import { getCurrencyLogo } from '@providers/coingecko/repository';
@@ -39,7 +39,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
         const price = await getCurrentUSDPrice(symbol);
         const balance = parseFloat(asset.free) + parseFloat(asset.locked);
         const contractAddress = await getContractAddress(symbol);
-        const value = roundNumber(balance * price);
+        const value = AppUtils.roundNumber(balance * price);
         const logo = symbol ? await getCurrencyLogo(symbol) : '';
         if (value > 1) {
           response.push({
@@ -159,25 +159,25 @@ type GetPaymentHistory = {
 };
 const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
   const response: BinancePaymentHistory[] = [];
-  await sleep(2000);
+  await AppUtils.sleep(2000);
   const creditCardPayment = await getFiatPaymentBuyAndSellHistory({
     apiKey,
     apiSecret,
     transactionType: TransactionType.DEPOSIT,
   });
-  await sleep(3000);
+  await AppUtils.sleep(3000);
   const bankPayment = await getFiatDepositAndWithDrawalHistory({
     apiKey,
     apiSecret,
     transactionType: TransactionType.DEPOSIT,
   });
-  await sleep(3000);
+  await AppUtils.sleep(3000);
   const creditCardWithdrawal = await getFiatPaymentBuyAndSellHistory({
     apiKey,
     apiSecret,
     transactionType: TransactionType.WITHDRAW,
   });
-  await sleep(3000);
+  await AppUtils.sleep(3000);
   const bankWithdrawal = await getFiatDepositAndWithDrawalHistory({
     apiKey,
     apiSecret,
@@ -191,7 +191,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
       orderNo: item.orderNo,
       type: 'Card Withdrawal',
       status: item.status,
-      date: timestampToReadableDate(item.createTime),
+      date: AppUtils.timestampToReadableDate(item.createTime),
       createTime: item.createTime,
       fee: item.totalFee,
       amount: item.obtainAmount,
@@ -205,7 +205,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
       type: 'Bank Withdrawal',
       status: item.status,
       createTime: item.createTime,
-      date: timestampToReadableDate(item.createTime),
+      date: AppUtils.timestampToReadableDate(item.createTime),
       fee: item.totalFee,
       amount: item.amount,
     };
@@ -218,7 +218,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
       type: 'Bank Deposit',
       status: item.status,
       createTime: item.createTime,
-      date: timestampToReadableDate(item.createTime),
+      date: AppUtils.timestampToReadableDate(item.createTime),
       amount: item.indicatedAmount,
       fee: item.totalFee,
     };
@@ -231,7 +231,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
       type: 'Card Payment',
       status: item.status,
       createTime: item.createTime,
-      date: timestampToReadableDate(item.createTime),
+      date: AppUtils.timestampToReadableDate(item.createTime),
       amount: item.sourceAmount,
       fee: item.totalFee,
     };
@@ -241,7 +241,9 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
   return sortedRes;
 };
 
-export default {
+const BinanceModule = {
   getAssets,
   getPaymentHistory,
 };
+
+export default BinanceModule;

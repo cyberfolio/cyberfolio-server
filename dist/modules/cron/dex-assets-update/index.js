@@ -12,8 +12,8 @@ const ethereum_1 = __importDefault(require("@dex/ethereum"));
 const optimism_1 = __importDefault(require("@dex/optimism"));
 const polygon_1 = __importDefault(require("@dex/polygon"));
 const smartchain_1 = __importDefault(require("@dex/smartchain"));
-const utils_1 = require("@src/utils");
-const path = (0, utils_1.getFilePath)(__filename);
+const utils_1 = __importDefault(require("@src/utils"));
+const path = utils_1.default.getFilePath(__filename);
 function getDifference(array1, array2) {
     return array1.filter((object1) => !array2.some((object2) => object1.symbol === object2.symbol && object1.chain === object2.chain));
 }
@@ -35,7 +35,7 @@ const updateEvmAssets = async () => {
             const polygonAssets = await polygon_1.default.getTokenBalances(walletAddress);
             const bscAssets = await smartchain_1.default.getTokenBalances(walletAddress);
             // stop 2 seconds for api rate limit
-            await (0, utils_1.sleep)(2000);
+            await utils_1.default.sleep(2000);
             const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
             // Remove assets that are not owned anymore
             const existingAssets = evmAssets.map((evmAsset) => ({
@@ -68,7 +68,7 @@ const updateEvmAssets = async () => {
         }
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             func: updateEvmAssets.name,
             path,
             e,

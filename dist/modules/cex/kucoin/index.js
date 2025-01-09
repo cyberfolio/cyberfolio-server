@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const coingecko_1 = require("@providers/coingecko");
 const types_1 = require("@config/types");
 const repository_1 = require("@providers/coingecko/repository");
@@ -31,13 +31,13 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase, }) => {
         const response = [];
         if (assets && assets.length > 0) {
             for (const asset of assets) {
-                const balance = (0, utils_1.roundNumber)(Number(asset.holds));
+                const balance = utils_1.default.roundNumber(Number(asset.holds));
                 if (balance > 0) {
                     const symbol = asset.currency?.toLowerCase();
                     const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
                     const name = await (0, coingecko_1.getFullNameOfTheCurrency)(symbol);
                     const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
-                    const value = (0, utils_1.roundNumber)(balance * price);
+                    const value = utils_1.default.roundNumber(balance * price);
                     const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
                     if (value > 1) {
                         response.push({
@@ -75,6 +75,7 @@ const getAssets = async ({ type, apiKey, apiSecret, passphrase, }) => {
         }
     }
 };
-exports.default = {
+const KucoinModule = {
     getAssets,
 };
+exports.default = KucoinModule;

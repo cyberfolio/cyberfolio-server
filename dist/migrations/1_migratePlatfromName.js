@@ -7,9 +7,9 @@ const models_1 = require("@api/cex/repository/models");
 const models_2 = require("@api/dex/repository/models");
 const logger_1 = __importDefault(require("@config/logger"));
 const types_1 = require("@config/types");
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const models_3 = __importDefault(require("./repository/models"));
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const Index = async (number) => {
     try {
         const migration = await models_3.default.findOne({});
@@ -31,7 +31,7 @@ const Index = async (number) => {
         }
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: Index.name,
             path,

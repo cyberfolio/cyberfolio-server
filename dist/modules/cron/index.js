@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_cron_1 = __importDefault(require("node-cron"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const remove_1 = __importDefault(require("./scam-tokens/remove"));
 const dex_assets_update_1 = __importDefault(require("./dex-assets-update"));
 const update_currencies_1 = __importDefault(require("./update-currencies"));
@@ -12,7 +12,7 @@ const cex_assets_update_1 = __importDefault(require("./cex-assets-update"));
 const ever2HourCronValue = '0 0 */2 * * *';
 const everHourCronValue = '0 0 */1 * * *';
 const everyMinuteCronValue = '0 */1 * * * *';
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const initCronJobs = async () => {
     node_cron_1.default.schedule(ever2HourCronValue, async () => {
         try {
@@ -20,10 +20,10 @@ const initCronJobs = async () => {
         }
         catch (e) {
             if (e instanceof Error) {
-                (0, utils_1.logError)({ path, func: initCronJobs.name, e });
+                utils_1.default.logError({ path, func: initCronJobs.name, e });
             }
             else {
-                (0, utils_1.logError)({ e: 'unknown error', path, func: initCronJobs.name });
+                utils_1.default.logError({ e: 'unknown error', path, func: initCronJobs.name });
             }
         }
     });
@@ -34,10 +34,10 @@ const initCronJobs = async () => {
         }
         catch (e) {
             if (e instanceof Error) {
-                (0, utils_1.logError)({ path, func: initCronJobs.name, e });
+                utils_1.default.logError({ path, func: initCronJobs.name, e });
             }
             else {
-                (0, utils_1.logError)({ e: 'unknown error', path, func: initCronJobs.name });
+                utils_1.default.logError({ e: 'unknown error', path, func: initCronJobs.name });
             }
         }
     });
@@ -47,10 +47,10 @@ const initCronJobs = async () => {
         }
         catch (e) {
             if (e instanceof Error) {
-                (0, utils_1.logError)({ path, func: initCronJobs.name, e });
+                utils_1.default.logError({ path, func: initCronJobs.name, e });
             }
             else {
-                (0, utils_1.logError)({ e: 'unknown error', path, func: initCronJobs.name });
+                utils_1.default.logError({ e: 'unknown error', path, func: initCronJobs.name });
             }
         }
     });

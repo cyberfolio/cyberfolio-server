@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ethers_1 = require("ethers");
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const jwt_1 = __importDefault(require("@config/jwt"));
 const middleware_1 = require("@config/middleware");
 const services_1 = __importDefault(require("@api/dex/services"));
@@ -17,7 +17,7 @@ router.post('/login/metamask', async (req, res, next) => {
     let evmAddress = req.body?.evmAddress;
     evmAddress = evmAddress.toLowerCase();
     try {
-        const nonce = (0, utils_1.generateNonce)();
+        const nonce = utils_1.default.generateNonce();
         const user = await (0, repository_1.getUserByEvmAddress)({
             evmAddress,
         });

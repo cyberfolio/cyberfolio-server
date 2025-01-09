@@ -12,12 +12,12 @@ import dex from './api/dex';
 import cex from './api/cex';
 import info from './api/info';
 
-import { connectToDB, runMigrations } from './init';
+import { connectToDB, runMigrations, startCronJobs } from './init';
 import { allowedMethods, authenticateUser } from './config/middleware';
 
 const boot = async () => {
   await connectToDB();
-  // await startCronJobs();
+  await startCronJobs();
   await runMigrations();
 
   const app = express();
@@ -33,9 +33,8 @@ const boot = async () => {
   app.use(cookieParser());
 
   app.get('/', (_, res) => {
-    res.send('Alive');
+    res.send(`${process.env.APP_NAME} server is running`);
   });
-
   // init api routes
   app.use('/api/auth', auth);
   app.use('/api/cex', authenticateUser, cex);

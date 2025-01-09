@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("@config/types");
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const express_1 = __importDefault(require("express"));
 const services_1 = __importDefault(require("./services"));
 const router = express_1.default.Router();
@@ -52,7 +52,7 @@ router.get('/assets/:chain', async (req, res) => {
     // Validation
     const keyIdentifier = req.user?.keyIdentifier;
     const { chain } = req.params;
-    if (!keyIdentifier || !(0, utils_1.isEnumOf)(types_1.Chain, chain)) {
+    if (!keyIdentifier || !utils_1.default.isEnumOf(types_1.Chain, chain)) {
         return res.status(400).send('Validation error');
     }
     // Logic

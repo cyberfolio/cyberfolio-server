@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const types_1 = require("@config/types");
 const evmAssetsResponse_1 = __importDefault(require("@dex/common/evmAssetsResponse"));
 const constants_1 = __importDefault(require("@config/constants"));
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const getTokenBalances = async (walletAddress) => {
     try {
         const walletInfo = await axios_1.default.get(`${process.env.COVALENT_V1_API_URL}/${constants_1.default.ChainIDs.POLYGON}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`);
@@ -17,7 +17,7 @@ const getTokenBalances = async (walletAddress) => {
         return response;
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: getTokenBalances.name,
             path,

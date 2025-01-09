@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { getFilePath, logError } from '@src/utils';
+import AppUtils from '@src/utils';
 import { Chain, ScanURL } from '@config/types';
 import evmAssetsResponse from '@dex/common/evmAssetsResponse';
 import { CovalentTokenBalanceResponse } from '@dex/common/types';
 import Constants from '@config/constants';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const getTokenBalances = async (walletAddress: string) => {
   try {
@@ -16,7 +16,7 @@ const getTokenBalances = async (walletAddress: string) => {
     const response = await evmAssetsResponse(walletAddress, ScanURL.BSC, assets, Chain.BSC);
     return response;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getTokenBalances.name,
       path,

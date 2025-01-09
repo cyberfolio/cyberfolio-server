@@ -5,16 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContractAddress = exports.getLastCurrencyUpdate = exports.getFullNameOfTheCurrency = exports.getCurrentUSDPrice = exports.addOrUpdateCryptoCurrencies = void 0;
 const axios_1 = __importDefault(require("axios"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const repository_1 = require("./repository");
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const addOrUpdateCryptoCurrencies = async (page) => {
     try {
         const response = await (0, axios_1.default)({
             url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&page=${page}`,
             method: 'get',
         });
-        await (0, utils_1.sleep)(10000);
+        await utils_1.default.sleep(10000);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cryptoCurrencies = response?.data;
         if (cryptoCurrencies && Array.isArray(cryptoCurrencies)) {
@@ -31,7 +31,7 @@ const addOrUpdateCryptoCurrencies = async (page) => {
         }
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: exports.addOrUpdateCryptoCurrencies.name,
             path,

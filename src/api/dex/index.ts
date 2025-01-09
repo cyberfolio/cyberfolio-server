@@ -1,5 +1,5 @@
 import { AuthenticatedRequest, Chain } from '@config/types';
-import { isEnumOf } from '@src/utils';
+import AppUtils from '@src/utils';
 import express from 'express';
 import DexService from './services';
 
@@ -55,7 +55,7 @@ router.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Resp
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;
   const { chain } = req.params;
-  if (!keyIdentifier || !isEnumOf(Chain, chain)) {
+  if (!keyIdentifier || !AppUtils.isEnumOf(Chain, chain)) {
     return res.status(400).send('Validation error');
   }
 

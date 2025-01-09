@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const binance_1 = __importDefault(require("@cex//binance"));
+const binance_1 = __importDefault(require("@cex/binance"));
 const binancetr_1 = __importDefault(require("@cex/binancetr"));
 const kucoin_1 = __importDefault(require("@cex/kucoin"));
 const gateio_1 = __importDefault(require("@cex/gateio"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const types_1 = require("@config/types");
 const repository_1 = __importDefault(require("./repository"));
 const checkIfExists = async ({ keyIdentifier, cexName }) => {
@@ -68,14 +68,14 @@ const saveSpotAssets = async ({ cexName, apiKey, apiSecret, passphrase, keyIdent
                 }
             }
             catch (e) {
-                const error = (0, utils_1.onError)(e);
+                const error = utils_1.default.onError(e);
                 throw error;
             }
         }
         return spotAssets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -95,7 +95,7 @@ const getSpotAssets = async ({ keyIdentifier, cexName }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -124,7 +124,7 @@ const add = async ({ keyIdentifier, apiKey, apiSecret, cexName, passphrase, }) =
         });
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -136,7 +136,7 @@ const deleteCex = async ({ keyIdentifier, cexName }) => {
         });
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -148,7 +148,7 @@ const getAssets = async ({ keyIdentifier }) => {
         return assets;
     }
     catch (e) {
-        const error = (0, utils_1.onError)(e);
+        const error = utils_1.default.onError(e);
         throw error;
     }
 };
@@ -165,7 +165,7 @@ const savePaymentHistory = async ({ keyIdentifier, cexName, apiKey, apiSecret, }
             }
         }
         catch (e) {
-            const error = (0, utils_1.onError)(e);
+            const error = utils_1.default.onError(e);
             throw error;
         }
         response.push(...binancePaymentHistory);
@@ -192,7 +192,7 @@ const getPaymentHistory = async ({ keyIdentifier }) => {
             fee,
             status: item.status,
             createTime: item.createTime,
-            date: (0, utils_1.timestampToReadableDate)(item.createTime),
+            date: utils_1.default.timestampToReadableDate(item.createTime),
             fiatCurrency: item.fiatCurrency,
             amount,
         };

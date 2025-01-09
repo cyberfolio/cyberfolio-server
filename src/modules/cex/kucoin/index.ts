@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
-import { roundNumber } from '@src/utils';
+import AppUtils from '@src/utils';
 
 import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
 import { KucoinError, CexAssetResponse, CexName } from '@config/types';
@@ -43,13 +43,13 @@ const getAssets = async ({
     const response: CexAssetResponse[] = [];
     if (assets && assets.length > 0) {
       for (const asset of assets) {
-        const balance = roundNumber(Number(asset.holds));
+        const balance = AppUtils.roundNumber(Number(asset.holds));
         if (balance > 0) {
           const symbol = asset.currency?.toLowerCase();
           const price = await getCurrentUSDPrice(symbol);
           const name = await getFullNameOfTheCurrency(symbol);
           const contractAddress = await getContractAddress(symbol);
-          const value = roundNumber(balance * price);
+          const value = AppUtils.roundNumber(balance * price);
           const logo = symbol ? await getCurrencyLogo(symbol) : '';
 
           if (value > 1) {
@@ -86,6 +86,8 @@ const getAssets = async ({
   }
 };
 
-export default {
+const KucoinModule = {
   getAssets,
 };
+
+export default KucoinModule;

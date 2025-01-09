@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const coingecko_1 = require("@providers/coingecko");
 const types_1 = require("@config/types");
 const repository_1 = require("@providers/coingecko/repository");
@@ -29,7 +29,7 @@ const getAssets = async ({ apiKey, apiSecret }) => {
                 const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
                 const balance = parseFloat(asset.free) + parseFloat(asset.locked);
                 const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
-                const value = (0, utils_1.roundNumber)(balance * price);
+                const value = utils_1.default.roundNumber(balance * price);
                 const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
                 if (value > 1) {
                     response.push({
@@ -125,25 +125,25 @@ const getFiatPaymentBuyAndSellHistory = async ({ transactionType, apiKey, apiSec
 };
 const getPaymentHistory = async ({ apiKey, apiSecret }) => {
     const response = [];
-    await (0, utils_1.sleep)(2000);
+    await utils_1.default.sleep(2000);
     const creditCardPayment = await getFiatPaymentBuyAndSellHistory({
         apiKey,
         apiSecret,
         transactionType: types_2.TransactionType.DEPOSIT,
     });
-    await (0, utils_1.sleep)(3000);
+    await utils_1.default.sleep(3000);
     const bankPayment = await getFiatDepositAndWithDrawalHistory({
         apiKey,
         apiSecret,
         transactionType: types_2.TransactionType.DEPOSIT,
     });
-    await (0, utils_1.sleep)(3000);
+    await utils_1.default.sleep(3000);
     const creditCardWithdrawal = await getFiatPaymentBuyAndSellHistory({
         apiKey,
         apiSecret,
         transactionType: types_2.TransactionType.WITHDRAW,
     });
-    await (0, utils_1.sleep)(3000);
+    await utils_1.default.sleep(3000);
     const bankWithdrawal = await getFiatDepositAndWithDrawalHistory({
         apiKey,
         apiSecret,
@@ -156,7 +156,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
             orderNo: item.orderNo,
             type: 'Card Withdrawal',
             status: item.status,
-            date: (0, utils_1.timestampToReadableDate)(item.createTime),
+            date: utils_1.default.timestampToReadableDate(item.createTime),
             createTime: item.createTime,
             fee: item.totalFee,
             amount: item.obtainAmount,
@@ -170,7 +170,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
             type: 'Bank Withdrawal',
             status: item.status,
             createTime: item.createTime,
-            date: (0, utils_1.timestampToReadableDate)(item.createTime),
+            date: utils_1.default.timestampToReadableDate(item.createTime),
             fee: item.totalFee,
             amount: item.amount,
         };
@@ -183,7 +183,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
             type: 'Bank Deposit',
             status: item.status,
             createTime: item.createTime,
-            date: (0, utils_1.timestampToReadableDate)(item.createTime),
+            date: utils_1.default.timestampToReadableDate(item.createTime),
             amount: item.indicatedAmount,
             fee: item.totalFee,
         };
@@ -196,7 +196,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
             type: 'Card Payment',
             status: item.status,
             createTime: item.createTime,
-            date: (0, utils_1.timestampToReadableDate)(item.createTime),
+            date: utils_1.default.timestampToReadableDate(item.createTime),
             amount: item.sourceAmount,
             fee: item.totalFee,
         };
@@ -205,7 +205,8 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
     const sortedRes = response.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
     return sortedRes;
 };
-exports.default = {
+const BinanceModule = {
     getAssets,
     getPaymentHistory,
 };
+exports.default = BinanceModule;

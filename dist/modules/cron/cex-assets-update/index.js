@@ -5,13 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("@api/auth/repository/models");
 const models_2 = require("@api/cex/repository/models");
-const binance_1 = __importDefault(require("@cex/binance"));
-const gateio_1 = __importDefault(require("@cex/gateio"));
-const kucoin_1 = __importDefault(require("@cex/kucoin"));
-const binancetr_1 = __importDefault(require("@cex/binancetr"));
+const modules_1 = __importDefault(require("@src/modules"));
 const types_1 = require("@config/types");
-const utils_1 = require("@src/utils");
-const path = (0, utils_1.getFilePath)(__filename);
+const utils_1 = __importDefault(require("@src/utils"));
+const path = utils_1.default.getFilePath(__filename);
 function getDifference(array1, array2) {
     return array1.filter((object1) => !array2.some((object2) => object1.symbol === object2.symbol && object1.cexName === object2.cexName));
 }
@@ -29,14 +26,14 @@ const updateCexAssets = async () => {
             const availableCexes = await models_2.cexInfoModel.find({ keyIdentifier: walletAddress }).lean();
             for (const availableCex of availableCexes) {
                 if (availableCex.cexName === types_1.CexName.BINANCE) {
-                    const assets = await binance_1.default.getAssets({
+                    const assets = await modules_1.default.Binance.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                     });
                     currentAssets.push(...assets);
                 }
                 if (availableCex.cexName === types_1.CexName.KUCOIN) {
-                    const assets = await kucoin_1.default.getAssets({
+                    const assets = await modules_1.default.Kucoin.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                         type: 'main',
@@ -45,20 +42,20 @@ const updateCexAssets = async () => {
                     currentAssets.push(...assets);
                 }
                 if (availableCex.cexName === types_1.CexName.GATEIO) {
-                    const assets = await gateio_1.default.getAssets({
+                    const assets = await modules_1.default.Gateio.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                     });
                     currentAssets.push(...assets);
                 }
                 if (availableCex.cexName === types_1.CexName.BINANCETR) {
-                    const assets = await binancetr_1.default.getAssets({
+                    const assets = await modules_1.default.BinanceTR.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                     });
                     currentAssets.push(...assets);
                 }
-                (0, utils_1.sleep)(2000);
+                utils_1.default.sleep(2000);
             }
             const existingAssets = currentAssets.map((cexAsset) => ({
                 symbol: cexAsset.symbol,
@@ -85,7 +82,7 @@ const updateCexAssets = async () => {
         }
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             func: updateCexAssets.name,
             path,
             e,

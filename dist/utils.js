@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.timestampToReadableDate = exports.isEnumOf = exports.isScamToken = exports.removeMongoFields = exports.getFilePath = exports.logError = exports.isEVMChain = exports.onError = exports.roundNumber = exports.capitalizeFirstLetter = exports.doesImageExists = exports.generateNonce = exports.intDivide = exports.getScanUrl = exports.toBase64 = exports.sathoshiToBtcBalance = exports.formatBalance = exports.isValid0xAddress = exports.sleep = exports.web3 = void 0;
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable promise/avoid-new */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -16,17 +15,12 @@ const logger_1 = __importDefault(require("@config/logger"));
 const lodash_1 = __importDefault(require("lodash"));
 const types_1 = require("@config/types");
 const model_1 = __importDefault(require("./modules/cron/scam-tokens/model"));
-exports.web3 = new web3_1.default(new web3_1.default.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`));
+const web3 = new web3_1.default(new web3_1.default.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`));
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-exports.sleep = sleep;
-const isValid0xAddress = (address) => exports.web3.utils.isAddress(address);
-exports.isValid0xAddress = isValid0xAddress;
+const isValid0xAddress = (address) => web3.utils.isAddress(address);
 const formatBalance = (balance, decimals) => ethers_1.ethers.formatUnits(balance, Number(decimals));
-exports.formatBalance = formatBalance;
 const sathoshiToBtcBalance = (satoshi) => satoshi * 0.00000001;
-exports.sathoshiToBtcBalance = sathoshiToBtcBalance;
 const toBase64 = (string) => Buffer.from(string).toString('base64');
-exports.toBase64 = toBase64;
 const getScanUrl = (address, chain) => {
     switch (chain) {
         case types_1.Chain.ARBITRUM:
@@ -49,11 +43,8 @@ const getScanUrl = (address, chain) => {
             return '';
     }
 };
-exports.getScanUrl = getScanUrl;
 const intDivide = (numerator, denominator) => Number((numerator / denominator).toString().split('.')[0]);
-exports.intDivide = intDivide;
 const generateNonce = () => `I confirm that I'm the owner of this wallet by signing this message: ${(0, uuid_1.v4)()}`;
-exports.generateNonce = generateNonce;
 const doesImageExists = async (url) => {
     try {
         await (0, axios_1.default)({
@@ -66,11 +57,8 @@ const doesImageExists = async (url) => {
         return false;
     }
 };
-exports.doesImageExists = doesImageExists;
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-exports.capitalizeFirstLetter = capitalizeFirstLetter;
 const roundNumber = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
-exports.roundNumber = roundNumber;
 const onError = (e) => {
     let error;
     if (e instanceof Error) {
@@ -82,7 +70,6 @@ const onError = (e) => {
     }
     return error;
 };
-exports.onError = onError;
 const isEVMChain = (chain) => {
     return (chain === types_1.Chain.ARBITRUM ||
         chain === types_1.Chain.AVALANCHE ||
@@ -91,7 +78,6 @@ const isEVMChain = (chain) => {
         chain === types_1.Chain.POLYGON ||
         chain === types_1.Chain.ETHEREUM);
 };
-exports.isEVMChain = isEVMChain;
 const logError = ({ path, func, e }) => {
     let message;
     if (axios_1.default.isAxiosError(e)) {
@@ -105,12 +91,10 @@ const logError = ({ path, func, e }) => {
     }
     logger_1.default.error(`Error at ${path} ${func} message: ${message}`);
 };
-exports.logError = logError;
 const getFilePath = (path) => {
     const fileName = path.substring(path.indexOf('src'));
     return fileName;
 };
-exports.getFilePath = getFilePath;
 const removeMongoFields = (object) => {
     if (Object.prototype.toString.call(object) !== '[object Object]')
         return object;
@@ -119,16 +103,13 @@ const removeMongoFields = (object) => {
     delete obj.__v;
     return obj;
 };
-exports.removeMongoFields = removeMongoFields;
 const isScamToken = async (address, chainId) => {
     const isScam = await model_1.default.findOne({ address, chainId });
     return Boolean(isScam);
 };
-exports.isScamToken = isScamToken;
 function isEnumOf(object, possibleValue) {
     return Object.values(object).includes(possibleValue);
 }
-exports.isEnumOf = isEnumOf;
 const timestampToReadableDate = (timestamp) => {
     const date = new Date(timestamp);
     let month = date.getMonth() + 1;
@@ -144,4 +125,25 @@ const timestampToReadableDate = (timestamp) => {
     const str = `${day}/${month}/${date.getFullYear()} ${hour}:${min}:${sec}`;
     return str;
 };
-exports.timestampToReadableDate = timestampToReadableDate;
+const AppUtils = {
+    sleep,
+    isValid0xAddress,
+    formatBalance,
+    sathoshiToBtcBalance,
+    toBase64,
+    getScanUrl,
+    intDivide,
+    generateNonce,
+    doesImageExists,
+    capitalizeFirstLetter,
+    roundNumber,
+    onError,
+    isEVMChain,
+    logError,
+    getFilePath,
+    removeMongoFields,
+    isScamToken,
+    isEnumOf,
+    timestampToReadableDate,
+};
+exports.default = AppUtils;

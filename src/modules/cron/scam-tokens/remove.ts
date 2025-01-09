@@ -1,11 +1,11 @@
-import { logError, getFilePath } from '@src/utils';
+import AppUtils from '@src/utils';
 import dexRepository from '@src/api/dex/repository';
 import { dexAssetModel } from '@src/api/dex/repository/models';
 import axios from 'axios';
 import constants from '@constants/index';
 import scamTokenModel from './model';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 interface ScamToken {
   address: string;
@@ -54,7 +54,7 @@ const removeScamTokens = async () => {
         try {
           await dexAssetModel.deleteMany({ contractAddress: asset.contractAddress });
         } catch (e) {
-          logError({
+          AppUtils.logError({
             func: removeScamTokens.name,
             path,
             e,
@@ -63,7 +63,7 @@ const removeScamTokens = async () => {
       }
     }
   } catch (e) {
-    logError({
+    AppUtils.logError({
       func: removeScamTokens.name,
       path,
       e,

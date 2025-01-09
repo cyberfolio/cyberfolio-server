@@ -1,18 +1,18 @@
 import axios from 'axios';
 
-import { getFilePath, logError, sathoshiToBtcBalance } from '@src/utils';
+import AppUtils from '@src/utils';
 import { getCurrentUSDPrice } from '@providers/coingecko';
 import { Chain } from '@config/types';
 import { DexAssetAPIResponse } from '@dex/common/types';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const getBalance = async (walletAddress: string): Promise<DexAssetAPIResponse[]> => {
   try {
     const { data } = await axios.get<number>(
       `${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`,
     );
-    const balance = sathoshiToBtcBalance(data);
+    const balance = AppUtils.sathoshiToBtcBalance(data);
     const price = await getCurrentUSDPrice('btc');
     const value = balance * price;
 
@@ -30,7 +30,7 @@ const getBalance = async (walletAddress: string): Promise<DexAssetAPIResponse[]>
       },
     ];
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getBalance.name,
       path,

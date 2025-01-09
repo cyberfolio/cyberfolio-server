@@ -7,21 +7,21 @@ exports.getTokenBalances = exports.getEthBalance = exports.isValidEthAddress = v
 const web3_1 = __importDefault(require("web3"));
 const axios_1 = __importDefault(require("axios"));
 const web3_validator_1 = __importDefault(require("web3-validator"));
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const types_1 = require("@config/types");
 const evmAssetsResponse_1 = __importDefault(require("@dex/common/evmAssetsResponse"));
 const constants_1 = __importDefault(require("@config/constants"));
 const web3 = new web3_1.default(new web3_1.default.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`));
 const isValidEthAddress = (address) => web3_validator_1.default.isAddress(address);
 exports.isValidEthAddress = isValidEthAddress;
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const getEthBalance = async (walletAddress) => {
     try {
         const balance = await web3.eth.getBalance(walletAddress);
         return web3.utils.fromWei(balance, 'ether');
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: exports.getEthBalance.name,
             path,
@@ -38,7 +38,7 @@ const getTokenBalances = async (walletAddress) => {
         return response;
     }
     catch (e) {
-        (0, utils_1.logError)({
+        utils_1.default.logError({
             e,
             func: exports.getTokenBalances.name,
             path,

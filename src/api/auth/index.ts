@@ -1,7 +1,7 @@
 import express from 'express';
 import { ethers } from 'ethers';
 
-import { generateNonce } from '@src/utils';
+import AppUilts from '@src/utils';
 import jwtConfig from '@config/jwt';
 import { authenticateUser } from '@config/middleware';
 
@@ -16,7 +16,7 @@ router.post('/login/metamask', async (req: express.Request, res: express.Respons
   let evmAddress = req.body?.evmAddress as string;
   evmAddress = evmAddress.toLowerCase();
   try {
-    const nonce = generateNonce();
+    const nonce = AppUilts.generateNonce();
     const user = await getUserByEvmAddress({
       evmAddress,
     });

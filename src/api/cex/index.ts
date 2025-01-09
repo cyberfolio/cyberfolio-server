@@ -1,5 +1,5 @@
 import { AuthenticatedRequest, CexName } from '@config/types';
-import { isEnumOf } from '@src/utils';
+import AppUtils from '@src/utils';
 import express from 'express';
 
 import CexService from './services';
@@ -58,7 +58,7 @@ router.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Re
   if (!keyIdentifier || !cexName) {
     return res.status(400).send('Validation error');
   }
-  if (!isEnumOf(CexName, cexName)) {
+  if (!AppUtils.isEnumOf(CexName, cexName)) {
     return res.status(400).send('Invalid cex name');
   }
 

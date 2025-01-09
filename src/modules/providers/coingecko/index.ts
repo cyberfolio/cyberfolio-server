@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getFilePath, logError, sleep } from '@src/utils';
+import AppUtils from '@src/utils';
 import {
   addOrUpdateCryptoCurrency,
   getCryptoPriceBySymbol,
@@ -9,7 +9,7 @@ import {
   getContractAddressOfTheCurrencyBySymbol,
 } from './repository';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 export const addOrUpdateCryptoCurrencies = async (page: number) => {
   try {
@@ -17,7 +17,7 @@ export const addOrUpdateCryptoCurrencies = async (page: number) => {
       url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&page=${page}`,
       method: 'get',
     });
-    await sleep(10000);
+    await AppUtils.sleep(10000);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cryptoCurrencies = response?.data as any[];
 
@@ -34,7 +34,7 @@ export const addOrUpdateCryptoCurrencies = async (page: number) => {
       }
     }
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: addOrUpdateCryptoCurrencies.name,
       path,

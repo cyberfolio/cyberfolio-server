@@ -1,4 +1,4 @@
-import { onError } from '@src/utils';
+import AppUtils from '@src/utils';
 import jwt from 'jsonwebtoken';
 import { JwtTokenInterface } from './types';
 
@@ -20,7 +20,7 @@ const verifyJwtAndReturnUserEvmAddress = ({ jwtToken }: { jwtToken: string }) =>
     const result = jwt.verify(jwtToken, secret) as JwtTokenInterface;
     return result;
   } catch (e) {
-    const error = onError(e);
+    const error = AppUtils.onError(e);
     throw error;
   }
 };

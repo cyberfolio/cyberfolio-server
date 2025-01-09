@@ -1,9 +1,9 @@
 import { CexName } from '@config/types';
-import { getFilePath, logError, removeMongoFields } from '@src/utils';
+import AppUtils from '@src/utils';
 import { CexPaymentHistory } from '@api/cex/types';
 import { cexInfoModel, cexAssetModel, cexPaymentHistoryModel } from './models';
 
-const path = getFilePath(__filename);
+const path = AppUtils.getFilePath(__filename);
 
 const addCexByKeyIdentifier = async ({
   keyIdentifier,
@@ -27,7 +27,7 @@ const addCexByKeyIdentifier = async ({
       passphrase,
     });
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: addCexByKeyIdentifier.name,
       path,
@@ -42,7 +42,7 @@ const getCexInfos = async ({ keyIdentifier }: { keyIdentifier: string }) => {
       keyIdentifier,
     })
     .lean();
-  cexes = cexes.map((cex) => removeMongoFields(cex));
+  cexes = cexes.map((cex) => AppUtils.removeMongoFields(cex));
 
   return cexes;
 };
@@ -64,7 +64,7 @@ const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: stri
       cexName,
     })
     .lean();
-  assets = assets.map((asset) => removeMongoFields(asset));
+  assets = assets.map((asset) => AppUtils.removeMongoFields(asset));
   return assets;
 };
 
@@ -74,7 +74,7 @@ const fetchAllSpotAssets = async ({ keyIdentifier }: { keyIdentifier: string }) 
       keyIdentifier,
     })
     .lean();
-  assets = assets.map((asset) => removeMongoFields(asset));
+  assets = assets.map((asset) => AppUtils.removeMongoFields(asset));
   return assets;
 };
 
@@ -117,7 +117,7 @@ const addCexAsset = async ({
       { upsert: true, new: true },
     );
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: addCexAsset.name,
       path,
@@ -134,7 +134,7 @@ const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; ce
     });
     await cexAssetModel.deleteMany({ keyIdentifier, cexName });
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: deleteCex.name,
       path,
@@ -164,7 +164,7 @@ const savePaymentHistory = async ({
       amount: Number(cexPaymentHistory.amount),
     });
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: savePaymentHistory.name,
       path,
@@ -182,7 +182,7 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }) =
       .lean();
     return history;
   } catch (e) {
-    logError({
+    AppUtils.logError({
       e,
       func: getPaymentHistory.name,
       path,

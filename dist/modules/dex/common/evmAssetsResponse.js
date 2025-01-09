@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("@src/utils");
+const utils_1 = __importDefault(require("@src/utils"));
 const repository_1 = require("@providers/coingecko/repository");
 const types_1 = require("@config/types");
 const index_1 = __importDefault(require("@constants/index"));
-const path = (0, utils_1.getFilePath)(__filename);
+const path = utils_1.default.getFilePath(__filename);
 const evmAssetsResponse = async (walletAddress, scanURL, assets, chain) => {
     const response = [];
     if (assets && Array.isArray(assets)) {
@@ -15,9 +15,9 @@ const evmAssetsResponse = async (walletAddress, scanURL, assets, chain) => {
             try {
                 const contractAddress = asset.contract_address?.toLowerCase();
                 const { chainId } = index_1.default.EvmWithChain[chain];
-                const isScam = await (0, utils_1.isScamToken)(contractAddress, chainId);
+                const isScam = await utils_1.default.isScamToken(contractAddress, chainId);
                 if (Number(asset.balance) > 0) {
-                    let balance = Number((0, utils_1.formatBalance)(asset.balance, asset.contract_decimals));
+                    let balance = Number(utils_1.default.formatBalance(asset.balance, asset.contract_decimals));
                     if (contractAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
                         balance = parseFloat(balance.toFixed(5));
                     }
@@ -64,7 +64,7 @@ const evmAssetsResponse = async (walletAddress, scanURL, assets, chain) => {
                 }
             }
             catch (e) {
-                (0, utils_1.logError)({
+                utils_1.default.logError({
                     e,
                     func: evmAssetsResponse.name,
                     path,
