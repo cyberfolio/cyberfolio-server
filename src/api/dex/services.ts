@@ -66,6 +66,7 @@ const saveAssets = async ({
   walletName: string;
 }) => {
   let assets: DexAssetAPIResponse[] = [];
+
   if (chain === Chain.ETHEREUM) {
     try {
       const avalancheTokens = await avalanche.getTokenBalances(walletAddress);
@@ -179,6 +180,7 @@ const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; w
       const existingWallets = await repository.getWallets({
         keyIdentifier,
       });
+
       const walletNames = existingWallets.map((existingWallet) => existingWallet.walletName);
       const walletAddresses = existingWallets.map((existingWallet) => existingWallet.walletAddress);
       if (walletNames.includes(walletName)) {
@@ -195,6 +197,7 @@ const addWallets = async ({ keyIdentifier, wallets }: { keyIdentifier: string; w
         walletName,
         chain,
       });
+
       await saveAssets({
         keyIdentifier,
         chain,

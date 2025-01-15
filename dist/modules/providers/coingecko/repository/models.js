@@ -17,4 +17,5 @@ const lastCurrencyUpdateSchema = new mongoose_1.default.Schema({
     id: Number,
     lastUpdateDate: Date,
 });
-exports.lastCurrencyUpdateModel = mongoose_1.default.model('last-currency-update', lastCurrencyUpdateSchema);
+exports.lastCurrencyUpdateModel = mongoose_1.default.models.LastCurrencyUpdateDoc ||
+    mongoose_1.default.model('last-currency-update', lastCurrencyUpdateSchema);

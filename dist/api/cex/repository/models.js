@@ -16,7 +16,7 @@ const cexInfoSchema = new mongoose_1.default.Schema({
     },
     passphrase: String,
 });
-exports.cexInfoModel = mongoose_1.default.model('cex-info', cexInfoSchema);
+exports.cexInfoModel = mongoose_1.default.models.CexInfo || mongoose_1.default.model('cex-info', cexInfoSchema);
 const cexAssetSchema = new mongoose_1.default.Schema({
     keyIdentifier: String,
     cexName: {
@@ -31,7 +31,7 @@ const cexAssetSchema = new mongoose_1.default.Schema({
     value: Number,
     accountName: String,
 });
-exports.cexAssetModel = mongoose_1.default.model('cex-asset', cexAssetSchema);
+exports.cexAssetModel = mongoose_1.default.models.CexAsset || mongoose_1.default.model('cex-asset', cexAssetSchema);
 const cexPaymentHistorySchema = new mongoose_1.default.Schema({
     keyIdentifier: {
         type: String,
@@ -74,4 +74,5 @@ const cexPaymentHistorySchema = new mongoose_1.default.Schema({
         required: true,
     },
 });
-exports.cexPaymentHistoryModel = mongoose_1.default.model('cex-payment-history', cexPaymentHistorySchema);
+exports.cexPaymentHistoryModel = mongoose_1.default.models.CexPaymentHistory ||
+    mongoose_1.default.model('cex-payment-history', cexPaymentHistorySchema);

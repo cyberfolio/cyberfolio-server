@@ -45,6 +45,7 @@
         ]
       }
     ],
+    "@typescript-eslint/ban-ts-comment": "warn",
     "object-curly-newline": "off",
     "import/prefer-default-export": "error",
     "import/no-named-as-default-member": "off",

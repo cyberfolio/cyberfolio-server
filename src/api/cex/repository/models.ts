@@ -19,7 +19,8 @@ const cexInfoSchema = new mongoose.Schema<CexInfo>({
   },
   passphrase: String,
 });
-export const cexInfoModel = mongoose.model<CexInfo>('cex-info', cexInfoSchema);
+export const cexInfoModel =
+  (mongoose.models.CexInfo as mongoose.Model<CexInfo>) || mongoose.model<CexInfo>('cex-info', cexInfoSchema);
 
 // CEX ASSET
 export interface CexAsset {
@@ -47,7 +48,8 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   value: Number,
   accountName: String,
 });
-export const cexAssetModel = mongoose.model<CexAsset>('cex-asset', cexAssetSchema);
+export const cexAssetModel =
+  (mongoose.models.CexAsset as mongoose.Model<CexAsset>) || mongoose.model<CexAsset>('cex-asset', cexAssetSchema);
 
 // CEX PAYMENT HISTORY
 export interface CexPaymentHistory {
@@ -104,4 +106,6 @@ const cexPaymentHistorySchema = new mongoose.Schema<CexPaymentHistory>({
     required: true,
   },
 });
-export const cexPaymentHistoryModel = mongoose.model<CexPaymentHistory>('cex-payment-history', cexPaymentHistorySchema);
+export const cexPaymentHistoryModel =
+  (mongoose.models.CexPaymentHistory as mongoose.Model<CexPaymentHistory>) ||
+  mongoose.model<CexPaymentHistory>('cex-payment-history', cexPaymentHistorySchema);

@@ -14,7 +14,8 @@ const walletSchema = new mongoose.Schema<Wallet>({
   chain: { type: String, required: true },
 });
 
-export const walletsModel = mongoose.model<Wallet>('wallet', walletSchema);
+export const walletsModel =
+  (mongoose.models.Wallet as mongoose.Model<Wallet>) || mongoose.model<Wallet>('wallet', walletSchema);
 
 export interface DexAsset {
   keyIdentifier: string;
@@ -47,4 +48,5 @@ const dexAssetSchema = new mongoose.Schema<DexAsset>({
   scan: { type: String },
 });
 
-export const dexAssetModel = mongoose.model<DexAsset>('dex-asset', dexAssetSchema);
+export const dexAssetModel =
+  (mongoose.models.DexAsset as mongoose.Model<DexAsset>) || mongoose.model<DexAsset>('dex-asset', dexAssetSchema);

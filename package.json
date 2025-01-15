@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc\" \"sleep 3 && nodemon dist/index.js\"",
+    "dev": "nodemon src/index.ts",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint:check": "eslint . --ext ts",
@@ -33,7 +33,6 @@
     "mongodb": "6.1.0",
     "mongoose": "7.5.2",
     "node-cron": "3.0.2",
-    "nodemon": "3.0.1",
     "typescript": "5.2.2",
     "uuid": "9.0.1",
     "web3": "4.1.1",
@@ -66,9 +65,13 @@
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-promise": "6.1.1",
     "husky": "8.0.3",
-    "prettier": "3.0.3"
+    "nodemon": "3.1.9",
+    "prettier": "3.0.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
   },
   "_moduleAliases": {
+    "@modules": "dist/modules",
     "@providers": "dist/modules/providers",
     "@constants": "dist/constants",
     "@cex": "dist/modules/cex",

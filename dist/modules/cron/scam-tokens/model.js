@@ -14,5 +14,5 @@ const scamTokenSchema = new mongoose_1.default.Schema({
         required: true,
     },
 });
-const scamTokenModel = mongoose_1.default.model('scam-token', scamTokenSchema);
+const scamTokenModel = mongoose_1.default.models.DexAsset || mongoose_1.default.model('scam-token', scamTokenSchema);
 exports.default = scamTokenModel;

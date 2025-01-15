@@ -11,7 +11,7 @@ const walletSchema = new mongoose_1.default.Schema({
     walletName: { type: String, required: true },
     chain: { type: String, required: true },
 });
-exports.walletsModel = mongoose_1.default.model('wallet', walletSchema);
+exports.walletsModel = mongoose_1.default.models.Wallet || mongoose_1.default.model('wallet', walletSchema);
 const dexAssetSchema = new mongoose_1.default.Schema({
     keyIdentifier: { type: String, required: true },
     chain: { type: String, required: true },
@@ -26,4 +26,4 @@ const dexAssetSchema = new mongoose_1.default.Schema({
     contractAddress: { type: String },
     scan: { type: String },
 });
-exports.dexAssetModel = mongoose_1.default.model('dex-asset', dexAssetSchema);
+exports.dexAssetModel = mongoose_1.default.models.DexAsset || mongoose_1.default.model('dex-asset', dexAssetSchema);

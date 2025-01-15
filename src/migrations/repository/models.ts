@@ -12,5 +12,7 @@ const migrationSchema = new mongoose.Schema<MigrationDoc>({
   },
 });
 
-const migrationModel = mongoose.model<MigrationDoc>('migration', migrationSchema);
+const migrationModel =
+  (mongoose.models.MigrationDoc as mongoose.Model<MigrationDoc>) ||
+  mongoose.model<MigrationDoc>('migration', migrationSchema);
 export default migrationModel;

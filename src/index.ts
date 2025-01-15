@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import 'dotenv-safe/config';
 
 import express from 'express';
@@ -14,6 +13,12 @@ import info from './api/info';
 
 import { connectToDB, runMigrations, startCronJobs } from './init';
 import { allowedMethods, authenticateUser } from './config/middleware';
+
+if (process.env.NODE_ENV !== 'development') {
+  import('module-alias/register').catch((e) => {
+    logger.error('Error while registering module-alias', e);
+  });
+}
 
 const boot = async () => {
   await connectToDB();
