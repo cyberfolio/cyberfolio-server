@@ -1,5 +1,5 @@
 import { AuthenticatedRequest, Chain } from '@config/types';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import express from 'express';
 import DexService from './services';
 

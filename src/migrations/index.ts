@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import migratePlatfromName from './1_migratePlatfromName';
 import removeWrongPricedTokens from './2_removeWrongPricedTokens';
 import migrationModel from './repository/models';

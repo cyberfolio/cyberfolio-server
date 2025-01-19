@@ -1,6 +1,6 @@
 import { Chain } from '@config/types';
 import { getCurrenyInfo } from '@providers/coingecko/repository';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { walletsModel, dexAssetModel } from './models';
 
 const path = AppUtils.getFilePath(__filename);

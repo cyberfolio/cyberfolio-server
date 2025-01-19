@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import axios from 'axios';
 import { CoinMCapCryptocurrencyInfoAPIResponse } from './types';
 

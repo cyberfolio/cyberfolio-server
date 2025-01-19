@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import {
   addOrUpdateCryptoCurrency,
   getCryptoPriceBySymbol,

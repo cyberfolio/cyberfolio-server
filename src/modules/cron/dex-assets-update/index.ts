@@ -9,7 +9,7 @@ import optimism from '@dex/optimism';
 import polygon from '@dex/polygon';
 import smartchain from '@dex/smartchain';
 
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 
 const path = AppUtils.getFilePath(__filename);
 

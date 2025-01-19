@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import removeScamTokens from './scam-tokens/remove';
 import dexAssetsUpdate from './dex-assets-update';
 import updateCurrencies from './update-currencies';

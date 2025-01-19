@@ -1,6 +1,6 @@
 import { dexAssetModel } from '@api/dex/repository/models';
 import logger from '@config/logger';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import migrationModel from './repository/models';
 
 const path = AppUtils.getFilePath(__filename);

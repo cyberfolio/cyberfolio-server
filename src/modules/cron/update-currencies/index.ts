@@ -1,5 +1,5 @@
 import AppProviders from '@src/modules/providers';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 
 const path = AppUtils.getFilePath(__filename);
 

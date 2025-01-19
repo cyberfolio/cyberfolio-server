@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
 import { Chain } from '@config/types';

@@ -16,6 +16,7 @@
       "@dex/*": ["modules/dex/*"],
       "@cex/*": ["modules/cex/*"],
       "@modules/*": ["modules/*"],
+      "@utils/*": ["utils/*"],
       "@api/*": ["api/*"],
       "@src/*": ["*"]
     }

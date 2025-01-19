@@ -1,5 +1,5 @@
 import { CexName } from '@config/types';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { CexPaymentHistory } from '@api/cex/types';
 import { cexInfoModel, cexAssetModel, cexPaymentHistoryModel } from './models';
 

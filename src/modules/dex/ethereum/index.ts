@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import axios from 'axios';
 import web3Validator from 'web3-validator';
 
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { Chain, ScanURL } from '@config/types';
 import evmAssetsResponse from '@dex/common/evmAssetsResponse';
 import { CovalentTokenBalanceResponse } from '@dex/common/types';

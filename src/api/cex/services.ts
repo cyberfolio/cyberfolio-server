@@ -3,7 +3,7 @@ import BinanceTR from '@cex/binancetr';
 import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
 
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { CexAssetResponse, CexName } from '@config/types';
 import repository from './repository';
 import { CexPaymentHistory } from './types';

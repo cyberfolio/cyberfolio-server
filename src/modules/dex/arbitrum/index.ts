@@ -1,5 +1,5 @@
 import axios from 'axios';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 
 import evmAssetsResponse from '@dex/common/evmAssetsResponse';
 import { Chain, ScanURL } from '@config/types';

@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import DexRepository from '@src/api/dex/repository';
 import { dexAssetModel } from '@src/api/dex/repository/models';
 import axios from 'axios';

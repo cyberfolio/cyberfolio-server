@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 
 import AppProviders from '@providers/index';
 import { KucoinError, CexAssetResponse, CexName } from '@config/types';

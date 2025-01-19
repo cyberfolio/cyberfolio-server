@@ -8,7 +8,7 @@ import smartchain from '@dex/smartchain';
 import solana from '@dex/solana';
 
 import scamTokens from '@config/scamTokens';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { Chain } from '@config/types';
 import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@dex/common/types';

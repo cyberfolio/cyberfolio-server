@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { currencyModel, lastCurrencyUpdateModel } from './models';
 
 const path = AppUtils.getFilePath(__filename);

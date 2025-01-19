@@ -1,5 +1,5 @@
 import { AuthenticatedRequest, CexName } from '@config/types';
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import express from 'express';
 
 import CexService from './services';

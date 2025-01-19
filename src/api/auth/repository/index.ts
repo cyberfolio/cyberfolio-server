@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { UserDoc, userModel } from './models';
 
 export const createUser = async ({ keyIdentifier, nonce }: { keyIdentifier: string; nonce: string }) => {

@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import { Chain, ScanURL } from '@config/types';
 import constants from '@constants/index';
 import AppProviders from '@providers/index';

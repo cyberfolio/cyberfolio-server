@@ -1,4 +1,4 @@
-import AppUtils from '@src/utils';
+import AppUtils from '@utils/index';
 import jwt from 'jsonwebtoken';
 import { JwtTokenInterface } from './types';
 
