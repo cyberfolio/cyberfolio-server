@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import AppUtils from '@src/utils';
-import { getCurrentUSDPrice } from '@providers/coingecko';
+import AppProviders from '@providers/index';
 import { Chain } from '@config/types';
 import { DexAssetAPIResponse } from '@dex/common/types';
 
@@ -13,7 +13,7 @@ const getBalance = async (walletAddress: string): Promise<DexAssetAPIResponse[]>
       `${process.env.BLOCKCHAIN_INFO_API_URL}/q/addressbalance/${walletAddress}`,
     );
     const balance = AppUtils.sathoshiToBtcBalance(data);
-    const price = await getCurrentUSDPrice('btc');
+    const price = await AppProviders.Coingecko.getCurrentUSDPrice('btc');
     const value = balance * price;
 
     return [

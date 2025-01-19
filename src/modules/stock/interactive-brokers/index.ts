@@ -17,8 +17,8 @@ const getStocks = async (walletAddress: string) => {
   }
 };
 
-const interactiveBrokers = {
+const InteractiveBrokers = {
   getStocks,
 };
 
-export default interactiveBrokers;
+export default InteractiveBrokers;

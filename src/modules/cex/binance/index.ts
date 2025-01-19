@@ -2,9 +2,8 @@ import axios, { AxiosError } from 'axios';
 import crypto from 'crypto-js';
 
 import AppUtils from '@src/utils';
-import { getCurrentUSDPrice, getFullNameOfTheCurrency, getContractAddress } from '@providers/coingecko';
+import AppProviders from '@providers/index';
 import { BinanceError, CexAssetResponse, CexName } from '@config/types';
-import { getCurrencyLogo } from '@providers/coingecko/repository';
 import {
   BinanceAccountAPIResponse,
   BinanceFiatDepositAPIResponse,
@@ -35,12 +34,12 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     if (Array.isArray(assets) && assets.length > 0) {
       for (const asset of assets) {
         const symbol = asset.asset?.toLowerCase();
-        const name = await getFullNameOfTheCurrency(symbol);
-        const price = await getCurrentUSDPrice(symbol);
+        const name = await AppProviders.Coingecko.getFullNameOfTheCurrency(symbol);
+        const price = await AppProviders.Coingecko.getCurrentUSDPrice(symbol);
         const balance = parseFloat(asset.free) + parseFloat(asset.locked);
-        const contractAddress = await getContractAddress(symbol);
+        const contractAddress = await AppProviders.Coingecko.getContractAddress(symbol);
         const value = AppUtils.roundNumber(balance * price);
-        const logo = symbol ? await getCurrencyLogo(symbol) : '';
+        const logo = symbol ? await AppProviders.Coingecko.getCurrencyLogo(symbol) : '';
         if (value > 1) {
           response.push({
             name,

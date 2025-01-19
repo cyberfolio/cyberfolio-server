@@ -1,7 +1,7 @@
 import AppUtils from '@src/utils';
-import { getCurrencyLogo } from '@providers/coingecko/repository';
 import { Chain, ScanURL } from '@config/types';
 import constants from '@constants/index';
+import AppProviders from '@providers/index';
 import { CovalentTokenBalanceItems, DexAssetAPIResponse } from './types';
 
 const path = AppUtils.getFilePath(__filename);
@@ -36,7 +36,7 @@ const evmAssetsResponse = async (
         }
         const value = balance * price;
         const symbol = asset.contract_ticker_symbol?.toLowerCase();
-        const logo = symbol ? await getCurrencyLogo(symbol) : '';
+        const logo = symbol ? await AppProviders.Coingecko.getCurrencyLogo(symbol) : '';
         let scan = '';
         if (scanURL === ScanURL.SOLANA && contractAddress !== '11111111111111111111111111111111') {
           scan = `${scanURL}/address/${walletAddress}/tokens`;

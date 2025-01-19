@@ -7,11 +7,12 @@ import {
   getLastCurrencyUpdateDate,
   getFullNameOfTheCurrencyBySymbol,
   getContractAddressOfTheCurrencyBySymbol,
+  getCurrencyLogo,
 } from './repository';
 
 const path = AppUtils.getFilePath(__filename);
 
-export const addOrUpdateCryptoCurrencies = async (page: number) => {
+const addOrUpdateCryptoCurrencies = async (page: number) => {
   try {
     const response = await axios({
       url: `${process.env.COINGECKO_V3_API_URL}/coins/markets?vs_currency=usd&page=${page}`,
@@ -43,16 +44,27 @@ export const addOrUpdateCryptoCurrencies = async (page: number) => {
   }
 };
 
-export const getCurrentUSDPrice = async (symbol: string) => {
+const getCurrentUSDPrice = async (symbol: string) => {
   const price = await getCryptoPriceBySymbol(symbol);
   return price || 0;
 };
 
-export const getFullNameOfTheCurrency = async (symbol: string) => {
+const getFullNameOfTheCurrency = async (symbol: string) => {
   const fullName = await getFullNameOfTheCurrencyBySymbol(symbol);
   return String(fullName);
 };
 
-export const getLastCurrencyUpdate = async () => getLastCurrencyUpdateDate();
+const getLastCurrencyUpdate = async () => getLastCurrencyUpdateDate();
 
-export const getContractAddress = async (symbol: string) => getContractAddressOfTheCurrencyBySymbol(symbol);
+const getContractAddress = async (symbol: string) => getContractAddressOfTheCurrencyBySymbol(symbol);
+
+const CoingeckoProvider = {
+  addOrUpdateCryptoCurrencies,
+  getCurrentUSDPrice,
+  getFullNameOfTheCurrency,
+  getLastCurrencyUpdate,
+  getContractAddress,
+  getCurrencyLogo,
+};
+
+export default CoingeckoProvider;

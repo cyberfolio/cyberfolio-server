@@ -1,5 +1,5 @@
 import AppUtils from '@src/utils';
-import dexRepository from '@src/api/dex/repository';
+import DexRepository from '@src/api/dex/repository';
 import { dexAssetModel } from '@src/api/dex/repository/models';
 import axios from 'axios';
 import constants from '@constants/index';
@@ -20,7 +20,7 @@ interface ScamTokenResponse {
 
 const removeScamTokens = async () => {
   try {
-    const assets = await dexRepository.getAllAssets();
+    const assets = await DexRepository.getAllAssets();
     const scam = await axios.get<ScamTokenResponse>(
       'https://raw.githubusercontent.com/dappradar/tokens-blacklist/main/all-tokens.json',
     );
