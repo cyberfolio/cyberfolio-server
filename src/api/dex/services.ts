@@ -1,17 +1,10 @@
-import bitcoin from '@dex/bitcoin';
-import avalanche from '@dex/avalanche';
-import ethereum from '@dex/ethereum';
-import arbitrum from '@dex/arbitrum';
-import optimism from '@dex/optimism';
-import polygon from '@dex/polygon';
-import smartchain from '@dex/smartchain';
-import solana from '@dex/solana';
+import AppModules from '@modules/index';
 
-import scamTokens from '@config/scamTokens';
 import AppUtils from '@utils/index';
 import { Chain } from '@config/types';
 import { userModel } from '@api/auth/repository/models';
-import { DexAssetAPIResponse } from '@dex/common/types';
+import { DexAssetAPIResponse } from '@modules/chain/common/types';
+import AppConstants from '@constants/index';
 import { AddWalletBody } from '.';
 import repository from './repository';
 import { dexAssetModel } from './repository/models';
@@ -69,12 +62,12 @@ const saveAssets = async ({
 
   if (chain === Chain.ETHEREUM) {
     try {
-      const avalancheTokens = await avalanche.getTokenBalances(walletAddress);
-      const arbitrumTokens = await arbitrum.getTokenBalances(walletAddress);
-      const optimismTokens = await optimism.getTokenBalances(walletAddress);
-      const polygonTokens = await polygon.getTokenBalances(walletAddress);
-      const smartChaintokens = await smartchain.getTokenBalances(walletAddress);
-      const ethereumTokens = await ethereum.getTokenBalances(walletAddress);
+      const ethereumTokens = await AppModules.Chain.Ethereum.getTokenBalances(walletAddress);
+      const avalancheTokens = await AppModules.Chain.Avalanche.getTokenBalances(walletAddress);
+      const arbitrumTokens = await AppModules.Chain.Arbitrum.getTokenBalances(walletAddress);
+      const optimismTokens = await AppModules.Chain.Optimism.getTokenBalances(walletAddress);
+      const polygonTokens = await AppModules.Chain.Polygon.getTokenBalances(walletAddress);
+      const smartChaintokens = await AppModules.Chain.SmartChain.getTokenBalances(walletAddress);
 
       const allEvmTokens = [
         ...ethereumTokens,
@@ -88,7 +81,7 @@ const saveAssets = async ({
       if (Array.isArray(allEvmTokens) && allEvmTokens.length > 0) {
         try {
           for (const evmAsset of allEvmTokens) {
-            const isScamToken = scamTokens.find(
+            const isScamToken = AppConstants.ScamTokens.find(
               (scamToken) =>
                 scamToken.contractAddress.toLowerCase() === evmAsset.contractAddress.toLowerCase() &&
                 scamToken.chain === evmAsset.chain,
@@ -120,7 +113,7 @@ const saveAssets = async ({
       throw error;
     }
   } else if (chain === Chain.BITCOIN) {
-    const btcAssets = await bitcoin.getBalance(walletAddress);
+    const btcAssets = await AppModules.Chain.Bitcoin.getBalance(walletAddress);
     try {
       for (const asset of btcAssets) {
         await repository.addAsset({
@@ -143,7 +136,7 @@ const saveAssets = async ({
       throw error;
     }
   } else if (chain === Chain.SOLANA) {
-    const solanaAssets = await solana.getTokenBalances(walletAddress);
+    const solanaAssets = await AppModules.Chain.Solana.getTokenBalances(walletAddress);
     try {
       for (const asset of solanaAssets) {
         await repository.addAsset({

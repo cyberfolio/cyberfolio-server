@@ -1,8 +1,8 @@
 import { cexAssetModel } from '@api/cex/repository/models';
 import { dexAssetModel } from '@api/dex/repository/models';
-import logger from '@config/logger';
 import { Platform } from '@config/types';
 import AppUtils from '@utils/index';
+import AppConfig from '@config/index';
 import migrationModel from './repository/models';
 
 const path = AppUtils.getFilePath(__filename);
@@ -11,7 +11,7 @@ const Index = async (number: number) => {
   try {
     const migration = await migrationModel.findOne({});
     if (migration?.number !== undefined && migration?.number < number) {
-      logger.info(`Migration number ${number} started`);
+      AppConfig.Logger.info(`Migration number ${number} started`);
       await dexAssetModel.updateMany({ platform: 'bitcoin' }, { $set: { platform: Platform.BITCOIN } });
       await dexAssetModel.updateMany({ platform: 'ethereum' }, { $set: { platform: Platform.ETHEREUM } });
       await dexAssetModel.updateMany({ platform: 'avalanche' }, { $set: { platform: Platform.AVALANCHE } });
@@ -26,7 +26,7 @@ const Index = async (number: number) => {
       await cexAssetModel.updateMany({ cexName: 'kucoin' }, { $set: { platform: Platform.KUCOIN } });
 
       await migrationModel.findOneAndUpdate({}, { number });
-      logger.info(`Migration number ${number} finished`);
+      AppConfig.Logger.info(`Migration number ${number} finished`);
     }
   } catch (e) {
     AppUtils.logError({

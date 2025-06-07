@@ -1,19 +1,18 @@
 import axios from 'axios';
 import AppUtils from '@utils/index';
 import { Chain, ScanURL } from '@config/types';
-import evmAssetsResponse from '@dex/common/evmAssetsResponse';
-import { CovalentTokenBalanceResponse } from '@dex/common/types';
-import Constants from '@config/constants';
+import evmAssetsResponse from '@modules/chain/common/evmAssetsResponse';
+import { CovalentTokenBalanceResponse } from '@modules/chain/common/types';
 
 const path = AppUtils.getFilePath(__filename);
 
 const getTokenBalances = async (walletAddress: string) => {
   try {
     const walletInfo = await axios.get<CovalentTokenBalanceResponse>(
-      `${process.env.COVALENT_V1_API_URL}/${Constants.ChainIDs.POLYGON}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
+      `${process.env.COVALENT_V1_API_URL}/${process.env.SOLANA_MAINNET_CHAIN_ID}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
     );
     const assets = walletInfo.data.data.items;
-    const response = await evmAssetsResponse(walletAddress, ScanURL.POLYGON, assets, Chain.POLYGON);
+    const response = await evmAssetsResponse(walletAddress, ScanURL.SOLANA, assets, Chain.SOLANA);
     return response;
   } catch (e) {
     AppUtils.logError({
@@ -25,8 +24,8 @@ const getTokenBalances = async (walletAddress: string) => {
   }
 };
 
-const polygon = {
+const solana = {
   getTokenBalances,
 };
 
-export default polygon;
+export default solana;

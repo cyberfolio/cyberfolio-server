@@ -1,7 +1,9 @@
-import AppUtils from '@utils/index';
 import { Chain, ScanURL } from '@config/types';
-import constants from '@constants/index';
+
 import AppProviders from '@providers/index';
+import AppUtils from '@utils/index';
+import AppConstants from '@constants/index';
+
 import { CovalentTokenBalanceItems, DexAssetAPIResponse } from './types';
 
 const path = AppUtils.getFilePath(__filename);
@@ -18,8 +20,10 @@ const evmAssetsResponse = async (
   for (const asset of assets) {
     try {
       const contractAddress = asset.contract_address?.toLowerCase();
-      const { chainId } = constants.EvmWithChain[chain];
-      const isScam = await AppUtils.isScamToken(contractAddress, chainId);
+      const platform = AppConstants.PlatformNames[chain];
+      const isScam = platform.evmChainId
+        ? false
+        : await AppUtils.isScamToken(contractAddress, platform.evmChainId as string);
 
       if (Number(asset.balance) > 0) {
         let balance = Number(AppUtils.formatBalance(asset.balance, asset.contract_decimals));

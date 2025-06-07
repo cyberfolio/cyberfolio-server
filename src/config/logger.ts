@@ -11,7 +11,7 @@ const levels = {
   silly: 7,
 };
 
-const logger = createLogger({
+const Logger = createLogger({
   levels,
   transports: [new transports.Console()],
   format: format.combine(
@@ -24,4 +24,4 @@ const logger = createLogger({
   ),
 });
 
-export default logger;
+export default Logger;

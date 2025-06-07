@@ -4,9 +4,9 @@ import { ethers } from 'ethers';
 import { AuthenticatedRequest } from '@config/types';
 import { getNetWorth, getConnectedAccounts } from './services';
 
-const router = express.Router();
+const InfoApi = express.Router();
 
-router.get('/networth', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/networth', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -23,7 +23,7 @@ router.get('/networth', async (req: AuthenticatedRequest, res: express.Response)
   }
 });
 
-router.get('/connected-accounts', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/connected-accounts', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -40,7 +40,7 @@ router.get('/connected-accounts', async (req: AuthenticatedRequest, res: express
   }
 });
 
-router.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -61,4 +61,4 @@ router.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response)
   }
 });
 
-export default router;
+export default InfoApi;

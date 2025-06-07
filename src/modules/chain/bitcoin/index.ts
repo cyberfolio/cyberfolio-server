@@ -3,7 +3,7 @@ import axios from 'axios';
 import AppUtils from '@utils/index';
 import AppProviders from '@providers/index';
 import { Chain } from '@config/types';
-import { DexAssetAPIResponse } from '@dex/common/types';
+import { DexAssetAPIResponse } from '@modules/chain/common/types';
 
 const path = AppUtils.getFilePath(__filename);
 

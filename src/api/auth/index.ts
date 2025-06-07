@@ -2,17 +2,16 @@ import express from 'express';
 import { ethers } from 'ethers';
 
 import AppUilts from '@src/utils';
-import jwtConfig from '@config/jwt';
-import { authenticateUser } from '@config/middleware';
 
 import DexService from '@api/dex/services';
 import { AuthenticatedRequest, Chain } from '@config/types';
+import AppConfig from '@config/index';
 import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from './repository';
 import AuthService from './services';
 
-const router = express.Router();
+const AuthApi = express.Router();
 
-router.post('/login/metamask', async (req: express.Request, res: express.Response, next) => {
+AuthApi.post('/login/metamask', async (req: express.Request, res: express.Response, next) => {
   let evmAddress = req.body?.evmAddress as string;
   evmAddress = evmAddress.toLowerCase();
   try {
@@ -37,7 +36,7 @@ router.post('/login/metamask', async (req: express.Request, res: express.Respons
   }
 });
 
-router.post('/login/validate-signature', async (req: express.Request, res: express.Response, next) => {
+AuthApi.post('/login/validate-signature', async (req: express.Request, res: express.Response, next) => {
   let { evmAddress } = req.body;
   const { signature } = req.body;
   const { nonce } = req.body;
@@ -66,7 +65,7 @@ router.post('/login/validate-signature', async (req: express.Request, res: expre
     }
 
     // set jwt to the user's browser cookies
-    const token = jwtConfig.signJwt(user.keyIdentifier);
+    const token = AppConfig.Jwt.signJwt(user.keyIdentifier);
     const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
     res.cookie('token', token, {
       secure: process.env.NODE_ENV !== 'development',
@@ -96,21 +95,25 @@ router.post('/login/validate-signature', async (req: express.Request, res: expre
   }
 });
 
-router.get('/get-user-info', authenticateUser, async (req: AuthenticatedRequest, res: express.Response) => {
-  if (req.user) {
-    res.status(200).send({
-      keyIdentifier: req.user.keyIdentifier,
-      ensName: req.user.ensName,
-      lastAssetUpdate: req.user.lastAssetUpdate,
-    });
-  } else {
-    res.status(401).send('Unauthenticated');
-  }
-});
+AuthApi.get(
+  '/get-user-info',
+  AppConfig.MiddleWare.authenticateUser,
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    if (req.user) {
+      res.status(200).send({
+        keyIdentifier: req.user.keyIdentifier,
+        ensName: req.user.ensName,
+        lastAssetUpdate: req.user.lastAssetUpdate,
+      });
+    } else {
+      res.status(401).send('Unauthenticated');
+    }
+  },
+);
 
-router.get('/logout', authenticateUser, (req, res) => {
+AuthApi.get('/logout', AppConfig.MiddleWare.authenticateUser, (req, res) => {
   res.clearCookie('token');
   res.status(403).send('');
 });
 
-export default router;
+export default AuthApi;

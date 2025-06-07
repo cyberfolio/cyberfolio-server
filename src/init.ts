@@ -1,15 +1,15 @@
-import logger from '@config/logger';
 import mongoose from 'mongoose';
 import initCronJobs from './modules/cron';
 import migrations from './migrations';
+import AppConfig from './config';
 
 export const connectToDB = async () => {
   try {
-    logger.info('Conntecting to Mongodb...');
+    AppConfig.Logger.info('Conntecting to Mongodb...');
     await mongoose.connect(`${process.env.MONGO_URL}`);
-    logger.info('Successfully connected to Mongodb');
+    AppConfig.Logger.info('Successfully connected to Mongodb');
   } catch (e) {
-    logger.error(`Error at src/init.ts ${connectToDB.name}`, e);
+    AppConfig.Logger.error(`Error at src/init.ts ${connectToDB.name}`, e);
     process.exit(1);
   }
 };
@@ -18,7 +18,7 @@ export const startCronJobs = async () => {
   try {
     await initCronJobs();
   } catch (e) {
-    logger.error(`Error at src/init.ts ${startCronJobs.name}`);
+    AppConfig.Logger.error(`Error at src/init.ts ${startCronJobs.name}`);
     process.exit(1);
   }
 };
@@ -27,7 +27,7 @@ export const runMigrations = async () => {
   try {
     await migrations();
   } catch (e) {
-    logger.error(`Error at src/init.ts ${startCronJobs.name}`);
+    AppConfig.Logger.error(`Error at src/init.ts ${startCronJobs.name}`);
     process.exit(1);
   }
 };

@@ -25,7 +25,9 @@ const verifyJwtAndReturnUserEvmAddress = ({ jwtToken }: { jwtToken: string }) =>
   }
 };
 
-export default {
+const Jwt = {
   signJwt,
   verifyJwtAndReturnUserEvmAddress,
 };
+
+export default Jwt;

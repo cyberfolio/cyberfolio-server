@@ -2,7 +2,7 @@ import AppUtils from '@utils/index';
 import DexRepository from '@src/api/dex/repository';
 import { dexAssetModel } from '@src/api/dex/repository/models';
 import axios from 'axios';
-import constants from '@constants/index';
+import AppConstants from '@constants/index';
 import scamTokenModel from './model';
 
 const path = AppUtils.getFilePath(__filename);
@@ -48,7 +48,7 @@ const removeScamTokens = async () => {
       const isScamToken = scamTokens.find(
         (scamToken) =>
           scamToken.address.toLowerCase() === asset.contractAddress.toLowerCase() &&
-          scamToken.chainId === constants.EvmWithChain[asset.chain].chainId,
+          scamToken.chainId === AppConstants.PlatformNames[asset.chain].evmChainId,
       );
       if (isScamToken) {
         try {

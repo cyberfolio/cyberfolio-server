@@ -6,10 +6,10 @@ import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { v4 as uuidv4 } from 'uuid';
 import axios, { AxiosError } from 'axios';
-import logger from '@config/logger';
 import _ from 'lodash';
 import { Chain, ScanURL } from '@config/types';
 import scamTokenModel from '@modules/cron/scam-tokens/model';
+import AppConfig from '@config/index';
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
@@ -74,7 +74,7 @@ const onError = (e: unknown) => {
   if (e instanceof Error) {
     error = e;
   } else {
-    logger.error('Unexpected error', e);
+    AppConfig.Logger.error('Unexpected error', e);
     error = new Error('Unexpected error');
   }
   return error;
@@ -100,7 +100,7 @@ const logError = ({ path, func, e }: { path: string; func: string; e: Error | un
   } else {
     message = e;
   }
-  logger.error(`Error at ${path} ${func} message: ${message}`);
+  AppConfig.Logger.error(`Error at ${path} ${func} message: ${message}`);
 };
 
 const getFilePath = (path: string) => {

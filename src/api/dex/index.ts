@@ -3,14 +3,14 @@ import AppUtils from '@utils/index';
 import express from 'express';
 import DexService from './services';
 
-const router = express.Router();
+const DexApi = express.Router();
 export interface AddWalletBody {
   address: string;
   name: string;
   chain: Chain;
 }
 
-router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
   // Validation
   try {
     const keyIdentifier = req.user?.keyIdentifier;
@@ -31,7 +31,7 @@ router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 });
 
-router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     // Validation
     const keyIdentifier = req.user?.keyIdentifier;
@@ -51,7 +51,7 @@ router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
   }
 });
 
-router.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Response) => {
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;
   const { chain } = req.params;
@@ -75,7 +75,7 @@ router.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Resp
   }
 });
 
-router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
@@ -98,4 +98,4 @@ router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) =
   }
 });
 
-export default router;
+export default DexApi;

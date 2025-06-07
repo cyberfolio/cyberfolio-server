@@ -4,7 +4,7 @@ import { getUserByEvmAddress } from '@api/auth/repository';
 import jwt from './jwt';
 import { AuthenticatedRequest } from './types';
 
-export const allowedMethods = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const allowedMethods = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   // NOTE: Exclude TRACE and TRACK methods to avoid XST attacks.
   const allowedMethods = ['OPTIONS', 'HEAD', 'CONNECT', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
   if (!allowedMethods.includes(req.method)) {
@@ -13,7 +13,7 @@ export const allowedMethods = (req: express.Request, res: express.Response, next
   next();
 };
 
-export const authenticateUser = async (
+const authenticateUser = async (
   req: AuthenticatedRequest,
   res: express.Response,
   next: express.NextFunction,
@@ -41,3 +41,10 @@ export const authenticateUser = async (
     res.status(401).send('Unauthenticated');
   }
 };
+
+const MiddleWare = {
+  allowedMethods,
+  authenticateUser,
+};
+
+export default MiddleWare;

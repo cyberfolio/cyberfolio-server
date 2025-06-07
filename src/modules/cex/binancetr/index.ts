@@ -6,7 +6,7 @@ import AppProviders from '@providers/index';
 import { BinanceError, CexAssetResponse, CexName } from '@config/types';
 import { BinanceTRAccountAPIResponse } from './types';
 
-const API_URL = 'https://www.trbinance.com';
+const API_URL = process.env.BINANCETR_API_URL;
 
 const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
   const queryString = `timestamp=${Date.now()}`;

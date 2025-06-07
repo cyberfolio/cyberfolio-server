@@ -5,18 +5,14 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import logger from '@config/logger';
-import auth from './api/auth';
-import dex from './api/dex';
-import cex from './api/cex';
-import info from './api/info';
-
 import { connectToDB, runMigrations, startCronJobs } from './init';
-import { allowedMethods, authenticateUser } from './config/middleware';
+
+import AppConfig from './config';
+import AppEndpoints from './api';
 
 if (process.env.NODE_ENV !== 'development') {
   import('module-alias/register').catch((e) => {
-    logger.error('Error while registering module-alias', e);
+    AppConfig.Logger.error('Error while registering module-alias', e);
   });
 }
 
@@ -27,7 +23,7 @@ const boot = async () => {
 
   const app = express();
   app.disable('x-powered-by');
-  app.use(allowedMethods);
+  app.use(AppConfig.MiddleWare.allowedMethods);
   app.use(
     cors({
       credentials: true,
@@ -40,16 +36,17 @@ const boot = async () => {
   app.get('/', (_, res) => {
     res.send(`${process.env.APP_NAME} server is running`);
   });
+
   // init api routes
-  app.use('/api/auth', auth);
-  app.use('/api/cex', authenticateUser, cex);
-  app.use('/api/dex', authenticateUser, dex);
-  app.use('/api/info', authenticateUser, info);
+  app.use('/api/auth', AppEndpoints.AuthApi);
+  app.use('/api/cex', AppConfig.MiddleWare.authenticateUser, AppEndpoints.CexApi);
+  app.use('/api/dex', AppConfig.MiddleWare.authenticateUser, AppEndpoints.DexApi);
+  app.use('/api/info', AppConfig.MiddleWare.authenticateUser, AppEndpoints.InfoApi);
 
   // start
   const port = process.env.PORT;
   app.listen(port, () => {
-    logger.info(`App listening at http://localhost:${port}`);
+    AppConfig.Logger.info(`App listening at http://localhost:${port}`);
   });
 };
 

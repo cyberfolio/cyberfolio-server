@@ -4,9 +4,9 @@ import web3Validator from 'web3-validator';
 
 import AppUtils from '@utils/index';
 import { Chain, ScanURL } from '@config/types';
-import evmAssetsResponse from '@dex/common/evmAssetsResponse';
-import { CovalentTokenBalanceResponse } from '@dex/common/types';
-import Constants from '@config/constants';
+import evmAssetsResponse from '@modules/chain/common/evmAssetsResponse';
+import { CovalentTokenBalanceResponse } from '@modules/chain/common/types';
+import AppConstants from '@constants/index';
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
@@ -32,7 +32,7 @@ export const getEthBalance = async (walletAddress: string) => {
 export const getTokenBalances = async (walletAddress: string) => {
   try {
     const walletInfo = await axios.get<CovalentTokenBalanceResponse>(
-      `${process.env.COVALENT_V1_API_URL}/${Constants.ChainIDs.ETHEREUM}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
+      `${process.env.COVALENT_V1_API_URL}/${AppConstants.ChainIDs.ETHEREUM}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
     );
     const assets = walletInfo.data.data.items;
     const response = await evmAssetsResponse(walletAddress, ScanURL.ETHEREUM, assets, Chain.ETHEREUM);

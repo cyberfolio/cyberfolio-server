@@ -2,12 +2,12 @@ import { userModel } from '@api/auth/repository/models';
 import { dexAssetModel } from '@api/dex/repository/models';
 import { Chain } from '@config/types';
 
-import arbitrum from '@dex/arbitrum';
-import avalanche from '@dex/avalanche';
-import ethereum from '@dex/ethereum';
-import optimism from '@dex/optimism';
-import polygon from '@dex/polygon';
-import smartchain from '@dex/smartchain';
+import arbitrum from '@modules/chain/arbitrum';
+import avalanche from '@modules/chain/avalanche';
+import ethereum from '@modules/chain/ethereum';
+import optimism from '@modules/chain/optimism';
+import polygon from '@modules/chain/polygon';
+import smartchain from '@modules/chain/smartchain';
 
 import AppUtils from '@utils/index';
 

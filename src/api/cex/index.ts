@@ -4,9 +4,9 @@ import express from 'express';
 
 import CexService from './services';
 
-const router = express.Router();
+const CexApi = express.Router();
 
-router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const { apiKey } = req.body;
   const { apiSecret } = req.body;
@@ -33,7 +33,7 @@ router.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 });
 
-router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -52,7 +52,7 @@ router.get('/assets', async (req: AuthenticatedRequest, res: express.Response) =
   }
 });
 
-router.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const cexName = req.params?.cexName;
   if (!keyIdentifier || !cexName) {
@@ -76,7 +76,7 @@ router.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Re
   }
 });
 
-router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const { cexName } = req.body;
   if (!keyIdentifier) {
@@ -96,7 +96,7 @@ router.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
   }
 });
 
-router.get('/payment-history', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/payment-history', async (req: AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -114,4 +114,4 @@ router.get('/payment-history', async (req: AuthenticatedRequest, res: express.Re
   }
 });
 
-export default router;
+export default CexApi;
