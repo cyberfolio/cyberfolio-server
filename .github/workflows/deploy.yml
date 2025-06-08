@@ -78,7 +78,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: dist/*
-          target: '/home/root/projects/cyberfolio-server/dist'
+          target: '/home/root/projects/cyberfolio-server'
 
       - name: SSH into server and restart app
         uses: appleboy/ssh-action@v1.0.3
