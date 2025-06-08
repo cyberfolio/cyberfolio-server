@@ -80,9 +80,6 @@ jobs:
           source: dist/*
           target: '/home/root/projects/cyberfolio-server/dist'
 
-      - name: Move .env into dist folder
-        run: mv .env dist/.env
-
       - name: SSH into server and restart app
         uses: appleboy/ssh-action@v1.0.3
         with:
