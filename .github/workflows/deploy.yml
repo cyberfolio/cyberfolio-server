@@ -52,8 +52,27 @@ jobs:
       - name: Create .env file
         run: |
           echo "NODE_ENV=production" > .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_EXPIRY_IN_DAYS=${{ secrets.JWT_EXPIRY_IN_DAYS }}" >> .env
+          echo "INFURA_API_URL=${{ secrets.INFURA_API_URL }}" >> .env
+          echo "INFURA_PROJECT_ID=${{ secrets.INFURA_PROJECT_ID }}" >> .env
+          echo "COINGECKO_V3_API_URL=${{ secrets.COINGECKO_V3_API_URL }}" >> .env
+          echo "COINMARKETCAP_API_KEY=${{ secrets.COINMARKETCAP_API_KEY }}" >> .env
+          echo "COINMARKETCAP_API_URL=${{ secrets.COINMARKETCAP_API_URL }}" >> .env
+          echo "COVALENT_V1_API_URL=${{ secrets.COVALENT_V1_API_URL }}" >> .env
+          echo "COVALENT_API_KEY=${{ secrets.COVALENT_API_KEY }}" >> .env
           echo "MORALIS_API_URL=${{ secrets.MORALIS_API_URL }}" >> .env
           echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> .env
+          echo "BLOCKCHAIN_INFO_API_URL=${{ secrets.BLOCKCHAIN_INFO_API_URL }}" >> .env
+          echo "BINANCE_API_URL=${{ secrets.BINANCE_API_URL }}" >> .env
+          echo "BINANCETR_API_URL=${{ secrets.BINANCETR_API_URL }}" >> .env
+          echo "KUCOIN_API_URL=${{ secrets.KUCOIN_API_URL }}" >> .env
+          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" >> .env
+          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" >> .env
 
       - name: Copy build to server
         uses: appleboy/scp-action@v0.1.7
@@ -61,8 +80,13 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist/*'
+          source: |
+            dist/*
+            .env
           target: '/home/root/projects/cyberfolio-server/dist'
+
+      - name: Move .env into dist folder
+        run: mv .env dist/.env
 
       - name: SSH into server and restart app
         uses: appleboy/ssh-action@v1.0.3
