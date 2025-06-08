@@ -78,6 +78,7 @@
     "@cex": "dist/modules/cex",
     "@dex": "dist/modules/dex",
     "@config": "dist/config",
+    "@utils": "dist/utils",
     "@api": "dist/api",
     "@structures": "dist/structures",
     "@src": "dist"
