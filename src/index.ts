@@ -19,7 +19,9 @@ if (process.env.NODE_ENV !== 'development') {
 const boot = async () => {
   await connectToDB();
   await startMoralis();
-  await startCronJobs();
+  if (process.env.NODE_ENV === 'production') {
+    await startCronJobs();
+  }
   await runMigrations();
 
   const app = express();
