@@ -49,27 +49,27 @@ jobs:
       - name: Create .env file
         run: |
           echo "NODE_ENV=production" > dist/.env
-          echo "PORT=${{ secrets.PORT }}" dist/.env
-          echo "MONGO_URL=${{ secrets.MONGO_URL }}" dist/.env
-          echo "APP_NAME=${{ secrets.APP_NAME }}" dist/.env
-          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" dist/.env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" dist/.env
-          echo "JWT_EXPIRY_IN_DAYS=${{ secrets.JWT_EXPIRY_IN_DAYS }}" dist/.env
-          echo "INFURA_API_URL=${{ secrets.INFURA_API_URL }}" dist/.env
-          echo "INFURA_PROJECT_ID=${{ secrets.INFURA_PROJECT_ID }}" dist/.env
-          echo "COINGECKO_V3_API_URL=${{ secrets.COINGECKO_V3_API_URL }}" dist/.env
-          echo "COINMARKETCAP_API_KEY=${{ secrets.COINMARKETCAP_API_KEY }}" dist/.env
-          echo "COINMARKETCAP_API_URL=${{ secrets.COINMARKETCAP_API_URL }}" dist/.env
-          echo "COVALENT_V1_API_URL=${{ secrets.COVALENT_V1_API_URL }}" dist/.env
-          echo "COVALENT_API_KEY=${{ secrets.COVALENT_API_KEY }}" dist/.env
-          echo "MORALIS_API_URL=${{ secrets.MORALIS_API_URL }}" dist/.env
-          echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" dist/.env
-          echo "BLOCKCHAIN_INFO_API_URL=${{ secrets.BLOCKCHAIN_INFO_API_URL }}" dist/.env
-          echo "BINANCE_API_URL=${{ secrets.BINANCE_API_URL }}" dist/.env
-          echo "BINANCETR_API_URL=${{ secrets.BINANCETR_API_URL }}" dist/.env
-          echo "KUCOIN_API_URL=${{ secrets.KUCOIN_API_URL }}" dist/.env
-          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" dist/.env
-          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" dist/.env
+          echo "PORT=${{ secrets.PORT }}" >> dist/.env
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> dist/.env
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> dist/.env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> dist/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> dist/.env
+          echo "JWT_EXPIRY_IN_DAYS=${{ secrets.JWT_EXPIRY_IN_DAYS }}" >> dist/.env
+          echo "INFURA_API_URL=${{ secrets.INFURA_API_URL }}" >> dist/.env
+          echo "INFURA_PROJECT_ID=${{ secrets.INFURA_PROJECT_ID }}" >> dist/.env
+          echo "COINGECKO_V3_API_URL=${{ secrets.COINGECKO_V3_API_URL }}" >> dist/.env
+          echo "COINMARKETCAP_API_KEY=${{ secrets.COINMARKETCAP_API_KEY }}" >> dist/.env
+          echo "COINMARKETCAP_API_URL=${{ secrets.COINMARKETCAP_API_URL }}" >> dist/.env
+          echo "COVALENT_V1_API_URL=${{ secrets.COVALENT_V1_API_URL }}" >> dist/.env
+          echo "COVALENT_API_KEY=${{ secrets.COVALENT_API_KEY }}" >> dist/.env
+          echo "MORALIS_API_URL=${{ secrets.MORALIS_API_URL }}" >> dist/.env
+          echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> dist/.env
+          echo "BLOCKCHAIN_INFO_API_URL=${{ secrets.BLOCKCHAIN_INFO_API_URL }}" >> dist/.env
+          echo "BINANCE_API_URL=${{ secrets.BINANCE_API_URL }}" >> dist/.env
+          echo "BINANCETR_API_URL=${{ secrets.BINANCETR_API_URL }}" >> dist/.env
+          echo "KUCOIN_API_URL=${{ secrets.KUCOIN_API_URL }}" >> dist/.env
+          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" >> dist/.env
+          echo "KUCOIN_API_VERSION=${{ secrets.KUCOIN_API_VERSION }}" >> dist/.env
 
       - name: Copy build to server
         uses: appleboy/scp-action@v0.1.7
