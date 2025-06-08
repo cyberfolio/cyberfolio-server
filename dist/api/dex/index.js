@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const types_1 = require("@config/types");
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@structures/index"));
+const index_2 = __importDefault(require("@utils/index"));
 const express_1 = __importDefault(require("express"));
 const services_1 = __importDefault(require("./services"));
-const router = express_1.default.Router();
-router.post('/add', async (req, res) => {
+const DexApi = express_1.default.Router();
+DexApi.post('/add', async (req, res) => {
     // Validation
     try {
         const keyIdentifier = req.user?.keyIdentifier;
@@ -28,7 +28,7 @@ router.post('/add', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.post('/delete', async (req, res) => {
+DexApi.post('/delete', async (req, res) => {
     try {
         // Validation
         const keyIdentifier = req.user?.keyIdentifier;
@@ -48,11 +48,11 @@ router.post('/delete', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/assets/:chain', async (req, res) => {
+DexApi.get('/assets/:chain', async (req, res) => {
     // Validation
     const keyIdentifier = req.user?.keyIdentifier;
     const { chain } = req.params;
-    if (!keyIdentifier || !utils_1.default.isEnumOf(types_1.Chain, chain)) {
+    if (!keyIdentifier || !index_2.default.isEnumOf(index_1.default.Chain, chain)) {
         return res.status(400).send('Validation error');
     }
     // Logic
@@ -71,7 +71,7 @@ router.get('/assets/:chain', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/assets', async (req, res) => {
+DexApi.get('/assets', async (req, res) => {
     // Validation
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
@@ -93,4 +93,4 @@ router.get('/assets', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-exports.default = router;
+exports.default = DexApi;

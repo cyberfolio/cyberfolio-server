@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const repository_1 = __importDefault(require("@src/api/dex/repository"));
 const models_1 = require("@src/api/dex/repository/models");
 const axios_1 = __importDefault(require("axios"));
-const index_1 = __importDefault(require("@constants/index"));
+const index_2 = __importDefault(require("@constants/index"));
 const model_1 = __importDefault(require("./model"));
-const path = utils_1.default.getFilePath(__filename);
+const path = index_1.default.getFilePath(__filename);
 const removeScamTokens = async () => {
     try {
         const assets = await repository_1.default.getAllAssets();
@@ -32,13 +32,13 @@ const removeScamTokens = async () => {
         }
         for (const asset of assets) {
             const isScamToken = scamTokens.find((scamToken) => scamToken.address.toLowerCase() === asset.contractAddress.toLowerCase() &&
-                scamToken.chainId === index_1.default.EvmWithChain[asset.chain].chainId);
+                scamToken.chainId === index_2.default.PlatformNames[asset.chain].evmChainId);
             if (isScamToken) {
                 try {
                     await models_1.dexAssetModel.deleteMany({ contractAddress: asset.contractAddress });
                 }
                 catch (e) {
-                    utils_1.default.logError({
+                    index_1.default.logError({
                         func: removeScamTokens.name,
                         path,
                         e,
@@ -48,7 +48,7 @@ const removeScamTokens = async () => {
         }
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             func: removeScamTokens.name,
             path,
             e,

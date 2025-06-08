@@ -1,4 +1,4 @@
-import { CexName } from '@config/types';
+import AppStructures from '@structures/index';
 
 export enum PaymentTransaction {
   CREDIT_CARD_PAYMENT = 'Credit Card Payment',
@@ -9,7 +9,7 @@ export enum PaymentTransaction {
 
 export interface CexPaymentHistory {
   orderNo: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   type: string;
   fee: string;
   status: string;

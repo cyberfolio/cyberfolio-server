@@ -1,12 +1,12 @@
 import express from 'express';
 
 import { ethers } from 'ethers';
-import { AuthenticatedRequest } from '@config/types';
+import AppStructures from '@structures/index';
 import { getNetWorth, getConnectedAccounts } from './services';
 
 const InfoApi = express.Router();
 
-InfoApi.get('/networth', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/networth', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -23,7 +23,7 @@ InfoApi.get('/networth', async (req: AuthenticatedRequest, res: express.Response
   }
 });
 
-InfoApi.get('/connected-accounts', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/connected-accounts', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -40,7 +40,7 @@ InfoApi.get('/connected-accounts', async (req: AuthenticatedRequest, res: expres
   }
 });
 
-InfoApi.get('/ens-name', async (req: AuthenticatedRequest, res: express.Response) => {
+InfoApi.get('/ens-name', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');

@@ -1,7 +1,7 @@
 import AppModules from '@modules/index';
 
 import AppUtils from '@utils/index';
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import { userModel } from '@api/auth/repository/models';
 import { DexAssetAPIResponse } from '@modules/chain/common/types';
 import AppConstants from '@constants/index';
@@ -9,7 +9,7 @@ import { AddWalletBody } from '.';
 import repository from './repository';
 import { dexAssetModel } from './repository/models';
 
-const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
+const getAssets = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: AppStructures.Chain }) => {
   try {
     const assets = await repository.getAssetsByKeyAndChain({
       keyIdentifier,
@@ -55,12 +55,12 @@ const saveAssets = async ({
 }: {
   walletAddress: string;
   keyIdentifier: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
   walletName: string;
 }) => {
   let assets: DexAssetAPIResponse[] = [];
 
-  if (chain === Chain.ETHEREUM) {
+  if (chain === AppStructures.Chain.ETHEREUM) {
     try {
       const ethereumTokens = await AppModules.Chain.Ethereum.getTokenBalances(walletAddress);
       const avalancheTokens = await AppModules.Chain.Avalanche.getTokenBalances(walletAddress);
@@ -112,7 +112,7 @@ const saveAssets = async ({
       const error = AppUtils.onError(e);
       throw error;
     }
-  } else if (chain === Chain.BITCOIN) {
+  } else if (chain === AppStructures.Chain.BITCOIN) {
     const btcAssets = await AppModules.Chain.Bitcoin.getBalance(walletAddress);
     try {
       for (const asset of btcAssets) {
@@ -135,7 +135,7 @@ const saveAssets = async ({
       const error = AppUtils.onError(e);
       throw error;
     }
-  } else if (chain === Chain.SOLANA) {
+  } else if (chain === AppStructures.Chain.SOLANA) {
     const solanaAssets = await AppModules.Chain.Solana.getTokenBalances(walletAddress);
     try {
       for (const asset of solanaAssets) {
@@ -210,7 +210,7 @@ const deleteWallet = async ({
   address,
 }: {
   keyIdentifier: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
   address: string;
 }) => {
   try {

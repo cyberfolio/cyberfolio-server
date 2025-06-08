@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLastCurrencyUpdateDate = exports.setLastCurrencyUpdateDate = exports.getContractAddressOfTheCurrencyBySymbol = exports.getFullNameOfTheCurrencyBySymbol = exports.getCurrenyInfo = exports.getCurrencyLogo = exports.getCryptoPriceBySymbol = exports.addOrUpdateCryptoCurrency = void 0;
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const models_1 = require("./models");
-const path = utils_1.default.getFilePath(__filename);
+const path = index_1.default.getFilePath(__filename);
 const addOrUpdateCryptoCurrency = async ({ name, symbol, price, image, }) => {
     if (name && symbol && price) {
         try {
@@ -21,7 +21,7 @@ const addOrUpdateCryptoCurrency = async ({ name, symbol, price, image, }) => {
             });
         }
         catch (e) {
-            utils_1.default.logError({
+            index_1.default.logError({
                 e,
                 func: exports.addOrUpdateCryptoCurrency.name,
                 path,
@@ -37,7 +37,7 @@ const getCryptoPriceBySymbol = async (symbol) => {
         return currency?.price ? parseFloat(currency.price.toFixed(2)) : null;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getCryptoPriceBySymbol.name,
             path,
@@ -52,7 +52,7 @@ const getCurrencyLogo = async (symbol) => {
         return currency?.logo;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getCurrencyLogo.name,
             path,
@@ -67,7 +67,7 @@ const getCurrenyInfo = async (symbol) => {
         return currency;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getCurrenyInfo.name,
             path,
@@ -82,7 +82,7 @@ const getFullNameOfTheCurrencyBySymbol = async (symbol) => {
         return currency?.name ? currency.name : '';
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getFullNameOfTheCurrencyBySymbol.name,
             path,
@@ -97,7 +97,7 @@ const getContractAddressOfTheCurrencyBySymbol = async (symbol) => {
         return currency?.contractAddress ? currency.contractAddress : '';
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getContractAddressOfTheCurrencyBySymbol.name,
             path,
@@ -111,7 +111,7 @@ const setLastCurrencyUpdateDate = async (lastUpdateDate) => {
         await models_1.lastCurrencyUpdateModel.findOneAndUpdate({ id: 1 }, { lastUpdateDate }, { upsert: true }).lean();
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.setLastCurrencyUpdateDate.name,
             path,
@@ -126,7 +126,7 @@ const getLastCurrencyUpdateDate = async () => {
         return lastCurrencyUpdate?.lastUpdateDate;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: exports.getLastCurrencyUpdateDate.name,
             path,

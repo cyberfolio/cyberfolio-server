@@ -5,11 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
-const utils_1 = __importDefault(require("@src/utils"));
-const coingecko_1 = require("@providers/coingecko");
+const index_1 = __importDefault(require("@utils/index"));
+const index_2 = __importDefault(require("@providers/index"));
 const types_1 = require("@config/types");
-const repository_1 = require("@providers/coingecko/repository");
-const API_URL = 'https://www.trbinance.com';
+const API_URL = process.env.BINANCETR_API_URL;
 const getAssets = async ({ apiKey, apiSecret }) => {
     const queryString = `timestamp=${Date.now()}`;
     const signature = crypto_js_1.default.HmacSHA256(queryString, apiSecret).toString(crypto_js_1.default.enc.Hex);
@@ -36,12 +35,12 @@ const getAssets = async ({ apiKey, apiSecret }) => {
         if (Array.isArray(assets) && assets.length > 0) {
             for (const asset of assets) {
                 const symbol = asset.asset?.toLowerCase();
-                const name = await (0, coingecko_1.getFullNameOfTheCurrency)(symbol);
-                const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
+                const name = await index_2.default.Coingecko.getFullNameOfTheCurrency(symbol);
+                const price = await index_2.default.Coingecko.getCurrentUSDPrice(symbol);
                 const balance = parseFloat(asset.free) + parseFloat(asset.locked);
-                const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
-                const value = utils_1.default.roundNumber(balance * price);
-                const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
+                const contractAddress = await index_2.default.Coingecko.getContractAddress(symbol);
+                const value = index_1.default.roundNumber(balance * price);
+                const logo = symbol ? await index_2.default.Coingecko.getCurrencyLogo(symbol) : '';
                 if (value > 1) {
                     response.push({
                         name,

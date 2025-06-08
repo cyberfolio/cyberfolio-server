@@ -1,4 +1,4 @@
-import { AuthenticatedRequest, Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import AppUtils from '@utils/index';
 import express from 'express';
 import DexService from './services';
@@ -7,10 +7,10 @@ const DexApi = express.Router();
 export interface AddWalletBody {
   address: string;
   name: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
 }
 
-DexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.post('/add', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   // Validation
   try {
     const keyIdentifier = req.user?.keyIdentifier;
@@ -31,7 +31,7 @@ DexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 });
 
-DexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.post('/delete', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   try {
     // Validation
     const keyIdentifier = req.user?.keyIdentifier;
@@ -51,11 +51,11 @@ DexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
   }
 });
 
-DexApi.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.get('/assets/:chain', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;
   const { chain } = req.params;
-  if (!keyIdentifier || !AppUtils.isEnumOf(Chain, chain)) {
+  if (!keyIdentifier || !AppUtils.isEnumOf(AppStructures.Chain, chain)) {
     return res.status(400).send('Validation error');
   }
 
@@ -75,7 +75,7 @@ DexApi.get('/assets/:chain', async (req: AuthenticatedRequest, res: express.Resp
   }
 });
 
-DexApi.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
+DexApi.get('/assets', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   // Validation
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {

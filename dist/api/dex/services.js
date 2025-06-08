@@ -3,18 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bitcoin_1 = __importDefault(require("@dex/bitcoin"));
-const avalanche_1 = __importDefault(require("@dex/avalanche"));
-const ethereum_1 = __importDefault(require("@dex/ethereum"));
-const arbitrum_1 = __importDefault(require("@dex/arbitrum"));
-const optimism_1 = __importDefault(require("@dex/optimism"));
-const polygon_1 = __importDefault(require("@dex/polygon"));
-const smartchain_1 = __importDefault(require("@dex/smartchain"));
-const solana_1 = __importDefault(require("@dex/solana"));
-const scamTokens_1 = __importDefault(require("@config/scamTokens"));
-const utils_1 = __importDefault(require("@src/utils"));
-const types_1 = require("@config/types");
+const index_1 = __importDefault(require("@modules/index"));
+const index_2 = __importDefault(require("@utils/index"));
+const index_3 = __importDefault(require("@structures/index"));
 const models_1 = require("@api/auth/repository/models");
+const index_4 = __importDefault(require("@constants/index"));
 const repository_1 = __importDefault(require("./repository"));
 const models_2 = require("./repository/models");
 const getAssets = async ({ keyIdentifier, chain }) => {
@@ -26,7 +19,7 @@ const getAssets = async ({ keyIdentifier, chain }) => {
         return assets;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_2.default.onError(e);
         throw error;
     }
 };
@@ -38,7 +31,7 @@ const getAllAssets = async ({ keyIdentifier }) => {
         return assets;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_2.default.onError(e);
         throw error;
     }
 };
@@ -51,20 +44,20 @@ const deleteAssets = async ({ keyIdentifier, address }) => {
         return assets;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_2.default.onError(e);
         throw error;
     }
 };
 const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) => {
     let assets = [];
-    if (chain === types_1.Chain.ETHEREUM) {
+    if (chain === index_3.default.Chain.ETHEREUM) {
         try {
-            const avalancheTokens = await avalanche_1.default.getTokenBalances(walletAddress);
-            const arbitrumTokens = await arbitrum_1.default.getTokenBalances(walletAddress);
-            const optimismTokens = await optimism_1.default.getTokenBalances(walletAddress);
-            const polygonTokens = await polygon_1.default.getTokenBalances(walletAddress);
-            const smartChaintokens = await smartchain_1.default.getTokenBalances(walletAddress);
-            const ethereumTokens = await ethereum_1.default.getTokenBalances(walletAddress);
+            const ethereumTokens = await index_1.default.Chain.Ethereum.getTokenBalances(walletAddress);
+            const avalancheTokens = await index_1.default.Chain.Avalanche.getTokenBalances(walletAddress);
+            const arbitrumTokens = await index_1.default.Chain.Arbitrum.getTokenBalances(walletAddress);
+            const optimismTokens = await index_1.default.Chain.Optimism.getTokenBalances(walletAddress);
+            const polygonTokens = await index_1.default.Chain.Polygon.getTokenBalances(walletAddress);
+            const smartChaintokens = await index_1.default.Chain.SmartChain.getTokenBalances(walletAddress);
             const allEvmTokens = [
                 ...ethereumTokens,
                 ...avalancheTokens,
@@ -76,7 +69,7 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
             if (Array.isArray(allEvmTokens) && allEvmTokens.length > 0) {
                 try {
                     for (const evmAsset of allEvmTokens) {
-                        const isScamToken = scamTokens_1.default.find((scamToken) => scamToken.contractAddress.toLowerCase() === evmAsset.contractAddress.toLowerCase() &&
+                        const isScamToken = index_4.default.ScamTokens.find((scamToken) => scamToken.contractAddress.toLowerCase() === evmAsset.contractAddress.toLowerCase() &&
                             scamToken.chain === evmAsset.chain);
                         if (!isScamToken && evmAsset.value >= 1) {
                             await repository_1.default.addAsset({
@@ -96,19 +89,19 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
                     }
                 }
                 catch (e) {
-                    const error = utils_1.default.onError(e);
+                    const error = index_2.default.onError(e);
                     throw error;
                 }
             }
             assets = allEvmTokens;
         }
         catch (e) {
-            const error = utils_1.default.onError(e);
+            const error = index_2.default.onError(e);
             throw error;
         }
     }
-    else if (chain === types_1.Chain.BITCOIN) {
-        const btcAssets = await bitcoin_1.default.getBalance(walletAddress);
+    else if (chain === index_3.default.Chain.BITCOIN) {
+        const btcAssets = await index_1.default.Chain.Bitcoin.getBalance(walletAddress);
         try {
             for (const asset of btcAssets) {
                 await repository_1.default.addAsset({
@@ -128,12 +121,12 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
             assets = btcAssets;
         }
         catch (e) {
-            const error = utils_1.default.onError(e);
+            const error = index_2.default.onError(e);
             throw error;
         }
     }
-    else if (chain === types_1.Chain.SOLANA) {
-        const solanaAssets = await solana_1.default.getTokenBalances(walletAddress);
+    else if (chain === index_3.default.Chain.SOLANA) {
+        const solanaAssets = await index_1.default.Chain.Solana.getTokenBalances(walletAddress);
         try {
             for (const asset of solanaAssets) {
                 await repository_1.default.addAsset({
@@ -153,7 +146,7 @@ const saveAssets = async ({ walletAddress, keyIdentifier, chain, walletName, }) 
             assets = solanaAssets;
         }
         catch (e) {
-            const error = utils_1.default.onError(e);
+            const error = index_2.default.onError(e);
             throw error;
         }
     }
@@ -193,7 +186,7 @@ const addWallets = async ({ keyIdentifier, wallets }) => {
             });
         }
         catch (e) {
-            const error = utils_1.default.onError(e);
+            const error = index_2.default.onError(e);
             throw error;
         }
     }
@@ -208,7 +201,7 @@ const deleteWallet = async ({ keyIdentifier, chain, address, }) => {
         return assets;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_2.default.onError(e);
         throw error;
     }
 };

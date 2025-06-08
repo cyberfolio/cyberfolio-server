@@ -1,4 +1,4 @@
-import { Chain, ScanURL } from '@config/types';
+import AppStructures from '@structures/index';
 
 import AppProviders from '@providers/index';
 import AppUtils from '@utils/index';
@@ -10,9 +10,9 @@ const path = AppUtils.getFilePath(__filename);
 
 const evmAssetsResponse = async (
   walletAddress: string,
-  scanURL: ScanURL,
+  scanURL: AppStructures.ScanURL,
   assets: CovalentTokenBalanceItems[],
-  chain: Chain,
+  chain: AppStructures.Chain,
 ) => {
   const response: DexAssetAPIResponse[] = [];
   if (!assets || !Array.isArray(assets)) return response;
@@ -42,9 +42,9 @@ const evmAssetsResponse = async (
         const symbol = asset.contract_ticker_symbol?.toLowerCase();
         const logo = symbol ? await AppProviders.Coingecko.getCurrencyLogo(symbol) : '';
         let scan = '';
-        if (scanURL === ScanURL.SOLANA && contractAddress !== '11111111111111111111111111111111') {
+        if (scanURL === AppStructures.ScanURL.SOLANA && contractAddress !== '11111111111111111111111111111111') {
           scan = `${scanURL}/address/${walletAddress}/tokens`;
-        } else if (scanURL === ScanURL.SOLANA && contractAddress === '11111111111111111111111111111111') {
+        } else if (scanURL === AppStructures.ScanURL.SOLANA && contractAddress === '11111111111111111111111111111111') {
           scan = `${scanURL}/address/${walletAddress}`;
         } else if (contractAddress && contractAddress !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
           scan = `${scanURL}/token/${contractAddress}?a=${walletAddress}`;

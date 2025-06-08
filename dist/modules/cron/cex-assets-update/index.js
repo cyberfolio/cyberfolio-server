@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("@api/auth/repository/models");
 const models_2 = require("@api/cex/repository/models");
 const modules_1 = __importDefault(require("@src/modules"));
-const types_1 = require("@config/types");
+const index_1 = __importDefault(require("@structures/index"));
 const utils_1 = __importDefault(require("@src/utils"));
 const path = utils_1.default.getFilePath(__filename);
 function getDifference(array1, array2) {
@@ -25,14 +25,14 @@ const updateCexAssets = async () => {
             const currentAssets = [];
             const availableCexes = await models_2.cexInfoModel.find({ keyIdentifier: walletAddress }).lean();
             for (const availableCex of availableCexes) {
-                if (availableCex.cexName === types_1.CexName.BINANCE) {
+                if (availableCex.cexName === index_1.default.CexName.BINANCE) {
                     const assets = await modules_1.default.Binance.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                     });
                     currentAssets.push(...assets);
                 }
-                if (availableCex.cexName === types_1.CexName.KUCOIN) {
+                if (availableCex.cexName === index_1.default.CexName.KUCOIN) {
                     const assets = await modules_1.default.Kucoin.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
@@ -41,14 +41,14 @@ const updateCexAssets = async () => {
                     });
                     currentAssets.push(...assets);
                 }
-                if (availableCex.cexName === types_1.CexName.GATEIO) {
+                if (availableCex.cexName === index_1.default.CexName.GATEIO) {
                     const assets = await modules_1.default.Gateio.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,
                     });
                     currentAssets.push(...assets);
                 }
-                if (availableCex.cexName === types_1.CexName.BINANCETR) {
+                if (availableCex.cexName === index_1.default.CexName.BINANCETR) {
                     const assets = await modules_1.default.BinanceTR.getAssets({
                         apiKey: availableCex.apiKey,
                         apiSecret: availableCex.apiSecret,

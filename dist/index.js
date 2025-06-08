@@ -31,25 +31,21 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const logger_1 = __importDefault(require("@config/logger"));
-const auth_1 = __importDefault(require("./api/auth"));
-const dex_1 = __importDefault(require("./api/dex"));
-const cex_1 = __importDefault(require("./api/cex"));
-const info_1 = __importDefault(require("./api/info"));
 const init_1 = require("./init");
-const middleware_1 = require("./config/middleware");
+const config_1 = __importDefault(require("./config"));
+const api_1 = __importDefault(require("./api"));
 if (process.env.NODE_ENV !== 'development') {
     Promise.resolve().then(() => __importStar(require('module-alias/register'))).catch((e) => {
-        logger_1.default.error('Error while registering module-alias', e);
+        config_1.default.Logger.error('Error while registering module-alias', e);
     });
 }
 const boot = async () => {
     await (0, init_1.connectToDB)();
-    await (0, init_1.startCronJobs)();
+    // await startCronJobs();
     await (0, init_1.runMigrations)();
     const app = (0, express_1.default)();
     app.disable('x-powered-by');
-    app.use(middleware_1.allowedMethods);
+    app.use(config_1.default.MiddleWare.allowedMethods);
     app.use((0, cors_1.default)({
         credentials: true,
         origin: process.env.FRONTEND_URL,
@@ -60,14 +56,14 @@ const boot = async () => {
         res.send(`${process.env.APP_NAME} server is running`);
     });
     // init api routes
-    app.use('/api/auth', auth_1.default);
-    app.use('/api/cex', middleware_1.authenticateUser, cex_1.default);
-    app.use('/api/dex', middleware_1.authenticateUser, dex_1.default);
-    app.use('/api/info', middleware_1.authenticateUser, info_1.default);
+    app.use('/api/auth', api_1.default.AuthApi);
+    app.use('/api/cex', config_1.default.MiddleWare.authenticateUser, api_1.default.CexApi);
+    app.use('/api/dex', config_1.default.MiddleWare.authenticateUser, api_1.default.DexApi);
+    app.use('/api/info', config_1.default.MiddleWare.authenticateUser, api_1.default.InfoApi);
     // start
     const port = process.env.PORT;
     app.listen(port, () => {
-        logger_1.default.info(`App listening at http://localhost:${port}`);
+        config_1.default.Logger.info(`App listening at http://localhost:${port}`);
     });
 };
 boot();

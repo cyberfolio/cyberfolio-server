@@ -3,7 +3,8 @@ import crypto from 'crypto-js';
 
 import AppUtils from '@utils/index';
 import AppProviders from '@providers/index';
-import { BinanceError, CexAssetResponse, CexName } from '@config/types';
+import AppStructures from '@structures/index';
+
 import {
   BinanceAccountAPIResponse,
   BinanceFiatDepositAPIResponse,
@@ -12,14 +13,20 @@ import {
   TransactionType,
 } from './types';
 
-const API_URL = process.env.BINANCE_API_URL;
+const BINANCE_API_URL = process.env.BINANCE_API_URL;
 
-const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
+const getAssets = async ({
+  apiKey,
+  apiSecret,
+}: {
+  apiKey: string;
+  apiSecret: string;
+}): Promise<AppStructures.CexAssetResponse[]> => {
   const queryString = `timestamp=${Date.now()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
     const accountInfo = await axios.get<BinanceAccountAPIResponse>(
-      `${API_URL}/api/v3/account?${queryString}&signature=${signature}`,
+      `${BINANCE_API_URL}/api/v3/account?${queryString}&signature=${signature}`,
       {
         headers: {
           'X-MBX-APIKEY': apiKey,
@@ -30,7 +37,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     const assets = accountInfo.data?.balances?.filter(
       (balance) => parseFloat(balance.free) + parseFloat(balance.locked) > 1,
     );
-    const response: CexAssetResponse[] = [];
+    const response: AppStructures.CexAssetResponse[] = [];
     if (Array.isArray(assets) && assets.length > 0) {
       for (const asset of assets) {
         const symbol = asset.asset?.toLowerCase();
@@ -49,8 +56,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
             price,
             value,
             logo,
-            cexName: CexName.BINANCE,
-            accountName: CexName.BINANCE,
+            cexName: AppStructures.CexName.BINANCE,
+            accountName: AppStructures.CexName.BINANCE,
           });
         }
       }
@@ -58,7 +65,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     return response;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
+      const binanceError = e as AxiosError<AppStructures.BinanceError>;
       if (binanceError.response?.data?.code === -1022) {
         throw new Error('API Secret is invalid');
       }
@@ -90,7 +97,7 @@ const getFiatDepositAndWithDrawalHistory = async ({
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
     const response = await axios.get<BinanceFiatDepositAPIResponse>(
-      `${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
+      `${BINANCE_API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`,
       {
         headers: {
           'X-MBX-APIKEY': apiKey,
@@ -102,7 +109,7 @@ const getFiatDepositAndWithDrawalHistory = async ({
     return data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
+      const binanceError = e as AxiosError<AppStructures.BinanceError>;
       if (binanceError.response?.data?.msg) {
         throw new Error(binanceError.response.data.msg);
       } else {
@@ -129,7 +136,7 @@ const getFiatPaymentBuyAndSellHistory = async ({
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
     const response = await axios.get<BinanceFiatPaymentAPIResponse>(
-      `${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
+      `${BINANCE_API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`,
       {
         headers: {
           'X-MBX-APIKEY': apiKey,
@@ -140,7 +147,7 @@ const getFiatPaymentBuyAndSellHistory = async ({
     return data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
+      const binanceError = e as AxiosError<AppStructures.BinanceError>;
       if (binanceError.response?.data?.msg) {
         throw new Error(binanceError.response.data.msg);
       } else {
@@ -185,7 +192,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
 
   const creditCardWithdrawalRes = creditCardWithdrawal.data.map((item) => {
     return {
-      cexName: CexName.BINANCE,
+      cexName: AppStructures.CexName.BINANCE,
       fiatCurrency: item.fiatCurrency,
       orderNo: item.orderNo,
       type: 'Card Withdrawal',
@@ -198,7 +205,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
   });
   const bankWithdrawalRes = bankWithdrawal.data.map((item) => {
     return {
-      cexName: CexName.BINANCE,
+      cexName: AppStructures.CexName.BINANCE,
       fiatCurrency: item.fiatCurrency,
       orderNo: item.orderNo,
       type: 'Bank Withdrawal',
@@ -211,7 +218,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
   });
   const bankPaymentRes = bankPayment.data.map((item) => {
     return {
-      cexName: CexName.BINANCE,
+      cexName: AppStructures.CexName.BINANCE,
       fiatCurrency: item.fiatCurrency,
       orderNo: item.orderNo,
       type: 'Bank Deposit',
@@ -224,7 +231,7 @@ const getPaymentHistory = async ({ apiKey, apiSecret }: GetPaymentHistory) => {
   });
   const creditCardPaymentRes = creditCardPayment.data.map((item) => {
     return {
-      cexName: CexName.BINANCE,
+      cexName: AppStructures.CexName.BINANCE,
       fiatCurrency: item.fiatCurrency,
       orderNo: item.orderNo,
       type: 'Card Payment',

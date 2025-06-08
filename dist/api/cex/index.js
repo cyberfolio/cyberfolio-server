@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("@config/types");
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const express_1 = __importDefault(require("express"));
 const services_1 = __importDefault(require("./services"));
-const router = express_1.default.Router();
-router.post('/add', async (req, res) => {
+const CexApi = express_1.default.Router();
+CexApi.post('/add', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     const { apiKey } = req.body;
     const { apiSecret } = req.body;
@@ -34,7 +34,7 @@ router.post('/add', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/assets', async (req, res) => {
+CexApi.get('/assets', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
         return res.status(400).send('Validation error');
@@ -52,13 +52,13 @@ router.get('/assets', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/assets/:cexName', async (req, res) => {
+CexApi.get('/assets/:cexName', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     const cexName = req.params?.cexName;
     if (!keyIdentifier || !cexName) {
         return res.status(400).send('Validation error');
     }
-    if (!utils_1.default.isEnumOf(types_1.CexName, cexName)) {
+    if (!index_1.default.isEnumOf(types_1.CexName, cexName)) {
         return res.status(400).send('Invalid cex name');
     }
     try {
@@ -75,7 +75,7 @@ router.get('/assets/:cexName', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.post('/delete', async (req, res) => {
+CexApi.post('/delete', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     const { cexName } = req.body;
     if (!keyIdentifier) {
@@ -95,7 +95,7 @@ router.post('/delete', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/payment-history', async (req, res) => {
+CexApi.get('/payment-history', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
         return res.status(400).send('Validation error');
@@ -113,4 +113,4 @@ router.get('/payment-history', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-exports.default = router;
+exports.default = CexApi;

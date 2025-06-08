@@ -1,4 +1,4 @@
-import { CexName } from '@config/types';
+import AppStructures from '@structures/index';
 
 interface Balances {
   free: string;
@@ -72,7 +72,7 @@ export interface BinanceFiatDepositAPIResponse {
 }
 
 export interface BinancePaymentHistory {
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   fiatCurrency: string;
   orderNo: string;
   type: string;

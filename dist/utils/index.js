@@ -11,10 +11,10 @@ const web3_1 = __importDefault(require("web3"));
 const ethers_1 = require("ethers");
 const uuid_1 = require("uuid");
 const axios_1 = __importDefault(require("axios"));
-const logger_1 = __importDefault(require("@config/logger"));
 const lodash_1 = __importDefault(require("lodash"));
 const types_1 = require("@config/types");
 const model_1 = __importDefault(require("@modules/cron/scam-tokens/model"));
+const index_1 = __importDefault(require("@config/index"));
 const web3 = new web3_1.default(new web3_1.default.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`));
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const isValid0xAddress = (address) => web3.utils.isAddress(address);
@@ -65,7 +65,7 @@ const onError = (e) => {
         error = e;
     }
     else {
-        logger_1.default.error('Unexpected error', e);
+        index_1.default.Logger.error('Unexpected error', e);
         error = new Error('Unexpected error');
     }
     return error;
@@ -89,7 +89,7 @@ const logError = ({ path, func, e }) => {
     else {
         message = e;
     }
-    logger_1.default.error(`Error at ${path} ${func} message: ${message}`);
+    index_1.default.Logger.error(`Error at ${path} ${func} message: ${message}`);
 };
 const getFilePath = (path) => {
     const fileName = path.substring(path.indexOf('src'));
@@ -125,7 +125,11 @@ const timestampToReadableDate = (timestamp) => {
     const str = `${day}/${month}/${date.getFullYear()} ${hour}:${min}:${sec}`;
     return str;
 };
+const toHexChainId = (chainId) => {
+    return `0x${chainId.toString(16)}`;
+};
 const AppUtils = {
+    toHexChainId,
     sleep,
     isValid0xAddress,
     formatBalance,

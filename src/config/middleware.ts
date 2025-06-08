@@ -1,8 +1,8 @@
 import express from 'express';
 
 import { getUserByEvmAddress } from '@api/auth/repository';
+import AppStructures from '@structures/index';
 import jwt from './jwt';
-import { AuthenticatedRequest } from './types';
 
 const allowedMethods = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   // NOTE: Exclude TRACE and TRACK methods to avoid XST attacks.
@@ -14,7 +14,7 @@ const allowedMethods = (req: express.Request, res: express.Response, next: expre
 };
 
 const authenticateUser = async (
-  req: AuthenticatedRequest,
+  req: AppStructures.AuthenticatedRequest,
   res: express.Response,
   next: express.NextFunction,
   // eslint-disable-next-line consistent-return

@@ -1,4 +1,4 @@
-import { CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import mongoose from 'mongoose';
 
 // CEX INFO
@@ -6,7 +6,7 @@ interface CexInfo {
   keyIdentifier: string;
   apiKey: string;
   apiSecret: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   passphrase: string;
 }
 const cexInfoSchema = new mongoose.Schema<CexInfo>({
@@ -15,7 +15,7 @@ const cexInfoSchema = new mongoose.Schema<CexInfo>({
   apiSecret: String,
   cexName: {
     type: String,
-    enum: CexName,
+    enum: AppStructures.CexName,
   },
   passphrase: String,
 });
@@ -25,7 +25,7 @@ export const cexInfoModel =
 // CEX ASSET
 export interface CexAsset {
   keyIdentifier: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   name: string;
   symbol: string;
   logo: string;
@@ -38,7 +38,7 @@ const cexAssetSchema = new mongoose.Schema<CexAsset>({
   keyIdentifier: String,
   cexName: {
     type: String,
-    enum: CexName,
+    enum: AppStructures.CexName,
   },
   name: String,
   symbol: String,
@@ -55,7 +55,7 @@ export const cexAssetModel =
 export interface CexPaymentHistory {
   keyIdentifier: string;
   orderNo: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   type: string;
   fee: string;
   status: string;
@@ -75,7 +75,7 @@ const cexPaymentHistorySchema = new mongoose.Schema<CexPaymentHistory>({
   },
   cexName: {
     type: String,
-    enum: CexName,
+    enum: AppStructures.CexName,
   },
   type: {
     type: String,

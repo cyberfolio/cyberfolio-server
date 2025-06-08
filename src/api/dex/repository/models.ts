@@ -1,11 +1,11 @@
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import mongoose, { Document } from 'mongoose';
 
 export interface Wallet {
   keyIdentifier: string;
   walletAddress: string;
   walletName: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
 }
 const walletSchema = new mongoose.Schema<Wallet>({
   keyIdentifier: { type: String, required: true },
@@ -19,7 +19,7 @@ export const walletsModel =
 
 export interface DexAsset {
   keyIdentifier: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
   name: string;
   symbol: string;
   logo: string;

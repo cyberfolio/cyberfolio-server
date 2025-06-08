@@ -6,14 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ethers_1 = require("ethers");
 const utils_1 = __importDefault(require("@src/utils"));
-const jwt_1 = __importDefault(require("@config/jwt"));
-const middleware_1 = require("@config/middleware");
 const services_1 = __importDefault(require("@api/dex/services"));
-const types_1 = require("@config/types");
+const index_1 = __importDefault(require("@structures/index"));
+const index_2 = __importDefault(require("@config/index"));
 const repository_1 = require("./repository");
 const services_2 = __importDefault(require("./services"));
-const router = express_1.default.Router();
-router.post('/login/metamask', async (req, res, next) => {
+const AuthApi = express_1.default.Router();
+AuthApi.post('/login/metamask', async (req, res, next) => {
     let evmAddress = req.body?.evmAddress;
     evmAddress = evmAddress.toLowerCase();
     try {
@@ -39,7 +38,7 @@ router.post('/login/metamask', async (req, res, next) => {
         next(e);
     }
 });
-router.post('/login/validate-signature', async (req, res, next) => {
+AuthApi.post('/login/validate-signature', async (req, res, next) => {
     let { evmAddress } = req.body;
     const { signature } = req.body;
     const { nonce } = req.body;
@@ -61,12 +60,12 @@ router.post('/login/validate-signature', async (req, res, next) => {
             await services_1.default.saveAssets({
                 keyIdentifier,
                 walletAddress: keyIdentifier,
-                chain: types_1.Chain.ETHEREUM,
+                chain: index_1.default.Chain.ETHEREUM,
                 walletName: 'main',
             });
         }
         // set jwt to the user's browser cookies
-        const token = jwt_1.default.signJwt(user.keyIdentifier);
+        const token = index_2.default.Jwt.signJwt(user.keyIdentifier);
         const jwtExpiryInDays = Number(process.env.JWT_EXPIRY_IN_DAYS);
         res.cookie('token', token, {
             secure: process.env.NODE_ENV !== 'development',
@@ -95,7 +94,7 @@ router.post('/login/validate-signature', async (req, res, next) => {
         next(e);
     }
 });
-router.get('/get-user-info', middleware_1.authenticateUser, async (req, res) => {
+AuthApi.get('/get-user-info', index_2.default.MiddleWare.authenticateUser, async (req, res) => {
     if (req.user) {
         res.status(200).send({
             keyIdentifier: req.user.keyIdentifier,
@@ -107,8 +106,8 @@ router.get('/get-user-info', middleware_1.authenticateUser, async (req, res) => 
         res.status(401).send('Unauthenticated');
     }
 });
-router.get('/logout', middleware_1.authenticateUser, (req, res) => {
+AuthApi.get('/logout', index_2.default.MiddleWare.authenticateUser, (req, res) => {
     res.clearCookie('token');
     res.status(403).send('');
 });
-exports.default = router;
+exports.default = AuthApi;

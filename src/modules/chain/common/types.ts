@@ -1,4 +1,4 @@
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 
 export interface CovalentTokenBalanceItems {
   contract_decimals: string;
@@ -33,6 +33,6 @@ export interface DexAssetAPIResponse {
   balance: number;
   price: number;
   value: number;
-  chain: Chain;
+  chain: AppStructures.Chain;
   scan: string;
 }

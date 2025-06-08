@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import AppUilts from '@src/utils';
 
 import DexService from '@api/dex/services';
-import { AuthenticatedRequest, Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import AppConfig from '@config/index';
 import { createUser, updateNonce, getUserByEvmAddress, getUserByEvmAddressAndNonce } from './repository';
 import AuthService from './services';
@@ -59,7 +59,7 @@ AuthApi.post('/login/validate-signature', async (req: express.Request, res: expr
       await DexService.saveAssets({
         keyIdentifier,
         walletAddress: keyIdentifier,
-        chain: Chain.ETHEREUM,
+        chain: AppStructures.Chain.ETHEREUM,
         walletName: 'main',
       });
     }
@@ -89,6 +89,7 @@ AuthApi.post('/login/validate-signature', async (req: express.Request, res: expr
     } else {
       response.lastAssetUpdate = new Date().toString();
     }
+
     res.json(response);
   } catch (e) {
     next(e);
@@ -98,7 +99,7 @@ AuthApi.post('/login/validate-signature', async (req: express.Request, res: expr
 AuthApi.get(
   '/get-user-info',
   AppConfig.MiddleWare.authenticateUser,
-  async (req: AuthenticatedRequest, res: express.Response) => {
+  async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
     if (req.user) {
       res.status(200).send({
         keyIdentifier: req.user.keyIdentifier,

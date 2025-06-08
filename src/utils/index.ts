@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import { v4 as uuidv4 } from 'uuid';
 import axios, { AxiosError } from 'axios';
 import _ from 'lodash';
-import { Chain, ScanURL } from '@config/types';
+import AppStructures from '@structures/index';
 import scamTokenModel from '@modules/cron/scam-tokens/model';
 import AppConfig from '@config/index';
 
@@ -25,24 +25,24 @@ const sathoshiToBtcBalance = (satoshi: number) => satoshi * 0.00000001;
 
 const toBase64 = (string: string) => Buffer.from(string).toString('base64');
 
-const getScanUrl = (address: string, chain: Chain) => {
+const getScanUrl = (address: string, chain: AppStructures.Chain) => {
   switch (chain) {
-    case Chain.ARBITRUM:
-      return `${ScanURL.ARBITRUM}/address/${address}`;
-    case Chain.AVALANCHE:
-      return `${ScanURL.AVALANCHE}/address/${address}`;
-    case Chain.BITCOIN:
-      return `${ScanURL.BITCOIN}/btc/address/${address}`;
-    case Chain.BSC:
-      return `${ScanURL.BSC}/address/${address}`;
-    case Chain.ETHEREUM:
-      return `${ScanURL.ETHEREUM}/address/${address}`;
-    case Chain.OPTIMISM:
-      return `${ScanURL.OPTIMISM}/address/${address}`;
-    case Chain.POLYGON:
-      return `${ScanURL.POLYGON}/address/${address}`;
-    case Chain.SOLANA:
-      return `${ScanURL.SOLANA}address/${address}`;
+    case AppStructures.Chain.ARBITRUM:
+      return `${AppStructures.ScanURL.ARBITRUM}/address/${address}`;
+    case AppStructures.Chain.AVALANCHE:
+      return `${AppStructures.ScanURL.AVALANCHE}/address/${address}`;
+    case AppStructures.Chain.BITCOIN:
+      return `${AppStructures.ScanURL.BITCOIN}/btc/address/${address}`;
+    case AppStructures.Chain.BSC:
+      return `${AppStructures.ScanURL.BSC}/address/${address}`;
+    case AppStructures.Chain.ETHEREUM:
+      return `${AppStructures.ScanURL.ETHEREUM}/address/${address}`;
+    case AppStructures.Chain.OPTIMISM:
+      return `${AppStructures.ScanURL.OPTIMISM}/address/${address}`;
+    case AppStructures.Chain.POLYGON:
+      return `${AppStructures.ScanURL.POLYGON}/address/${address}`;
+    case AppStructures.Chain.SOLANA:
+      return `${AppStructures.ScanURL.SOLANA}address/${address}`;
     default:
       return '';
   }
@@ -80,14 +80,14 @@ const onError = (e: unknown) => {
   return error;
 };
 
-const isEVMChain = (chain: Chain) => {
+const isEVMChain = (chain: AppStructures.Chain) => {
   return (
-    chain === Chain.ARBITRUM ||
-    chain === Chain.AVALANCHE ||
-    chain === Chain.BSC ||
-    chain === Chain.OPTIMISM ||
-    chain === Chain.POLYGON ||
-    chain === Chain.ETHEREUM
+    chain === AppStructures.Chain.ARBITRUM ||
+    chain === AppStructures.Chain.AVALANCHE ||
+    chain === AppStructures.Chain.BSC ||
+    chain === AppStructures.Chain.OPTIMISM ||
+    chain === AppStructures.Chain.POLYGON ||
+    chain === AppStructures.Chain.ETHEREUM
   );
 };
 
@@ -144,7 +144,12 @@ const timestampToReadableDate = (timestamp: number) => {
   return str;
 };
 
+const toHexChainId = (chainId: number) => {
+  return `0x${chainId.toString(16)}`;
+};
+
 const AppUtils = {
+  toHexChainId,
   sleep,
   isValid0xAddress,
   formatBalance,

@@ -1,4 +1,4 @@
-import { CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import AppUtils from '@utils/index';
 import { CexPaymentHistory } from '@api/cex/types';
 import { cexInfoModel, cexAssetModel, cexPaymentHistoryModel } from './models';
@@ -15,7 +15,7 @@ const addCexByKeyIdentifier = async ({
   keyIdentifier: string;
   apiKey: string;
   apiSecret: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   passphrase: string;
 }) => {
   try {
@@ -47,7 +47,7 @@ const getCexInfos = async ({ keyIdentifier }: { keyIdentifier: string }) => {
   return cexes;
 };
 
-const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: AppStructures.CexName }) => {
   const cex = await cexInfoModel
     .findOne({
       keyIdentifier,
@@ -57,7 +57,13 @@ const getCexInfo = async ({ keyIdentifier, cexName }: { keyIdentifier: string; c
   return cex;
 };
 
-const fetchSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const fetchSpotAssets = async ({
+  keyIdentifier,
+  cexName,
+}: {
+  keyIdentifier: string;
+  cexName: AppStructures.CexName;
+}) => {
   let assets = await cexAssetModel
     .find({
       keyIdentifier,
@@ -90,7 +96,7 @@ const addCexAsset = async ({
   accountName,
 }: {
   keyIdentifier: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   name: string;
   symbol: string;
   balance: number;
@@ -126,7 +132,7 @@ const addCexAsset = async ({
   }
 };
 
-const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: AppStructures.CexName }) => {
   try {
     await cexInfoModel.deleteOne({
       keyIdentifier,

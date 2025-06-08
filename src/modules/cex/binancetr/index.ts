@@ -3,12 +3,18 @@ import crypto from 'crypto-js';
 
 import AppUtils from '@utils/index';
 import AppProviders from '@providers/index';
-import { BinanceError, CexAssetResponse, CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import { BinanceTRAccountAPIResponse } from './types';
 
 const API_URL = process.env.BINANCETR_API_URL;
 
-const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
+const getAssets = async ({
+  apiKey,
+  apiSecret,
+}: {
+  apiKey: string;
+  apiSecret: string;
+}): Promise<AppStructures.CexAssetResponse[]> => {
   const queryString = `timestamp=${Date.now()}`;
   const signature = crypto.HmacSHA256(queryString, apiSecret).toString(crypto.enc.Hex);
   try {
@@ -35,7 +41,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     const assets = accountInfo.data?.data?.accountAssets?.filter(
       (accountAsset) => parseFloat(accountAsset.free) + parseFloat(accountAsset.locked) > 1,
     );
-    const response: CexAssetResponse[] = [];
+    const response: AppStructures.CexAssetResponse[] = [];
     if (Array.isArray(assets) && assets.length > 0) {
       for (const asset of assets) {
         const symbol = asset.asset?.toLowerCase();
@@ -54,8 +60,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
             price,
             value,
             logo,
-            cexName: CexName.BINANCETR,
-            accountName: CexName.BINANCETR,
+            cexName: AppStructures.CexName.BINANCETR,
+            accountName: AppStructures.CexName.BINANCETR,
           });
         }
       }
@@ -63,7 +69,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     return response;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const binanceError = e as AxiosError<BinanceError>;
+      const binanceError = e as AxiosError<AppStructures.BinanceError>;
       if (binanceError.response?.data?.code === -1022) {
         throw new Error('API Secret is invalid');
       }

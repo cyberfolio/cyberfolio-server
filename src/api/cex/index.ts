@@ -1,4 +1,4 @@
-import { AuthenticatedRequest, CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import AppUtils from '@utils/index';
 import express from 'express';
 
@@ -6,7 +6,7 @@ import CexService from './services';
 
 const CexApi = express.Router();
 
-CexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.post('/add', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const { apiKey } = req.body;
   const { apiSecret } = req.body;
@@ -33,7 +33,7 @@ CexApi.post('/add', async (req: AuthenticatedRequest, res: express.Response) => 
   }
 });
 
-CexApi.get('/assets', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/assets', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');
@@ -52,13 +52,13 @@ CexApi.get('/assets', async (req: AuthenticatedRequest, res: express.Response) =
   }
 });
 
-CexApi.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/assets/:cexName', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const cexName = req.params?.cexName;
   if (!keyIdentifier || !cexName) {
     return res.status(400).send('Validation error');
   }
-  if (!AppUtils.isEnumOf(CexName, cexName)) {
+  if (!AppUtils.isEnumOf(AppStructures.CexName, cexName)) {
     return res.status(400).send('Invalid cex name');
   }
 
@@ -76,7 +76,7 @@ CexApi.get('/assets/:cexName', async (req: AuthenticatedRequest, res: express.Re
   }
 });
 
-CexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.post('/delete', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   const { cexName } = req.body;
   if (!keyIdentifier) {
@@ -96,7 +96,7 @@ CexApi.post('/delete', async (req: AuthenticatedRequest, res: express.Response) 
   }
 });
 
-CexApi.get('/payment-history', async (req: AuthenticatedRequest, res: express.Response) => {
+CexApi.get('/payment-history', async (req: AppStructures.AuthenticatedRequest, res: express.Response) => {
   const keyIdentifier = req.user?.keyIdentifier;
   if (!keyIdentifier) {
     return res.status(400).send('Validation error');

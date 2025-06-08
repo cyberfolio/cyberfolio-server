@@ -4,11 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const gate_api_1 = require("gate-api");
-const coingecko_1 = require("@providers/coingecko");
+const index_1 = __importDefault(require("@providers/index"));
 const axios_1 = __importDefault(require("axios"));
-const types_1 = require("@config/types");
-const repository_1 = require("@providers/coingecko/repository");
-const getAssets = async ({ apiKey, apiSecret }) => {
+const index_2 = __importDefault(require("@structures/index"));
+const getAssets = async ({ apiKey, apiSecret, }) => {
     const client = new gate_api_1.ApiClient();
     client.setApiKeySecret(apiKey, apiSecret);
     const spotApi = new gate_api_1.SpotApi(client);
@@ -24,12 +23,12 @@ const getAssets = async ({ apiKey, apiSecret }) => {
                 const lockedBalance = parseFloat(locked || '0');
                 if (balance > 0.5 || lockedBalance > 0.5) {
                     const symbol = String(asset?.currency).toLowerCase();
-                    const name = await (0, coingecko_1.getFullNameOfTheCurrency)(symbol);
-                    const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
+                    const name = await index_1.default.Coingecko.getFullNameOfTheCurrency(symbol);
+                    const contractAddress = await index_1.default.Coingecko.getContractAddress(symbol);
                     balance += lockedBalance;
-                    const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
+                    const price = await index_1.default.Coingecko.getCurrentUSDPrice(symbol);
                     const value = balance * price;
-                    const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
+                    const logo = symbol ? await index_1.default.Coingecko.getCurrencyLogo(symbol) : '';
                     if (value > 1) {
                         response.push({
                             name,
@@ -39,8 +38,8 @@ const getAssets = async ({ apiKey, apiSecret }) => {
                             price,
                             value,
                             logo,
-                            cexName: types_1.CexName.GATEIO,
-                            accountName: types_1.CexName.GATEIO,
+                            cexName: index_2.default.CexName.GATEIO,
+                            accountName: index_2.default.CexName.GATEIO,
                         });
                     }
                 }

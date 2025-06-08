@@ -3,7 +3,7 @@ import crypto from 'crypto-js';
 import AppUtils from '@utils/index';
 
 import AppProviders from '@providers/index';
-import { KucoinError, CexAssetResponse, CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import { KucoinAccountsApiResponse } from './types';
 
 const API_VERSION = process.env.KUCOIN_API_VERSION as string;
@@ -19,7 +19,7 @@ const getAssets = async ({
   apiKey: string;
   apiSecret: string;
   passphrase: string;
-}): Promise<CexAssetResponse[]> => {
+}): Promise<AppStructures.CexAssetResponse[]> => {
   const timestamp = Date.now().toString();
   const endpoint = `/api/v1/accounts?type=${type}`;
   const stringToSign = `${timestamp}GET${endpoint}`;
@@ -39,7 +39,7 @@ const getAssets = async ({
     });
 
     const assets = accountInfo?.data?.data;
-    const response: CexAssetResponse[] = [];
+    const response: AppStructures.CexAssetResponse[] = [];
     if (assets && assets.length > 0) {
       for (const asset of assets) {
         const balance = AppUtils.roundNumber(Number(asset.holds));
@@ -60,8 +60,8 @@ const getAssets = async ({
               price,
               value,
               logo,
-              cexName: CexName.KUCOIN,
-              accountName: CexName.KUCOIN,
+              cexName: AppStructures.CexName.KUCOIN,
+              accountName: AppStructures.CexName.KUCOIN,
             });
           }
         }
@@ -71,7 +71,7 @@ const getAssets = async ({
     return response;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const gateIoError = e as AxiosError<KucoinError>;
+      const gateIoError = e as AxiosError<AppStructures.KucoinError>;
       if (gateIoError.response?.data?.code === '400003') {
         throw new Error('Api key or secret is not valid.');
       } else if (gateIoError.response?.data?.code === '400005') {

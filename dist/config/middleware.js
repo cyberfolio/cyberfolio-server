@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = exports.allowedMethods = void 0;
 const repository_1 = require("@api/auth/repository");
 const jwt_1 = __importDefault(require("./jwt"));
 const allowedMethods = (req, res, next) => {
@@ -14,7 +13,6 @@ const allowedMethods = (req, res, next) => {
     }
     next();
 };
-exports.allowedMethods = allowedMethods;
 const authenticateUser = async (req, res, next) => {
     const jwtToken = req.cookies?.token;
     if (!jwtToken) {
@@ -39,4 +37,8 @@ const authenticateUser = async (req, res, next) => {
         res.status(401).send('Unauthenticated');
     }
 };
-exports.authenticateUser = authenticateUser;
+const MiddleWare = {
+    allowedMethods,
+    authenticateUser,
+};
+exports.default = MiddleWare;

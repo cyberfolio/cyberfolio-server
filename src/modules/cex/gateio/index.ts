@@ -2,9 +2,15 @@ import { ApiClient, SpotApi } from 'gate-api';
 
 import AppProviders from '@providers/index';
 import axios, { AxiosError } from 'axios';
-import { GateIoError, CexAssetResponse, CexName } from '@config/types';
+import AppStructures from '@structures/index';
 
-const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: string }): Promise<CexAssetResponse[]> => {
+const getAssets = async ({
+  apiKey,
+  apiSecret,
+}: {
+  apiKey: string;
+  apiSecret: string;
+}): Promise<AppStructures.CexAssetResponse[]> => {
   const client = new ApiClient();
   client.setApiKeySecret(apiKey, apiSecret);
 
@@ -40,8 +46,8 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
               price,
               value,
               logo,
-              cexName: CexName.GATEIO,
-              accountName: CexName.GATEIO,
+              cexName: AppStructures.CexName.GATEIO,
+              accountName: AppStructures.CexName.GATEIO,
             });
           }
         }
@@ -51,7 +57,7 @@ const getAssets = async ({ apiKey, apiSecret }: { apiKey: string; apiSecret: str
     return response;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const gateIoError = e as AxiosError<GateIoError>;
+      const gateIoError = e as AxiosError<AppStructures.GateIoError>;
       if (gateIoError.response?.data?.code) {
         throw new Error(gateIoError.response.data.code);
       } else {

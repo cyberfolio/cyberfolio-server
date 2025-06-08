@@ -5,17 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
-const utils_1 = __importDefault(require("@src/utils"));
-const coingecko_1 = require("@providers/coingecko");
-const types_1 = require("@config/types");
-const repository_1 = require("@providers/coingecko/repository");
-const types_2 = require("./types");
-const API_URL = process.env.BINANCE_API_URL;
-const getAssets = async ({ apiKey, apiSecret }) => {
+const index_1 = __importDefault(require("@utils/index"));
+const index_2 = __importDefault(require("@providers/index"));
+const index_3 = __importDefault(require("@structures/index"));
+const types_1 = require("./types");
+const BINANCE_API_URL = process.env.BINANCE_API_URL;
+const getAssets = async ({ apiKey, apiSecret, }) => {
     const queryString = `timestamp=${Date.now()}`;
     const signature = crypto_js_1.default.HmacSHA256(queryString, apiSecret).toString(crypto_js_1.default.enc.Hex);
     try {
-        const accountInfo = await axios_1.default.get(`${API_URL}/api/v3/account?${queryString}&signature=${signature}`, {
+        const accountInfo = await axios_1.default.get(`${BINANCE_API_URL}/api/v3/account?${queryString}&signature=${signature}`, {
             headers: {
                 'X-MBX-APIKEY': apiKey,
             },
@@ -25,12 +24,12 @@ const getAssets = async ({ apiKey, apiSecret }) => {
         if (Array.isArray(assets) && assets.length > 0) {
             for (const asset of assets) {
                 const symbol = asset.asset?.toLowerCase();
-                const name = await (0, coingecko_1.getFullNameOfTheCurrency)(symbol);
-                const price = await (0, coingecko_1.getCurrentUSDPrice)(symbol);
+                const name = await index_2.default.Coingecko.getFullNameOfTheCurrency(symbol);
+                const price = await index_2.default.Coingecko.getCurrentUSDPrice(symbol);
                 const balance = parseFloat(asset.free) + parseFloat(asset.locked);
-                const contractAddress = await (0, coingecko_1.getContractAddress)(symbol);
-                const value = utils_1.default.roundNumber(balance * price);
-                const logo = symbol ? await (0, repository_1.getCurrencyLogo)(symbol) : '';
+                const contractAddress = await index_2.default.Coingecko.getContractAddress(symbol);
+                const value = index_1.default.roundNumber(balance * price);
+                const logo = symbol ? await index_2.default.Coingecko.getCurrencyLogo(symbol) : '';
                 if (value > 1) {
                     response.push({
                         name,
@@ -40,8 +39,8 @@ const getAssets = async ({ apiKey, apiSecret }) => {
                         price,
                         value,
                         logo,
-                        cexName: types_1.CexName.BINANCE,
-                        accountName: types_1.CexName.BINANCE,
+                        cexName: index_3.default.CexName.BINANCE,
+                        accountName: index_3.default.CexName.BINANCE,
                     });
                 }
             }
@@ -73,7 +72,7 @@ const getFiatDepositAndWithDrawalHistory = async ({ transactionType, apiKey, api
     const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}&beginTime=${new Date('01.01.2016').getTime()}`;
     const signature = crypto_js_1.default.HmacSHA256(queryString, apiSecret).toString(crypto_js_1.default.enc.Hex);
     try {
-        const response = await axios_1.default.get(`${API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`, {
+        const response = await axios_1.default.get(`${BINANCE_API_URL}/sapi/v1/fiat/orders?${queryString}&signature=${signature}`, {
             headers: {
                 'X-MBX-APIKEY': apiKey,
             },
@@ -100,7 +99,7 @@ const getFiatPaymentBuyAndSellHistory = async ({ transactionType, apiKey, apiSec
     const queryString = `transactionType=${transactionType}&timestamp=${Date.now()}&beginTime=${new Date('01.01.2016').getTime()}`;
     const signature = crypto_js_1.default.HmacSHA256(queryString, apiSecret).toString(crypto_js_1.default.enc.Hex);
     try {
-        const response = await axios_1.default.get(`${API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`, {
+        const response = await axios_1.default.get(`${BINANCE_API_URL}/sapi/v1/fiat/payments?${queryString}&signature=${signature}`, {
             headers: {
                 'X-MBX-APIKEY': apiKey,
             },
@@ -125,38 +124,38 @@ const getFiatPaymentBuyAndSellHistory = async ({ transactionType, apiKey, apiSec
 };
 const getPaymentHistory = async ({ apiKey, apiSecret }) => {
     const response = [];
-    await utils_1.default.sleep(2000);
+    await index_1.default.sleep(2000);
     const creditCardPayment = await getFiatPaymentBuyAndSellHistory({
         apiKey,
         apiSecret,
-        transactionType: types_2.TransactionType.DEPOSIT,
+        transactionType: types_1.TransactionType.DEPOSIT,
     });
-    await utils_1.default.sleep(3000);
+    await index_1.default.sleep(3000);
     const bankPayment = await getFiatDepositAndWithDrawalHistory({
         apiKey,
         apiSecret,
-        transactionType: types_2.TransactionType.DEPOSIT,
+        transactionType: types_1.TransactionType.DEPOSIT,
     });
-    await utils_1.default.sleep(3000);
+    await index_1.default.sleep(3000);
     const creditCardWithdrawal = await getFiatPaymentBuyAndSellHistory({
         apiKey,
         apiSecret,
-        transactionType: types_2.TransactionType.WITHDRAW,
+        transactionType: types_1.TransactionType.WITHDRAW,
     });
-    await utils_1.default.sleep(3000);
+    await index_1.default.sleep(3000);
     const bankWithdrawal = await getFiatDepositAndWithDrawalHistory({
         apiKey,
         apiSecret,
-        transactionType: types_2.TransactionType.WITHDRAW,
+        transactionType: types_1.TransactionType.WITHDRAW,
     });
     const creditCardWithdrawalRes = creditCardWithdrawal.data.map((item) => {
         return {
-            cexName: types_1.CexName.BINANCE,
+            cexName: index_3.default.CexName.BINANCE,
             fiatCurrency: item.fiatCurrency,
             orderNo: item.orderNo,
             type: 'Card Withdrawal',
             status: item.status,
-            date: utils_1.default.timestampToReadableDate(item.createTime),
+            date: index_1.default.timestampToReadableDate(item.createTime),
             createTime: item.createTime,
             fee: item.totalFee,
             amount: item.obtainAmount,
@@ -164,39 +163,39 @@ const getPaymentHistory = async ({ apiKey, apiSecret }) => {
     });
     const bankWithdrawalRes = bankWithdrawal.data.map((item) => {
         return {
-            cexName: types_1.CexName.BINANCE,
+            cexName: index_3.default.CexName.BINANCE,
             fiatCurrency: item.fiatCurrency,
             orderNo: item.orderNo,
             type: 'Bank Withdrawal',
             status: item.status,
             createTime: item.createTime,
-            date: utils_1.default.timestampToReadableDate(item.createTime),
+            date: index_1.default.timestampToReadableDate(item.createTime),
             fee: item.totalFee,
             amount: item.amount,
         };
     });
     const bankPaymentRes = bankPayment.data.map((item) => {
         return {
-            cexName: types_1.CexName.BINANCE,
+            cexName: index_3.default.CexName.BINANCE,
             fiatCurrency: item.fiatCurrency,
             orderNo: item.orderNo,
             type: 'Bank Deposit',
             status: item.status,
             createTime: item.createTime,
-            date: utils_1.default.timestampToReadableDate(item.createTime),
+            date: index_1.default.timestampToReadableDate(item.createTime),
             amount: item.indicatedAmount,
             fee: item.totalFee,
         };
     });
     const creditCardPaymentRes = creditCardPayment.data.map((item) => {
         return {
-            cexName: types_1.CexName.BINANCE,
+            cexName: index_3.default.CexName.BINANCE,
             fiatCurrency: item.fiatCurrency,
             orderNo: item.orderNo,
             type: 'Card Payment',
             status: item.status,
             createTime: item.createTime,
-            date: utils_1.default.timestampToReadableDate(item.createTime),
+            date: index_1.default.timestampToReadableDate(item.createTime),
             amount: item.sourceAmount,
             fee: item.totalFee,
         };

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getConnectedAccounts = exports.getNetWorth = void 0;
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const services_1 = __importDefault(require("@api/cex/services"));
 const repository_1 = __importDefault(require("@api/dex/repository"));
 const types_1 = require("@config/types");
@@ -23,7 +23,7 @@ const getNetWorth = async ({ keyIdentifier }) => {
         return dexTotalValue + cexTotalValue;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };
@@ -38,12 +38,12 @@ const getConnectedAccounts = async ({ keyIdentifier, }) => {
         const connectedWallets = wallets.map(({ chain, walletAddress, walletName }) => {
             const netWorth = dexAssets.reduce((acc, dexAsset) => {
                 if ((dexAsset.chain === chain && dexAsset.walletAddress === walletAddress) ||
-                    (chain === types_1.Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && utils_1.default.isEVMChain(dexAsset.chain))) {
+                    (chain === types_1.Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && index_1.default.isEVMChain(dexAsset.chain))) {
                     return acc + dexAsset.value;
                 }
                 return acc + 0;
             }, 0);
-            const scan = utils_1.default.getScanUrl(walletAddress, chain);
+            const scan = index_1.default.getScanUrl(walletAddress, chain);
             return { chain, address: walletAddress, name: walletName, netWorth, scan };
         });
         const cexes = await services_1.default.getAvailableCexes({ keyIdentifier });
@@ -66,7 +66,7 @@ const getConnectedAccounts = async ({ keyIdentifier, }) => {
         return res;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };

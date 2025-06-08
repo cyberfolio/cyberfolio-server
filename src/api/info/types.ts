@@ -1,7 +1,7 @@
-import { CexName, Chain } from '@config/types';
+import AppStructures from '@structures/index';
 
 export interface ConnectedWallets {
-  chain: Chain;
+  chain: AppStructures.Chain;
   name: string;
   address: string;
   scan: string;
@@ -9,7 +9,7 @@ export interface ConnectedWallets {
 }
 
 export interface ConnectedCexes {
-  name: CexName;
+  name: AppStructures.CexName;
   netWorth: number;
 }
 

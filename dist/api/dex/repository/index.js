@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const repository_1 = require("@providers/coingecko/repository");
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const models_1 = require("./models");
-const path = utils_1.default.getFilePath(__filename);
+const path = index_1.default.getFilePath(__filename);
 const addWalletByKeyIdentifier = async ({ keyIdentifier, walletAddress, walletName, chain, }) => {
     const wallet = await models_1.walletsModel
         .findOne({
@@ -33,12 +33,12 @@ const deleteWallet = async ({ keyIdentifier, address, chain, }) => {
 };
 const getWalletsByKey = async ({ keyIdentifier }) => {
     let wallets = await models_1.walletsModel.find({ keyIdentifier }).lean().exec();
-    wallets = wallets.map((wallet) => utils_1.default.removeMongoFields(wallet));
+    wallets = wallets.map((wallet) => index_1.default.removeMongoFields(wallet));
     return wallets;
 };
 const getWallet = async ({ keyIdentifier, platform }) => {
     const wallet = await models_1.walletsModel.findOne({ keyIdentifier, platform }).lean();
-    return utils_1.default.removeMongoFields(wallet);
+    return index_1.default.removeMongoFields(wallet);
 };
 const getWallets = async ({ keyIdentifier }) => {
     const wallets = await models_1.walletsModel.find({ keyIdentifier }).lean();
@@ -46,7 +46,7 @@ const getWallets = async ({ keyIdentifier }) => {
 };
 const getWalletByName = async ({ keyIdentifier, walletName }) => {
     const wallet = await models_1.walletsModel.findOne({ keyIdentifier, walletName }).lean();
-    return utils_1.default.removeMongoFields(wallet);
+    return index_1.default.removeMongoFields(wallet);
 };
 const addAsset = async ({ keyIdentifier, walletName, name, symbol, balance, price, value, chain, contractAddress, walletAddress, scan, }) => {
     try {
@@ -75,7 +75,7 @@ const addAsset = async ({ keyIdentifier, walletName, name, symbol, balance, pric
         }, { upsert: true, new: true });
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: addAsset.name,
             path,
@@ -86,11 +86,11 @@ const addAsset = async ({ keyIdentifier, walletName, name, symbol, balance, pric
 const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }) => {
     try {
         let assets = await models_1.dexAssetModel.find({ keyIdentifier, chain }).lean();
-        assets = assets.map((asset) => utils_1.default.removeMongoFields(asset));
+        assets = assets.map((asset) => index_1.default.removeMongoFields(asset));
         return assets;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: getAssetsByKeyAndChain.name,
             path,
@@ -101,11 +101,11 @@ const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }) => {
 const getAssets = async ({ keyIdentifier }) => {
     try {
         let assets = await models_1.dexAssetModel.find({ keyIdentifier }).lean();
-        assets = assets.map((asset) => utils_1.default.removeMongoFields(asset));
+        assets = assets.map((asset) => index_1.default.removeMongoFields(asset));
         return assets;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: getAssets.name,
             path,
@@ -116,11 +116,11 @@ const getAssets = async ({ keyIdentifier }) => {
 const getAllAssets = async () => {
     try {
         let assets = await models_1.dexAssetModel.find({}).lean();
-        assets = assets.map((asset) => utils_1.default.removeMongoFields(asset));
+        assets = assets.map((asset) => index_1.default.removeMongoFields(asset));
         return assets;
     }
     catch (e) {
-        utils_1.default.logError({
+        index_1.default.logError({
             e,
             func: getAllAssets.name,
             path,

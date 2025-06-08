@@ -18,6 +18,7 @@
       "@modules/*": ["modules/*"],
       "@utils/*": ["utils/*"],
       "@api/*": ["api/*"],
+      "@structures/*": ["structures/*"],
       "@src/*": ["*"]
     }
   },

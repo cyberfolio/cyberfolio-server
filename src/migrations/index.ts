@@ -5,7 +5,7 @@ import migrationModel from './repository/models';
 
 const path = AppUtils.getFilePath(__filename);
 
-const Index = async () => {
+const AppMigrations = async () => {
   try {
     const migration = await migrationModel.findOne({});
     if (!migration) {
@@ -16,10 +16,10 @@ const Index = async () => {
   } catch (e) {
     AppUtils.logError({
       e,
-      func: Index.name,
+      func: AppMigrations.name,
       path,
     });
   }
 };
 
-export default Index;
+export default AppMigrations;

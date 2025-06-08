@@ -11,9 +11,9 @@ const levels = {
     debug: 6,
     silly: 7,
 };
-const logger = (0, winston_1.createLogger)({
+const Logger = (0, winston_1.createLogger)({
     levels,
     transports: [new winston_1.transports.Console()],
     format: winston_1.format.combine(winston_1.format.colorize(), winston_1.format.timestamp(), winston_1.format.printf(({ timestamp, level, message, metadata }) => `[${timestamp}] ${level}: ${message}. ${metadata ? JSON.stringify(metadata) : ''}`)),
 });
-exports.default = logger;
+exports.default = Logger;

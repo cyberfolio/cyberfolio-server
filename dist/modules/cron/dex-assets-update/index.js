@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("@api/auth/repository/models");
 const models_2 = require("@api/dex/repository/models");
-const types_1 = require("@config/types");
-const arbitrum_1 = __importDefault(require("@dex/arbitrum"));
-const avalanche_1 = __importDefault(require("@dex/avalanche"));
-const ethereum_1 = __importDefault(require("@dex/ethereum"));
-const optimism_1 = __importDefault(require("@dex/optimism"));
-const polygon_1 = __importDefault(require("@dex/polygon"));
-const smartchain_1 = __importDefault(require("@dex/smartchain"));
-const utils_1 = __importDefault(require("@src/utils"));
-const path = utils_1.default.getFilePath(__filename);
+const index_1 = __importDefault(require("@structures/index"));
+const arbitrum_1 = __importDefault(require("@modules/chain/arbitrum"));
+const avalanche_1 = __importDefault(require("@modules/chain/avalanche"));
+const ethereum_1 = __importDefault(require("@modules/chain/ethereum"));
+const optimism_1 = __importDefault(require("@modules/chain/optimism"));
+const polygon_1 = __importDefault(require("@modules/chain/polygon"));
+const smartchain_1 = __importDefault(require("@modules/chain/smartchain"));
+const index_2 = __importDefault(require("@utils/index"));
+const path = index_2.default.getFilePath(__filename);
 function getDifference(array1, array2) {
     return array1.filter((object1) => !array2.some((object2) => object1.symbol === object2.symbol && object1.chain === object2.chain));
 }
@@ -25,17 +25,21 @@ const updateEvmAssets = async () => {
             const assets = await models_2.dexAssetModel
                 .find({
                 keyIdentifier: walletAddress,
-                $and: [{ chain: { $ne: types_1.Chain.POLKADOT } }, { chain: { $ne: types_1.Chain.SOLANA } }],
+                $and: [{ chain: { $ne: index_1.default.Chain.POLKADOT } }, { chain: { $ne: index_1.default.Chain.SOLANA } }],
             })
                 .lean();
             const arbiAssets = await arbitrum_1.default.getTokenBalances(walletAddress);
-            const avaAssets = await avalanche_1.default.getTokenBalances(walletAddress);
-            const ethAssets = await ethereum_1.default.getTokenBalances(walletAddress);
-            const optiAssets = await optimism_1.default.getTokenBalances(walletAddress);
-            const polygonAssets = await polygon_1.default.getTokenBalances(walletAddress);
-            const bscAssets = await smartchain_1.default.getTokenBalances(walletAddress);
             // stop 2 seconds for api rate limit
-            await utils_1.default.sleep(2000);
+            await index_2.default.sleep(2000);
+            const avaAssets = await avalanche_1.default.getTokenBalances(walletAddress);
+            await index_2.default.sleep(2000);
+            const ethAssets = await ethereum_1.default.getTokenBalances(walletAddress);
+            await index_2.default.sleep(2000);
+            const optiAssets = await optimism_1.default.getTokenBalances(walletAddress);
+            await index_2.default.sleep(2000);
+            const polygonAssets = await polygon_1.default.getTokenBalances(walletAddress);
+            await index_2.default.sleep(2000);
+            const bscAssets = await smartchain_1.default.getTokenBalances(walletAddress);
             const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
             // Remove assets that are not owned anymore
             const existingAssets = evmAssets.map((evmAsset) => ({
@@ -68,7 +72,7 @@ const updateEvmAssets = async () => {
         }
     }
     catch (e) {
-        utils_1.default.logError({
+        index_2.default.logError({
             func: updateEvmAssets.name,
             path,
             e,

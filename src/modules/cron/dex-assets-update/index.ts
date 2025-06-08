@@ -1,6 +1,6 @@
 import { userModel } from '@api/auth/repository/models';
 import { dexAssetModel } from '@api/dex/repository/models';
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 
 import arbitrum from '@modules/chain/arbitrum';
 import avalanche from '@modules/chain/avalanche';
@@ -16,11 +16,11 @@ const path = AppUtils.getFilePath(__filename);
 function getDifference(
   array1: {
     symbol: string;
-    chain: Chain;
+    chain: AppStructures.Chain;
   }[],
   array2: {
     symbol: string;
-    chain: Chain;
+    chain: AppStructures.Chain;
   }[],
 ) {
   return array1.filter(
@@ -37,19 +37,22 @@ const updateEvmAssets = async () => {
         .find({
           keyIdentifier: walletAddress,
 
-          $and: [{ chain: { $ne: Chain.POLKADOT } }, { chain: { $ne: Chain.SOLANA } }],
+          $and: [{ chain: { $ne: AppStructures.Chain.POLKADOT } }, { chain: { $ne: AppStructures.Chain.SOLANA } }],
         })
         .lean();
 
       const arbiAssets = await arbitrum.getTokenBalances(walletAddress);
-      const avaAssets = await avalanche.getTokenBalances(walletAddress);
-      const ethAssets = await ethereum.getTokenBalances(walletAddress);
-      const optiAssets = await optimism.getTokenBalances(walletAddress);
-      const polygonAssets = await polygon.getTokenBalances(walletAddress);
-      const bscAssets = await smartchain.getTokenBalances(walletAddress);
-
       // stop 2 seconds for api rate limit
       await AppUtils.sleep(2000);
+      const avaAssets = await avalanche.getTokenBalances(walletAddress);
+      await AppUtils.sleep(2000);
+      const ethAssets = await ethereum.getTokenBalances(walletAddress);
+      await AppUtils.sleep(2000);
+      const optiAssets = await optimism.getTokenBalances(walletAddress);
+      await AppUtils.sleep(2000);
+      const polygonAssets = await polygon.getTokenBalances(walletAddress);
+      await AppUtils.sleep(2000);
+      const bscAssets = await smartchain.getTokenBalances(walletAddress);
 
       const evmAssets = [...arbiAssets, ...avaAssets, ...ethAssets, ...optiAssets, ...polygonAssets, ...bscAssets];
 

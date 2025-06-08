@@ -1,4 +1,4 @@
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import { getCurrenyInfo } from '@providers/coingecko/repository';
 import AppUtils from '@utils/index';
 import { walletsModel, dexAssetModel } from './models';
@@ -14,7 +14,7 @@ const addWalletByKeyIdentifier = async ({
   keyIdentifier: string;
   walletAddress: string;
   walletName: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
 }) => {
   const wallet = await walletsModel
     .findOne({
@@ -40,7 +40,7 @@ const deleteWallet = async ({
 }: {
   keyIdentifier: string;
   address: string;
-  chain: Chain;
+  chain: AppStructures.Chain;
 }) => {
   await walletsModel.deleteOne({
     keyIdentifier,
@@ -55,7 +55,7 @@ const getWalletsByKey = async ({ keyIdentifier }: { keyIdentifier: string }) => 
   return wallets;
 };
 
-const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: Chain }) => {
+const getWallet = async ({ keyIdentifier, platform }: { keyIdentifier: string; platform: AppStructures.Chain }) => {
   const wallet = await walletsModel.findOne({ keyIdentifier, platform }).lean();
   return AppUtils.removeMongoFields(wallet);
 };
@@ -90,7 +90,7 @@ const addAsset = async ({
   balance: number;
   price: number;
   value: number;
-  chain: Chain;
+  chain: AppStructures.Chain;
   contractAddress: string;
   walletAddress: string;
   scan: string;
@@ -133,7 +133,13 @@ const addAsset = async ({
   }
 };
 
-const getAssetsByKeyAndChain = async ({ keyIdentifier, chain }: { keyIdentifier: string; chain: Chain }) => {
+const getAssetsByKeyAndChain = async ({
+  keyIdentifier,
+  chain,
+}: {
+  keyIdentifier: string;
+  chain: AppStructures.Chain;
+}) => {
   try {
     let assets = await dexAssetModel.find({ keyIdentifier, chain }).lean();
     assets = assets.map((asset) => AppUtils.removeMongoFields(asset));

@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateNonce = exports.getUserByEvmAddressAndNonce = exports.getUserByEvmAddress = exports.createUser = void 0;
-const utils_1 = __importDefault(require("@src/utils"));
+const index_1 = __importDefault(require("@utils/index"));
 const models_1 = require("./models");
 const createUser = async ({ keyIdentifier, nonce }) => {
     try {
         await models_1.userModel.create({ keyIdentifier, nonce });
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };
@@ -22,7 +22,7 @@ const getUserByEvmAddress = async ({ evmAddress }) => {
         return user;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };
@@ -33,7 +33,7 @@ const getUserByEvmAddressAndNonce = async ({ evmAddress, nonce }) => {
         return user;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };
@@ -44,7 +44,7 @@ const updateNonce = async ({ evmAddress, nonce }) => {
         return user;
     }
     catch (e) {
-        const error = utils_1.default.onError(e);
+        const error = index_1.default.onError(e);
         throw error;
     }
 };

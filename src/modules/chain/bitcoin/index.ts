@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import AppUtils from '@utils/index';
 import AppProviders from '@providers/index';
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import { DexAssetAPIResponse } from '@modules/chain/common/types';
 
 const path = AppUtils.getFilePath(__filename);
@@ -24,7 +24,7 @@ const getBalance = async (walletAddress: string): Promise<DexAssetAPIResponse[]>
         price,
         logo: 'https://cdn.cdnlogo.com/logos/b/46/bitcoin.svg',
         value,
-        chain: Chain.BITCOIN,
+        chain: AppStructures.Chain.BITCOIN,
         scan: `https://www.blockchain.com/btc/address/${walletAddress}`,
         contractAddress: '',
       },

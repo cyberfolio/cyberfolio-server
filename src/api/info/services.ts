@@ -1,7 +1,7 @@
 import AppUtils from '@utils/index';
 import cexRepo from '@api/cex/services';
 import dexRepo from '@api/dex/repository';
-import { Chain } from '@config/types';
+import AppStructures from '@structures/index';
 import { ConnectedAccountsResponse, ConnectedCexes, ConnectedWallets } from './types';
 
 export const getNetWorth = async ({ keyIdentifier }: { keyIdentifier: string }) => {
@@ -40,7 +40,9 @@ export const getConnectedAccounts = async ({
       const netWorth = dexAssets.reduce((acc, dexAsset) => {
         if (
           (dexAsset.chain === chain && dexAsset.walletAddress === walletAddress) ||
-          (chain === Chain.ETHEREUM && dexAsset.walletAddress === walletAddress && AppUtils.isEVMChain(dexAsset.chain))
+          (chain === AppStructures.Chain.ETHEREUM &&
+            dexAsset.walletAddress === walletAddress &&
+            AppUtils.isEVMChain(dexAsset.chain))
         ) {
           return acc + dexAsset.value;
         }

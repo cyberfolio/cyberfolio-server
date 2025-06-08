@@ -5,7 +5,7 @@ import migrationModel from './repository/models';
 
 const path = AppUtils.getFilePath(__filename);
 
-const Index = async (number: number) => {
+const removeWrongPricedTokens = async (number: number) => {
   try {
     const migration = await migrationModel.findOne({});
     if (migration?.number !== undefined && migration?.number < number) {
@@ -17,10 +17,10 @@ const Index = async (number: number) => {
   } catch (e) {
     AppUtils.logError({
       e,
-      func: Index.name,
+      func: removeWrongPricedTokens.name,
       path,
     });
   }
 };
 
-export default Index;
+export default removeWrongPricedTokens;

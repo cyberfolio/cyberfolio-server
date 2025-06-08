@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ethers_1 = require("ethers");
 const services_1 = require("./services");
-const router = express_1.default.Router();
-router.get('/networth', async (req, res) => {
+const InfoApi = express_1.default.Router();
+InfoApi.get('/networth', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
         return res.status(400).send('Validation error');
@@ -23,7 +23,7 @@ router.get('/networth', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/connected-accounts', async (req, res) => {
+InfoApi.get('/connected-accounts', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
         return res.status(400).send('Validation error');
@@ -39,7 +39,7 @@ router.get('/connected-accounts', async (req, res) => {
         return res.status(500).send('Unexpected error');
     }
 });
-router.get('/ens-name', async (req, res) => {
+InfoApi.get('/ens-name', async (req, res) => {
     const keyIdentifier = req.user?.keyIdentifier;
     if (!keyIdentifier) {
         return res.status(400).send('Validation error');
@@ -59,4 +59,4 @@ router.get('/ens-name', async (req, res) => {
         return res.status(401).send('Unexpected error');
     }
 });
-exports.default = router;
+exports.default = InfoApi;

@@ -4,11 +4,11 @@ import Kucoin from '@cex/kucoin';
 import GateIO from '@cex/gateio';
 
 import AppUtils from '@utils/index';
-import { CexAssetResponse, CexName } from '@config/types';
+import AppStructures from '@structures/index';
 import repository from './repository';
 import { CexPaymentHistory } from './types';
 
-const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const checkIfExists = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: AppStructures.CexName }) => {
   const cexInfo = await repository.getCexInfo({
     keyIdentifier,
     cexName,
@@ -32,26 +32,26 @@ const saveSpotAssets = async ({
   passphrase,
   keyIdentifier,
 }: {
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   apiKey: string;
   apiSecret: string;
   passphrase: string;
   keyIdentifier: string;
 }) => {
-  let spotAssets: CexAssetResponse[] = [];
+  let spotAssets: AppStructures.CexAssetResponse[] = [];
   try {
-    if (cexName === CexName.BINANCE) {
+    if (cexName === AppStructures.CexName.BINANCE) {
       spotAssets = await Binance.getAssets({ apiKey, apiSecret });
-    } else if (cexName === CexName.BINANCETR) {
+    } else if (cexName === AppStructures.CexName.BINANCETR) {
       spotAssets = await BinanceTR.getAssets({ apiKey, apiSecret });
-    } else if (cexName === CexName.KUCOIN) {
+    } else if (cexName === AppStructures.CexName.KUCOIN) {
       spotAssets = await Kucoin.getAssets({
         type: 'main',
         apiKey,
         apiSecret,
         passphrase,
       });
-    } else if (cexName === CexName.GATEIO) {
+    } else if (cexName === AppStructures.CexName.GATEIO) {
       spotAssets = await GateIO.getAssets({
         apiKey,
         apiSecret,
@@ -86,7 +86,7 @@ const saveSpotAssets = async ({
   }
 };
 
-const getSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const getSpotAssets = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: AppStructures.CexName }) => {
   try {
     const cexInfo = await repository.getCexInfo({
       keyIdentifier,
@@ -116,7 +116,7 @@ const add = async ({
   keyIdentifier: string;
   apiKey: string;
   apiSecret: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   passphrase: string;
 }) => {
   try {
@@ -147,7 +147,7 @@ const add = async ({
   }
 };
 
-const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: CexName }) => {
+const deleteCex = async ({ keyIdentifier, cexName }: { keyIdentifier: string; cexName: AppStructures.CexName }) => {
   try {
     await repository.deleteCex({
       keyIdentifier,
@@ -178,12 +178,12 @@ const savePaymentHistory = async ({
   apiSecret,
 }: {
   keyIdentifier: string;
-  cexName: CexName;
+  cexName: AppStructures.CexName;
   apiKey: string;
   apiSecret: string;
 }): Promise<CexPaymentHistory[]> => {
   const response = [];
-  if (cexName === CexName.BINANCE) {
+  if (cexName === AppStructures.CexName.BINANCE) {
     const binancePaymentHistory = await Binance.getPaymentHistory({ apiKey, apiSecret });
     try {
       for (const item of binancePaymentHistory) {
@@ -215,7 +215,7 @@ const getPaymentHistory = async ({ keyIdentifier }: { keyIdentifier: string }): 
       currency: item.fiatCurrency,
     });
     return {
-      cexName: CexName.BINANCE,
+      cexName: AppStructures.CexName.BINANCE,
       orderNo: item.orderNo,
       type: item.type,
       fee,
