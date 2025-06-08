@@ -14,3 +14,9 @@
 
 - vim /etc/nginx/sites-available/default
 - service nginx restart
+
+##  NOTES
+
+### Github Actions
+
+- You need to create ssh key with no passphrase because "appleboy/scp-action" does not support passphrase-protected keys
