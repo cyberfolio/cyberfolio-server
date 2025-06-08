@@ -72,14 +72,15 @@
     "tsconfig-paths": "4.2.0"
   },
   "_moduleAliases": {
+    "@api": "dist/api",
+    "@config": "dist/config",
+    "@constants": "dist/constants",
+    "@migrations": "dist/migrations",
     "@modules": "dist/modules",
     "@providers": "dist/modules/providers",
-    "@constants": "dist/constants",
     "@cex": "dist/modules/cex",
     "@dex": "dist/modules/dex",
-    "@config": "dist/config",
     "@utils": "dist/utils",
-    "@api": "dist/api",
     "@structures": "dist/structures",
     "@src": "dist"
   },

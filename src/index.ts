@@ -1,4 +1,5 @@
 import 'dotenv-safe/config';
+import './register-aliases';
 
 import express from 'express';
 import cors from 'cors';
@@ -9,12 +10,6 @@ import { connectToDB, runMigrations, startCronJobs, startMoralis } from './init'
 
 import AppConfig from './config';
 import AppEndpoints from './api';
-
-if (process.env.NODE_ENV !== 'development') {
-  import('module-alias/register').catch((e) => {
-    AppConfig.Logger.error('Error while registering module-alias', e);
-  });
-}
 
 const boot = async () => {
   await connectToDB();
