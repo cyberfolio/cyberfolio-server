@@ -88,4 +88,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/root/projects/cyberfolio-server
-            pm2 restart cyberfolio-server || pm2 start dist/index.js --name cyberfolio-server
+            pm2 delete cyberfolio-server 
+            pm2 start dist/index.js --name cyberfolio-server
