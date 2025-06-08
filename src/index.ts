@@ -5,7 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import { connectToDB, runMigrations, startCronJobs } from './init';
+import { connectToDB, runMigrations, startCronJobs, startMoralis } from './init';
 
 import AppConfig from './config';
 import AppEndpoints from './api';
@@ -18,8 +18,8 @@ if (process.env.NODE_ENV !== 'development') {
 
 const boot = async () => {
   await connectToDB();
+  await startMoralis();
   await startCronJobs();
-
   await runMigrations();
 
   const app = express();

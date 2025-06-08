@@ -21,6 +21,9 @@ declare global {
       COVALENT_V1_API_URL: string;
       COVALENT_API_KEY: string;
 
+      MORALIS_API_URL: string;
+      MORALIS_API_KEY: string;
+
       BLOCKCHAIN_INFO_API_URL: string;
 
       SOLANA_MAINNET_CHAIN_ID: string;

@@ -11,22 +11,11 @@ import { DexAssetAPIResponse } from '@modules/chain/common/types';
 const path = AppUtils.getFilePath(__filename);
 
 const getTokenBalances = async (walletAddress: string) => {
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-  });
-
   try {
-    // const walletInfo = await axios.get<CovalentTokenBalanceResponse>(
-    //   `${process.env.COVALENT_V1_API_URL}/${AppConstants.ChainIDs.ARBITRUM}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
-    // );
-    // const assets = walletInfo.data.data.items;
-    // const response = await evmAssetsResponse(walletAddress, ScanURL.ARBITRUM, assets, Chain.ARBITRUM);
-
     const tokenBalancesResponse = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
-      chain: AppUtils.toHexChainId(AppConstants.ChainIDs.ETHEREUM),
+      chain: AppUtils.toHexChainId(AppConstants.ChainIDs.ARBITRUM),
       address: walletAddress,
     });
-
     const response: DexAssetAPIResponse[] = tokenBalancesResponse.response.result.map((item) => {
       return {
         name: item.name,
@@ -40,7 +29,6 @@ const getTokenBalances = async (walletAddress: string) => {
         scan: AppStructures.ScanURL.ARBITRUM,
       };
     });
-
     return response;
   } catch (e) {
     AppUtils.logError({

@@ -10,7 +10,7 @@ namespace AppStructures {
   export enum Chain {
     BITCOIN = 'Bitcoin',
     ETHEREUM = 'Ethereum',
-    BSC = 'SmartChain',
+    SMARTCHAIN = 'SmartChain',
     AVALANCHE = 'Avalanche',
     SOLANA = 'Solana',
     POLKADOT = 'Polkadot',
@@ -22,7 +22,7 @@ namespace AppStructures {
   export enum Platform {
     BITCOIN = 'Bitcoin',
     ETHEREUM = 'Ethereum',
-    BSC = 'SmartChain',
+    SMARTCHAIN = 'SmartChain',
     AVALANCHE = 'Avalanche',
     SOLANA = 'Solana',
     POLKADOT = 'Polkadot',
@@ -68,7 +68,7 @@ namespace AppStructures {
 
   export enum ScanURL {
     ETHEREUM = 'https://etherscan.io',
-    BSC = 'https://bscscan.com',
+    SMARTCHAIN = 'https://bscscan.com',
     BITCOIN = 'https://www.blockchain.com',
     AVALANCHE = 'https://snowtrace.io',
     POLYGON = 'https://polygonscan.com',
@@ -79,6 +79,18 @@ namespace AppStructures {
 
   export interface JwtTokenInterface {
     evmAddress?: string | undefined;
+  }
+
+  export interface DexAssetAPIResponse {
+    name: string;
+    symbol: string;
+    contractAddress: string;
+    logo: string | undefined;
+    balance: number;
+    price: number;
+    value: number;
+    chain: AppStructures.Chain;
+    scan: string;
   }
 }
 

@@ -33,8 +33,8 @@ const getScanUrl = (address: string, chain: AppStructures.Chain) => {
       return `${AppStructures.ScanURL.AVALANCHE}/address/${address}`;
     case AppStructures.Chain.BITCOIN:
       return `${AppStructures.ScanURL.BITCOIN}/btc/address/${address}`;
-    case AppStructures.Chain.BSC:
-      return `${AppStructures.ScanURL.BSC}/address/${address}`;
+    case AppStructures.Chain.SMARTCHAIN:
+      return `${AppStructures.ScanURL.SMARTCHAIN}/address/${address}`;
     case AppStructures.Chain.ETHEREUM:
       return `${AppStructures.ScanURL.ETHEREUM}/address/${address}`;
     case AppStructures.Chain.OPTIMISM:
@@ -84,7 +84,7 @@ const isEVMChain = (chain: AppStructures.Chain) => {
   return (
     chain === AppStructures.Chain.ARBITRUM ||
     chain === AppStructures.Chain.AVALANCHE ||
-    chain === AppStructures.Chain.BSC ||
+    chain === AppStructures.Chain.SMARTCHAIN ||
     chain === AppStructures.Chain.OPTIMISM ||
     chain === AppStructures.Chain.POLYGON ||
     chain === AppStructures.Chain.ETHEREUM

@@ -1,12 +1,11 @@
 import Web3 from 'web3';
-import axios from 'axios';
 import web3Validator from 'web3-validator';
 
 import AppUtils from '@utils/index';
 import AppStructures from '@structures/index';
-import evmAssetsResponse from '@modules/chain/common/evmAssetsResponse';
-import { CovalentTokenBalanceResponse } from '@modules/chain/common/types';
 import AppConstants from '@constants/index';
+
+import Moralis from 'moralis';
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(`${process.env.INFURA_API_URL}/${process.env.INFURA_PROJECT_ID}`),
@@ -31,16 +30,25 @@ export const getEthBalance = async (walletAddress: string) => {
 
 export const getTokenBalances = async (walletAddress: string) => {
   try {
-    const walletInfo = await axios.get<CovalentTokenBalanceResponse>(
-      `${process.env.COVALENT_V1_API_URL}/${AppConstants.ChainIDs.ETHEREUM}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
-    );
-    const assets = walletInfo.data.data.items;
-    const response = await evmAssetsResponse(
-      walletAddress,
-      AppStructures.ScanURL.ETHEREUM,
-      assets,
-      AppStructures.Chain.ETHEREUM,
-    );
+    const tokenBalancesResponse = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
+      chain: AppUtils.toHexChainId(AppConstants.ChainIDs.ETHEREUM),
+      address: walletAddress,
+    });
+
+    const response: AppStructures.DexAssetAPIResponse[] = tokenBalancesResponse.response.result.map((item) => {
+      return {
+        name: item.name,
+        symbol: item.symbol,
+        contractAddress: String(item.tokenAddress?.lowercase),
+        logo: item.logo,
+        balance: Number(item.balanceFormatted),
+        price: Number(item.usdPrice),
+        value: item.usdValue,
+        chain: AppStructures.Chain.ETHEREUM,
+        scan: AppStructures.ScanURL.ETHEREUM,
+      };
+    });
+
     return response;
   } catch (e) {
     AppUtils.logError({

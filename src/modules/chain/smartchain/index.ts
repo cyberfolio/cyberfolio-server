@@ -1,19 +1,29 @@
-import axios from 'axios';
 import AppUtils from '@utils/index';
 import AppStructures from '@structures/index';
-import evmAssetsResponse from '@modules/chain/common/evmAssetsResponse';
-import { CovalentTokenBalanceResponse } from '@modules/chain/common/types';
 import AppConstants from '@constants/index';
+import Moralis from 'moralis';
 
 const path = AppUtils.getFilePath(__filename);
 
 const getTokenBalances = async (walletAddress: string) => {
   try {
-    const walletInfo = await axios.get<CovalentTokenBalanceResponse>(
-      `${process.env.COVALENT_V1_API_URL}/${AppConstants.ChainIDs.SMARTCHAIN}/address/${walletAddress}/balances_v2/?key=${process.env.COVALENT_API_KEY}`,
-    );
-    const assets = walletInfo.data.data.items;
-    const response = await evmAssetsResponse(walletAddress, AppStructures.ScanURL.BSC, assets, AppStructures.Chain.BSC);
+    const tokenBalancesResponse = await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
+      chain: AppUtils.toHexChainId(AppConstants.ChainIDs.SMARTCHAIN),
+      address: walletAddress,
+    });
+    const response: AppStructures.DexAssetAPIResponse[] = tokenBalancesResponse.response.result.map((item) => {
+      return {
+        name: item.name,
+        symbol: item.symbol,
+        contractAddress: String(item.tokenAddress?.lowercase),
+        logo: item.logo,
+        balance: Number(item.balanceFormatted),
+        price: Number(item.usdPrice),
+        value: item.usdValue,
+        chain: AppStructures.Chain.SMARTCHAIN,
+        scan: AppStructures.ScanURL.SMARTCHAIN,
+      };
+    });
     return response;
   } catch (e) {
     AppUtils.logError({

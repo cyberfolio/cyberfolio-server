@@ -18,7 +18,10 @@ const migratePlatfromName = async (number: number) => {
         { platform: 'avalanche' },
         { $set: { platform: AppStructures.Platform.AVALANCHE } },
       );
-      await dexAssetModel.updateMany({ platform: 'smartchain' }, { $set: { platform: AppStructures.Platform.BSC } });
+      await dexAssetModel.updateMany(
+        { platform: 'smartchain' },
+        { $set: { platform: AppStructures.Platform.SMARTCHAIN } },
+      );
       await dexAssetModel.updateMany({ platform: 'polkadot' }, { $set: { platform: AppStructures.Platform.POLKADOT } });
       await dexAssetModel.updateMany({ platform: 'polygon' }, { $set: { platform: AppStructures.Platform.POLYGON } });
       await dexAssetModel.updateMany({ platform: 'arbitrum' }, { $set: { platform: AppStructures.Platform.ARBITRUM } });

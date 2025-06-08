@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Moralis from 'moralis';
 import initCronJobs from './modules/cron';
 import migrations from './migrations';
 import AppConfig from './config';
@@ -19,6 +20,17 @@ export const startCronJobs = async () => {
     await initCronJobs();
   } catch (e) {
     AppConfig.Logger.error(`Error at src/init.ts ${startCronJobs.name}`);
+    process.exit(1);
+  }
+};
+
+export const startMoralis = async () => {
+  try {
+    await Moralis.start({
+      apiKey: process.env.MORALIS_API_KEY,
+    });
+  } catch (e) {
+    AppConfig.Logger.error(`Error at src/init.ts ${startMoralis.name}`, e);
     process.exit(1);
   }
 };
