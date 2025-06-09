@@ -81,7 +81,7 @@ jobs:
             dist/**
             package.json
             yarn.lock
-          target: '/home/projects/cyberfolio-server'
+          target: '/root/projects/cyberfolio-server'
 
       - name: SSH into server and restart app
         uses: appleboy/ssh-action@v1.0.3
@@ -90,6 +90,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/projects/cyberfolio-server
+            cd /root/projects/cyberfolio-server
             yarn install --production
             pm2 restart cyberfolio-server || pm2 start dist/index.js --name cyberfolio-server
