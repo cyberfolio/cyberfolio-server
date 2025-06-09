@@ -89,9 +89,13 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use 22.16.0
+            node -v        # just to confirm
+            npm install -g yarn@1.22.22
             cd /root/projects/cyberfolio-server
-            nvm use 22.16.0 || nvm install 22.16.0
-            yarn --version || npm install -g yarn@1.22.22
+            yarn --version # just to confirm
             yarn cache clean
             yarn install --production
             pm2 restart cyberfolio-server || pm2 start dist/index.js --name cyberfolio-server
