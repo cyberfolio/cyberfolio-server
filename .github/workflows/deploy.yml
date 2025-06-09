@@ -67,8 +67,8 @@ jobs:
 
       - name: Prepare deployment folder
         run: |
-          mkdir deploy
-          cp -r dist deploy/
+          mkdir -p deploy/dist
+          cp -r dist/* deploy/dist/
           cp package.json yarn.lock deploy/
 
       - name: Copy build to server
