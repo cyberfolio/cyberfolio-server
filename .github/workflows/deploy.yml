@@ -69,9 +69,7 @@ jobs:
         run: |
           mkdir -p deploy/dist
           cp -r dist/* deploy/dist/
-          cp .env deploy/dist/
-          cp .env.example deploy/dist/
-          cp package.json yarn.lock deploy/
+          cp package.json yarn.lock .env .env.example deploy/
 
       - name: Upload project using rsync
         uses: burnett01/rsync-deployments@5.2
