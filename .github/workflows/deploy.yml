@@ -90,6 +90,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /root/projects/cyberfolio-server
+            nvm use 22
             yarn cache clean
             yarn install --production
             pm2 restart cyberfolio-server || pm2 start dist/index.js --name cyberfolio-server
