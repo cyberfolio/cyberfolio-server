@@ -70,6 +70,7 @@ jobs:
           mkdir -p deploy/dist
           cp -r dist/* deploy/dist/
           cp .env deploy/dist/
+          cp .env.example deploy/dist/
           cp package.json yarn.lock deploy/
 
       - name: Upload project using rsync
@@ -97,5 +98,5 @@ jobs:
             cd /root/projects/cyberfolio-server
             yarn --version # just to confirm
             yarn cache clean
-            yarn install --production
+            yarn
             pm2 restart cyberfolio-server || pm2 start dist/index.js --name cyberfolio-server
